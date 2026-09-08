@@ -88,17 +88,18 @@ watch(result, async (r, prev) => {
 // The share link is generated automatically (debounced) as soon as a result exists; clicking the field copies it.
 let shareTimer = 0
 let shareSeq = 0
-watch([result, shareState], ([r]) => {
+function scheduleShare(delay = 500) {
   shareUrl.value = ''
   clearTimeout(shareTimer)
-  if (!r || restoring) return
+  if (!result.value || restoring) return
   const seq = ++shareSeq
   shareBusy.value = true
   shareTimer = window.setTimeout(async () => {
     const url = await createShareUrl(shareState.value, locale.value)
     if (seq === shareSeq) { shareUrl.value = url; shareBusy.value = false }
-  }, 500)
-}, { deep: true })
+  }, delay)
+}
+watch([result, shareState], () => scheduleShare(), { deep: true })
 async function copyShare() {
   if (!shareUrl.value) return
   try { await navigator.clipboard.writeText(shareUrl.value); copied.value = true; setTimeout(() => (copied.value = false), 1500) } catch { /* noop */ }
@@ -131,6 +132,7 @@ onMounted(async () => {
   }
   await nextTick()
   restoring = false
+  scheduleShare(0)
   Object.assign(fx, await loadFx())
 })
 </script>
