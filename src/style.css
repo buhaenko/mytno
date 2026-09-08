@@ -174,3 +174,8 @@ details .body li { margin: 3px 0; }
 .row.three .check { padding-top: 22px; }
 @media (max-width: 560px) { .row.three .check { padding-top: 0; } }
 .total .r { display: flex; gap: 4px; }
+.lines tr.opt td { color: var(--muted); }
+.lines td.n .dim { color: var(--muted); }
+.legend { flex-wrap: wrap; row-gap: 2px; }
+.legend .dot { margin-left: 6px; margin-right: 5px; }
+.legend .dot:first-child { margin-left: 0; }
