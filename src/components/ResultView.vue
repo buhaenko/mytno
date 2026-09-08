@@ -75,7 +75,7 @@ const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estim
         <tr class="sum"><td>{{ t('result.total') }}</td><td class="n dim">{{ money(result.total.min) }} – {{ money(result.total.max) }}</td><td class="n"><CountUp :value="result.total.likely" :format="money" /></td></tr>
       </tbody>
     </table>
-    <p v-if="optionalNuances.length" class="tiny legend"><span class="dot red"></span>{{ t('result.legend.always') }} <span class="dot amber"></span>{{ t('result.legend.likely') }} <span class="dot grey"></span>{{ t('result.legend.sometimes') }} · {{ t('result.notInSum', { tier: t(`result.tier.${vehicle.brandTier}`) }) }}</p>
+    <p v-if="optionalNuances.length" class="tiny legend"><span class="li"><span class="dot red"></span>{{ t('result.legend.always') }}</span><span class="li"><span class="dot amber"></span>{{ t('result.legend.likely') }}</span><span class="li"><span class="dot grey"></span>{{ t('result.legend.sometimes') }}</span><span class="li muted">{{ t('result.notInSum', { tier: t(`result.tier.${vehicle.brandTier}`) }) }}</span></p>
     <p class="tiny">{{ t('result.customsValue', { value: money(result.customsValue) }) }} <Help :text="t(route.destination === 'UA' ? 'result.help.customsValueUa' : 'result.help.customsValueEu')" :source="refs.duty" /></p>
 
     <div v-if="result.notComputed.length" class="nc">
