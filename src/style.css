@@ -98,7 +98,7 @@ details .body li { margin: 3px 0; }
 .lines td.n .help .pop, .nu .c .help .pop { left: auto; right: 0; }
 /* progressive reveal */
 .s { padding: 34px 0 0; }
-.s.result { padding-top: 34px; margin-top: 8px; border-top: 1px solid var(--line); }
+.s.result { padding-top: 40px; }
 .rise-enter-active { transition: opacity .35s ease, transform .35s ease; }
 .rise-leave-active { transition: opacity .15s ease; }
 .rise-enter-from { opacity: 0; transform: translateY(10px); }
@@ -118,7 +118,7 @@ details .body li { margin: 3px 0; }
 @media (max-width: 560px) { .check { padding-top: 0; } }
 /* hero → compact route bar */
 .hero { padding-top: 20vh; transition: padding .55s cubic-bezier(.2,.7,.2,1); }
-.hero.compact { padding-top: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.hero.compact { padding-top: 12px; padding-bottom: 0; }
 .hero-text { text-align: center; max-height: 200px; opacity: 1; overflow: hidden; transition: max-height .45s ease, opacity .3s ease, margin .45s ease; margin-bottom: 26px; }
 .hero-text h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
 .hero-text p { color: var(--muted); margin-top: 8px; font-size: 14.5px; }
