@@ -4,11 +4,13 @@ import type { Destination, Fuel, MarketSpec, Origin, Vehicle } from '../types'
 import { checkDigitValid, detectMarketSpec, isValidVinFormat, modelYearFromVin, normalizeVin, wmiInfo } from '../lib/vin'
 import { decodeVin, mapFuel, titleCase } from '../lib/nhtsa'
 import { matchReference, tierForMake } from '../lib/models'
-import { loadIndex, loadYear, matchCatalogModel, versionFuel, versionLabel, type CatalogIndex, type CatalogVersion, type CatalogYear } from '../lib/catalog'
+import { loadIndex, loadYear, matchCatalogModel, versionFuel, type CatalogIndex, type CatalogVersion, type CatalogYear } from '../lib/catalog'
+import { useI18n } from '../i18n'
 import Help from './Help.vue'
 
 const vehicle = defineModel<Vehicle>({ required: true })
 const props = defineProps<{ destination: Destination; origin: Origin }>()
+const { t, region } = useI18n()
 
 const mode = ref<'vin' | 'catalog'>('vin')
 const vinRaw = ref(vehicle.value.vin ?? '')
@@ -19,13 +21,22 @@ const vin = computed(() => normalizeVin(vinRaw.value))
 const forSpain = computed(() => props.destination === 'ES')
 const isElectrified = computed(() => vehicle.value.fuel === 'electric' || vehicle.value.fuel === 'phev')
 
-const fuelOptions: { value: Fuel; label: string }[] = [
-  { value: 'petrol', label: 'Бензин' }, { value: 'diesel', label: 'Дизель' }, { value: 'hybrid', label: 'Гібрид' },
-  { value: 'phev', label: 'Plug-in' }, { value: 'electric', label: 'Електро' }, { value: 'lpg', label: 'Газ' },
-]
-const marketOptions: { value: MarketSpec; label: string }[] = [
-  { value: 'US', label: 'США' }, { value: 'EU', label: 'Європа' }, { value: 'JP', label: 'Японія' }, { value: 'KR', label: 'Корея' }, { value: 'OTHER', label: 'інше' },
-]
+const fuels: Fuel[] = ['petrol', 'diesel', 'hybrid', 'phev', 'electric', 'lpg']
+const markets: MarketSpec[] = ['US', 'EU', 'JP', 'KR', 'OTHER']
+
+/** Підпис версії з каталогу EPA локалізованою мовою. */
+function versionLabel(v: CatalogVersion): string {
+  const [cc, cyl, fuel, co2, trany, drive, ev] = v
+  const parts: string[] = []
+  if (fuel === 'electric') parts.push(t('car.version.electric'), ev || '')
+  else {
+    parts.push(`${(cc / 1000).toFixed(1)} L`, cyl ? t('car.version.cyl', { n: cyl }) : '')
+    parts.push(fuel === 'petrol' || fuel === 'diesel' || fuel === 'hybrid' || fuel === 'phev' ? t(`car.version.${fuel}`) : fuel)
+  }
+  parts.push(trany.replace(/\s*\(.*\)/, ''), drive.replace('-Wheel Drive', 'WD').replace('Front', 'F').replace('Rear', 'R').replace('All', 'A').replace('4WD or ', '').replace('Part-time ', ''))
+  if (co2) parts.push(`${co2} g/km`)
+  return parts.filter(Boolean).join(' · ')
+}
 
 function applyReference(v: Vehicle, notes: string[]) {
   const ref = matchReference({ make: v.make, model: v.model, year: v.year, engineCc: v.engineCc, fuel: v.fuel, powerHp: v.powerHp })
@@ -35,7 +46,7 @@ function applyReference(v: Vehicle, notes: string[]) {
   if (ref.engine.cc && (!v.engineCc || (v.engineCc % 100 === 0 && Math.abs(v.engineCc - ref.engine.cc) / ref.engine.cc < 0.05))) v.engineCc = ref.engine.cc
   if (!v.batteryKwh && ref.engine.kwh) v.batteryKwh = ref.engine.kwh
   if (!v.powerHp) v.powerHp = ref.engine.hp
-  notes.push(`Європейський аналог (довідник): ${ref.entry.model} · ${ref.engine.label} → CO₂ WLTP ${ref.engine.co2 || '—'} г/км, ціна нового ≈ ${ref.engine.listEur.toLocaleString('uk-UA')} €.`)
+  notes.push(t('car.note.reference', { model: ref.entry.model, engine: ref.engine.label, co2: ref.engine.co2 || '—', list: ref.engine.listEur.toLocaleString() }))
 }
 
 watch(vin, (v) => { if (isValidVinFormat(v) && v !== vehicle.value.vin) decode() })
@@ -48,8 +59,8 @@ async function decode() {
     const d = await decodeVin(vin.value)
     const notes: string[] = []
     const spec = detectMarketSpec(vin.value, d.clean)
-    notes.push(spec.reason)
     const w = wmiInfo(vin.value)
+    notes.push(t(`car.note.${spec.reasonKey}`, { country: w.countryKey ? region(w.countryKey) : w.country }))
     const year = d.modelYear ?? modelYearFromVin(vin.value) ?? vehicle.value.year
     const make = d.make ? titleCase(d.make) : ''
     const fuel = mapFuel(d)
@@ -59,7 +70,6 @@ async function decode() {
       plantCountry: d.plantCountry, body: d.body, drive: d.drive, marketSpec: spec.spec, brandTier: make ? tierForMake(make) : 'mass',
       co2Wltp: undefined, listPriceNewEur: undefined, decodeNotes: notes,
     }
-    // каталог EPA: точний об'єм і CO₂ (комбінований, EPA) для цієї моделі/року
     if (make && v.model) {
       try {
         const cy = await loadYear(year)
@@ -69,24 +79,23 @@ async function decode() {
           const pick = (cand.length ? cand : cm.versions).sort((a, b) => Math.abs(a[0] - (v.engineCc ?? a[0])) - Math.abs(b[0] - (v.engineCc ?? b[0])))[0]
           if (pick) {
             if (pick[0] && (!v.engineCc || Math.abs(pick[0] - v.engineCc) / pick[0] < 0.06)) v.engineCc = pick[0]
-            notes.push(`Каталог EPA: ${cm.model} · ${versionLabel(pick)}${pick[3] ? ' (CO₂ за циклом EPA, не WLTP)' : ''}.`)
+            notes.push(t('car.note.epa', { model: cm.model, version: versionLabel(pick) }) + (pick[3] ? ' ' + t('car.note.epaCo2') : ''))
           }
         }
-      } catch { /* каталог недоступний — не критично */ }
+      } catch { /* каталог недоступний */ }
     }
     applyReference(v, notes)
-    if (!d.displacementCc && !v.engineCc && fuel !== 'electric') notes.push(`NHTSA знає лише марку, рік і завод (виробник з ${w.country}). Заповніть об'єм і паливо${forSpain.value ? ', CO₂ і ціну нового' : ''}.`)
-    if (!checkDigitValid(vin.value) && w.region === 'NA') notes.push('Контрольна цифра не сходиться — перевірте VIN.')
-    if (!make) error.value = 'VIN не розпізнано. Знайдіть авто в каталозі.'
+    if (!d.displacementCc && !v.engineCc && fuel !== 'electric') notes.push(t('car.note.nhtsaLimited', { country: w.countryKey ? region(w.countryKey) : w.country }))
+    if (!checkDigitValid(vin.value) && w.region === 'NA') notes.push(t('car.note.checkDigit'))
+    if (!make) error.value = t('car.err.notRecognized')
     vehicle.value = v
   } catch (e) {
-    error.value = `База NHTSA недоступна (${(e as Error).message}). Спробуйте ще раз або знайдіть авто в каталозі.`
+    error.value = t('car.err.nhtsaDown', { error: (e as Error).message })
   } finally {
     loading.value = false
   }
 }
 
-// ---- каталог ----
 const index = ref<CatalogIndex | null>(null)
 const cYear = ref<number | null>(null)
 const cMake = ref('')
@@ -97,10 +106,7 @@ const cLoading = ref(false)
 const makes = computed(() => (cYear.value && index.value ? index.value.makesByYear[String(cYear.value)] ?? [] : []))
 const models = computed(() => (cData.value && cMake.value ? Object.keys(cData.value[cMake.value] ?? {}) : []))
 const versions = computed<CatalogVersion[]>(() => (cData.value && cMake.value && cModel.value ? cData.value[cMake.value]?.[cModel.value] ?? [] : []))
-async function openCatalog() {
-  mode.value = 'catalog'; error.value = ''
-  if (!index.value) index.value = await loadIndex()
-}
+async function openCatalog() { mode.value = 'catalog'; error.value = ''; if (!index.value) index.value = await loadIndex() }
 watch(cYear, async (y) => {
   cMake.value = ''; cModel.value = ''; cVersion.value = -1; cData.value = null
   if (!y) return
@@ -112,12 +118,11 @@ watch(cModel, () => { cVersion.value = versions.value.length === 1 ? 0 : -1 })
 watch(cVersion, (i) => {
   const ver = versions.value[i]
   if (!ver || !cYear.value) return
-  const fuel = versionFuel(ver)
   const v: Vehicle = {
-    ...vehicle.value, vin: undefined, make: cMake.value, model: cModel.value, year: cYear.value, engineCc: ver[0] || undefined, fuel,
+    ...vehicle.value, vin: undefined, make: cMake.value, model: cModel.value, year: cYear.value, engineCc: ver[0] || undefined, fuel: versionFuel(ver),
     powerHp: undefined, batteryKwh: undefined, co2Wltp: undefined, listPriceNewEur: undefined, plantCountry: undefined, drive: ver[5],
     brandTier: tierForMake(cMake.value), marketSpec: props.origin === 'US' ? 'US' : props.origin === 'JP' ? 'JP' : props.origin === 'KR' ? 'KR' : 'EU',
-    decodeNotes: [`Каталог EPA (fueleconomy.gov): ${versionLabel(ver)}${ver[3] ? '. CO₂ за циклом EPA, не WLTP — для Іспанії вкажіть WLTP з COC.' : ''}`],
+    decodeNotes: [t('car.note.catalogPick', { version: versionLabel(ver) }) + (ver[3] ? ' ' + t('car.note.epaCo2') : '')],
   }
   applyReference(v, v.decodeNotes)
   vehicle.value = v
@@ -128,19 +133,19 @@ watch(cVersion, (i) => {
   <div>
     <div class="f">
       <div class="modes">
-        <button type="button" class="mode" :class="{ on: mode === 'vin' }" @click="mode = 'vin'">За VIN</button>
-        <button type="button" class="mode" :class="{ on: mode === 'catalog' }" @click="openCatalog">Знайти в каталозі</button>
-        <Help :text="mode === 'vin' ? 'База NHTSA (США): марка, модель, двигун, завод, ринок. Далі звіряємо з каталогом EPA (усі моделі 1984–2026) і довідником європейських аналогів.' : 'Каталог EPA (fueleconomy.gov): усі моделі, що продавались у США з 1984 по 2026 рік, з двигуном, паливом і CO₂. Європейські моделі, яких не було в США, вводьте самі.'" :source="mode === 'vin' ? { title: 'NHTSA vPIC API', url: 'https://vpic.nhtsa.dot.gov/api/' } : { title: 'EPA fueleconomy.gov — Vehicle data', url: 'https://www.fueleconomy.gov/feg/download.shtml' }" />
+        <button type="button" class="mode" :class="{ on: mode === 'vin' }" @click="mode = 'vin'">{{ t('car.byVin') }}</button>
+        <button type="button" class="mode" :class="{ on: mode === 'catalog' }" @click="openCatalog">{{ t('car.catalog') }}</button>
+        <Help :text="t(mode === 'vin' ? 'car.help.vin' : 'car.help.catalog')" :source="mode === 'vin' ? { title: 'NHTSA vPIC API', url: 'https://vpic.nhtsa.dot.gov/api/' } : { title: 'EPA fueleconomy.gov — Vehicle data', url: 'https://www.fueleconomy.gov/feg/download.shtml' }" />
       </div>
       <div v-if="mode === 'vin'" class="vin-row">
-        <input v-model="vinRaw" class="in mono big" placeholder="VIN · 17 символів" maxlength="20" autocomplete="off" spellcheck="false" @keyup.enter="decode" />
+        <input v-model="vinRaw" class="in mono big" :placeholder="t('car.vinPlaceholder')" maxlength="20" autocomplete="off" spellcheck="false" @keyup.enter="decode" />
         <span v-if="loading" class="spin dark"></span>
       </div>
       <div v-else class="row four">
-        <select v-model="cYear" class="in"><option :value="null" disabled>Рік</option><option v-for="y in index?.years ?? []" :key="y" :value="y">{{ y }}</option></select>
-        <select v-model="cMake" class="in" :disabled="!cYear || cLoading"><option value="" disabled>{{ cLoading ? '…' : 'Марка' }}</option><option v-for="m in makes" :key="m" :value="m">{{ m }}</option></select>
-        <select v-model="cModel" class="in" :disabled="!cMake"><option value="" disabled>Модель</option><option v-for="m in models" :key="m" :value="m">{{ m }}</option></select>
-        <select v-model="cVersion" class="in" :disabled="!cModel"><option :value="-1" disabled>Версія</option><option v-for="(v, i) in versions" :key="v[7]" :value="i">{{ versionLabel(v) }}</option></select>
+        <select v-model="cYear" class="in"><option :value="null" disabled>{{ t('car.year') }}</option><option v-for="y in index?.years ?? []" :key="y" :value="y">{{ y }}</option></select>
+        <select v-model="cMake" class="in" :disabled="!cYear || cLoading"><option value="" disabled>{{ cLoading ? '…' : t('car.make') }}</option><option v-for="m in makes" :key="m" :value="m">{{ m }}</option></select>
+        <select v-model="cModel" class="in" :disabled="!cMake"><option value="" disabled>{{ t('car.model') }}</option><option v-for="m in models" :key="m" :value="m">{{ m }}</option></select>
+        <select v-model="cVersion" class="in" :disabled="!cModel"><option :value="-1" disabled>{{ t('car.version') }}</option><option v-for="(v, i) in versions" :key="v[7]" :value="i">{{ versionLabel(v) }}</option></select>
       </div>
       <p v-if="error" class="err">{{ error }}</p>
     </div>
@@ -152,16 +157,16 @@ watch(cVersion, (i) => {
           <span v-if="vehicle.plantCountry" class="tag">{{ vehicle.plantCountry.toLowerCase() }}</span>
         </div>
         <div class="row four">
-          <div class="f"><label>Рік</label><input v-model.number="vehicle.year" type="number" class="in" min="1980" :max="new Date().getFullYear() + 1" /></div>
-          <div class="f"><label>Паливо</label><select v-model="vehicle.fuel" class="in"><option v-for="f in fuelOptions" :key="f.value" :value="f.value">{{ f.label }}</option></select></div>
-          <div v-if="vehicle.fuel !== 'electric'" class="f"><label>см³ <Help :text="destination === 'UA' ? 'Акциз: ставка в € за літр × вік. 2.0 л = 1 984 см³, не 2 000.' : 'Довідково; на податки в Іспанії об\'єм не впливає.'" /></label><input v-model.number="vehicle.engineCc" type="number" class="in" placeholder="1984" /></div>
-          <div v-if="isElectrified" class="f"><label>кВт·год <Help text="Україна: акциз 1 € за кВт·год ємності батареї." /></label><input v-model.number="vehicle.batteryKwh" type="number" class="in" placeholder="75" /></div>
+          <div class="f"><label>{{ t('car.year') }}</label><input v-model.number="vehicle.year" type="number" class="in" min="1980" :max="new Date().getFullYear() + 1" /></div>
+          <div class="f"><label>{{ t('car.fuel') }}</label><select v-model="vehicle.fuel" class="in"><option v-for="f in fuels" :key="f" :value="f">{{ t(`car.fuel.${f}`) }}</option></select></div>
+          <div v-if="vehicle.fuel !== 'electric'" class="f"><label>{{ t('car.cc') }} <Help :text="t(destination === 'UA' ? 'car.help.ccUa' : destination === 'PL' ? 'car.help.ccPl' : 'car.help.ccOther')" /></label><input v-model.number="vehicle.engineCc" type="number" class="in" placeholder="1984" /></div>
+          <div v-if="isElectrified" class="f"><label>{{ t('car.kwh') }} <Help :text="t('car.help.kwh')" /></label><input v-model.number="vehicle.batteryKwh" type="number" class="in" placeholder="75" /></div>
           <template v-if="forSpain">
-            <div class="f"><label>CO₂ WLTP <Help text="Ставка impuesto de matriculación: до 120 г/км — 0%, 120–160 — 4,75%, 160–200 — 9,75%, від 200 або без сертифікації — 14,75%. З COC або європейського техпаспорта; у US-авто зазвичай відсутній." :source="{ title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }" /></label><input v-model.number="vehicle.co2Wltp" type="number" class="in" placeholder="168" /></div>
-            <div class="f"><label>Ціна нового, € <Help text="Hacienda рахує impuesto de matriculación від табличної ціни нового × коефіцієнт віку, а не від вашої ціни. Без неї беремо вашу ціну." :source="{ title: 'AEAT — Vehículos: valoración', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" /></label><input v-model.number="vehicle.listPriceNewEur" type="number" class="in" placeholder="47150" /></div>
+            <div class="f"><label>{{ t('car.co2') }} <Help :text="t('car.help.co2')" :source="{ title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }" /></label><input v-model.number="vehicle.co2Wltp" type="number" class="in" placeholder="168" /></div>
+            <div class="f"><label>{{ t('car.listPrice') }} <Help :text="t('car.help.listPrice')" :source="{ title: 'AEAT — Vehículos', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" /></label><input v-model.number="vehicle.listPriceNewEur" type="number" class="in" placeholder="47150" /></div>
           </template>
-          <div class="f span"><label>Ринок <Help text="Версія для США/Японії не має європейського COC: в ЄС потрібна індивідуальна омологація і переобладнання світла. За VIN: «ZZZ» на позиціях 4–6 — Європа; правильна контрольна цифра — Північна Америка." /></label>
-            <div class="chips"><button v-for="m in marketOptions" :key="m.value" type="button" class="chip" :class="{ on: vehicle.marketSpec === m.value }" @click="vehicle.marketSpec = m.value">{{ m.label }}</button></div>
+          <div class="f span"><label>{{ t('car.market') }} <Help :text="t('car.help.market')" /></label>
+            <div class="chips"><button v-for="m in markets" :key="m" type="button" class="chip" :class="{ on: vehicle.marketSpec === m }" @click="vehicle.marketSpec = m">{{ t(`car.market.${m}`) }}</button></div>
           </div>
         </div>
       </div>

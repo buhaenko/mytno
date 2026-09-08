@@ -1,96 +1,82 @@
 import type { CalcResult, FxRates, LineItem, RouteInput, Vehicle } from '../../types'
 import rules from '../../data/rules.spain.json'
 import { toEur } from '../fx'
-import { addR, fixed, pct, r, scaleR, span, zero } from '../money'
-import { ageYears, isEuMade, item, nuancesFor, sumItems } from './common'
+import { addR, fixed, r, scaleR, span, zero } from '../money'
+import { ageYears, isEuMade, item, m, nuancesFor, sumItems } from './common'
 
 export function iedmtRate(co2?: number): number {
   if (co2 === undefined || co2 === null || Number.isNaN(co2)) return rules.iedmt.unknownCo2Rate
-  for (const b of rules.iedmt.brackets) {
-    if (b.maxCo2 === null || co2 < b.maxCo2) return b.rate
-  }
+  for (const b of rules.iedmt.brackets) if (b.maxCo2 === null || co2 < b.maxCo2) return b.rate
   return rules.iedmt.unknownCo2Rate
 }
 
 export function depreciation(age: number): number {
-  for (const d of rules.iedmt.depreciation) {
-    if (d.maxYears === null || age <= d.maxYears) return d.pct
-  }
+  for (const d of rules.iedmt.depreciation) if (d.maxYears === null || age <= d.maxYears) return d.pct
   return 0.1
 }
 
 export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date()): CalcResult {
   const price = toEur(i.purchasePrice, i.purchaseCurrency, fx)
-  const freight = toEur(i.freightToBorder || 0, i.purchaseCurrency, fx)
   const items: LineItem[] = []
-  const warnings: string[] = []
-  const nonEuOrigin = i.origin !== 'EU'
+  const warnings = [] as CalcResult['warnings']
+  const nonEu = i.origin !== 'EU'
   const age = ageYears(v, now)
-  const exempt = i.residenceTransfer && nonEuOrigin
+  const exempt = i.residenceTransfer && nonEu
+  const cif = r(price, price, price * 1.15)
+  const relocationSrc = rules.refs.franquicia
 
-  const cif = r(price + freight, price + freight, (price + freight) * 1.15)
-
-  if (nonEuOrigin) {
+  if (nonEu) {
     const duty = exempt ? zero : scaleR(cif, rules.duty)
-    items.push(item('duty', `Мито ${exempt ? '0%' : pct(rules.duty)}`, 'tax', duty, {
-      formula: '10% × CIF (ціна + доставка та страховка до кордону ЄС)',
-      note: exempt ? 'Пільга при переїзді.' : isEuMade(v) ? 'Авто зроблене в ЄС, але «повернення товару» без мита діє лише 3 роки після вивозу з ЄС.' : undefined,
-      source: exempt ? rules.refs.franquicia : rules.refs.duty,
-    }))
+    items.push(item('duty', m('line.duty', { rate: exempt ? 0 : rules.duty * 100 }), 'tax', duty, { formula: '10% × CIF', note: exempt ? m('note.relocation') : isEuMade(v) ? m('note.euMadeReturn') : m('note.dutyNonEu'), source: exempt ? relocationSrc : rules.refs.duty }))
     const vat = exempt ? zero : scaleR(addR(cif, duty), rules.vat)
-    items.push(item('vat', `IVA ${exempt ? '0%' : pct(rules.vat)}`, 'tax', vat, { formula: '21% × (CIF + мито)', note: exempt ? 'Пільга при переїзді.' : 'Канари: IGIC 7% замість IVA.', source: exempt ? rules.refs.franquicia : rules.refs.vat }))
+    items.push(item('vat', m('line.iva', { rate: exempt ? 0 : rules.vat * 100 }), 'tax', vat, { formula: '21% × (CIF + duty)', note: exempt ? m('note.relocation') : m('note.esCanarias'), source: exempt ? relocationSrc : rules.refs.vat }))
   } else {
     const isNew = (v.mileageKm !== undefined && v.mileageKm < 6000) || age < 0.5
-    items.push(item('vat', isNew ? 'IVA 21% (нове авто)' : 'IVA 0%', 'tax', isNew ? scaleR(fixed(price), rules.vat) : zero, {
-      note: isNew ? 'Авто «нове» для ПДВ (< 6 міс або < 6 000 км): IVA платиться в Іспанії.' : 'Вживане авто з ЄС: додаткового ПДВ немає.',
-      source: rules.refs.dgtEu,
-    }))
+    items.push(item('vat', m('line.iva', { rate: isNew ? rules.vat * 100 : 0 }), 'tax', isNew ? scaleR(fixed(price), rules.vat) : zero, { note: m(isNew ? 'note.newVehicleVat' : 'note.usedEuNoVat'), source: rules.refs.dgtEu }))
   }
 
   const knownCo2 = v.co2Wltp !== undefined && v.co2Wltp > 0
-  const isUsSpec = v.marketSpec !== 'EU'
-  const rateLikely = isUsSpec ? rules.iedmt.unknownCo2Rate : iedmtRate(knownCo2 ? v.co2Wltp : undefined)
+  const nonEuSpec = v.marketSpec !== 'EU'
+  const rateLikely = nonEuSpec ? rules.iedmt.unknownCo2Rate : iedmtRate(knownCo2 ? v.co2Wltp : undefined)
   const rateMin = knownCo2 ? iedmtRate(v.co2Wltp) : rateLikely
   const dep = depreciation(age)
   let base: { min: number; likely: number; max: number }
-  let baseNote: string
+  let baseNote
   if (v.listPriceNewEur && v.listPriceNewEur > 0) {
     const gross = v.listPriceNewEur * dep
     base = { min: gross / (1 + rules.vat + rateMin), likely: gross / (1 + rules.vat + rateLikely), max: gross }
-    baseNote = `База: ціна нового ${Math.round(v.listPriceNewEur).toLocaleString('uk-UA')} € × ${pct(dep)} (вік ${age.toFixed(1)} р.) без IVA та IEDMT, що входять у табличну ціну. Точну базу дає сервіс AEAT «Valoración de vehículos».`
+    baseNote = m('note.iedmtBaseTable', { list: Math.round(v.listPriceNewEur).toLocaleString('uk-UA'), dep: Math.round(dep * 100), age: age.toFixed(1) })
   } else {
     base = { min: price * 0.9, likely: price, max: price * 1.3 }
-    baseNote = 'Ціна нового невідома — базою взято вашу ціну. Hacienda може застосувати свої таблиці; вкажіть ціну нового для точності.'
+    baseNote = m('note.iedmtBasePrice')
   }
   const iedmt = exempt ? zero : { min: base.min * rateMin, likely: base.likely * rateLikely, max: base.max * rateLikely }
-  const co2Note = exempt ? 'Пільга при переїзді.' : isUsSpec ? `CO₂ не сертифіковано в ЄС → ${pct(rateLikely)}.${knownCo2 ? ` Якщо лабораторія впише ${v.co2Wltp} г/км WLTP → ${pct(rateMin)}.` : ''}` : `CO₂ ${knownCo2 ? `${v.co2Wltp} г/км WLTP` : 'невідомо'} → ${pct(rateLikely)}.`
-  items.push(item('iedmt', `Impuesto de matriculación ${exempt ? '0%' : pct(rateLikely)}`, 'tax', iedmt, { formula: 'ставка за CO₂ × база', note: `${co2Note} ${baseNote}`, source: rules.refs.iedmt }))
-  if (isUsSpec && !exempt) warnings.push('Без європейської сертифікації CO₂ Hacienda застосовує 14,75%. Лабораторія при омологації іноді вписує WLTP європейського аналога — тоді ставка нижча.')
-  if (!knownCo2 && !isUsSpec) warnings.push('Вкажіть CO₂ (WLTP з COC або техпаспорта): без нього рахуємо 14,75%.')
-  if (exempt) warnings.push('Пільга діє, лише якщо авто у власності ≥ 6 міс до переїзду, ви жили поза ЄС ≥ 12 міс і ввозите протягом 12 міс після зміни резиденції. Якщо ви вже резидент Іспанії і купуєте зараз — не діє.')
+  const co2Note = exempt ? m('note.relocation') : nonEuSpec ? m(knownCo2 ? 'note.iedmtNoCertCo2Alt' : 'note.iedmtNoCert', { rate: rateLikely * 100, co2: v.co2Wltp ?? 0, alt: rateMin * 100 }) : m('note.iedmtCo2', { co2: knownCo2 ? String(v.co2Wltp) : '—', rate: rateLikely * 100 })
+  items.push(item('iedmt', m('line.iedmt', { rate: exempt ? 0 : rateLikely * 100 }), 'tax', iedmt, { formula: 'rate(CO₂) × base', note: m('note.join', { a: co2Note.key, b: baseNote.key }), source: rules.refs.iedmt }))
+  // note.join — спеціальний ключ: UI зʼєднує два повідомлення; параметри для них передаємо окремо
+  items[items.length - 1]!.note = { key: 'join', params: { a: JSON.stringify(co2Note), b: JSON.stringify(baseNote) } }
+  if (nonEuSpec && !exempt) warnings.push(m('warn.esNoCertCo2'))
+  if (!knownCo2 && !nonEuSpec) warnings.push(m('warn.esEnterCo2'))
+  if (exempt) warnings.push(m('warn.relocationConditions'))
 
   const F = rules.fees
   if (v.marketSpec === 'EU') {
-    items.push(item('coc', 'COC', 'fees', span(F.cocFromManufacturerEur), { estimate: true, note: 'Сертифікат відповідності ЄС від виробника за VIN. Якщо є оригінал — 0 €.', source: rules.refs.dgtEu }))
-    items.push(item('ficha', 'Ficha reducida + ITV', 'fees', addR(span(F.fichaReducidaEur), span(F.itvImportEur)), { estimate: true, note: 'Ficha técnica reducida від інженера/лабораторії + ITV імпортного авто (тарифи автономії).', source: rules.refs.dgtEu }))
+    items.push(item('coc', m('line.esCoc'), 'fees', span(F.cocFromManufacturerEur), { estimate: true, note: m('note.esCoc'), source: rules.refs.dgtEu }))
+    items.push(item('ficha', m('line.esFicha'), 'fees', addR(span(F.fichaReducidaEur), span(F.itvImportEur)), { estimate: true, note: m('note.esFicha'), source: rules.refs.dgtEu }))
   } else {
-    items.push(item('homolog', 'Індивідуальна омологація', 'fees', span(F.individualHomologationEur), { estimate: true, note: 'Лабораторія + ficha técnica reducida + інспекція ITV. Обов\'язкова для авто без європейського типового схвалення. 3–8 тижнів.', source: rules.refs.homolog }))
-    items.push(item('itv', 'ITV', 'fees', span(F.itvImportEur), { estimate: true, note: 'Тариф залежить від автономії.', source: rules.refs.dgtNonEu }))
+    items.push(item('homolog', m('line.esHomolog'), 'fees', span(F.individualHomologationEur), { estimate: true, note: m('note.esHomolog'), source: rules.refs.homolog }))
+    items.push(item('itv', m('line.esItv'), 'fees', span(F.itvImportEur), { estimate: true, note: m('note.esItv'), source: rules.refs.dgtNonEu }))
   }
-  items.push(item('dgt', 'Tasa DGT 1.1', 'fees', fixed(F.dgtTasaEur), { source: rules.refs.dgtTasa }))
-  items.push(item('plates', 'Номерні знаки', 'fees', span(F.platesEur), { estimate: true }))
+  items.push(item('dgt', m('line.esDgt'), 'fees', fixed(F.dgtTasaEur), { source: rules.refs.dgtTasa }))
+  items.push(item('plates', m('line.plates'), 'fees', span(F.platesEur), { estimate: true }))
 
   const key = v.marketSpec === 'US' ? 'US_to_EU' : v.marketSpec === 'JP' ? 'JP_to_EU' : ''
-  const nu = key ? nuancesFor(key, v.brandTier) : { list: [], total: zero }
-  if (v.marketSpec === 'JP') warnings.push('Праве кермо в Іспанії реєструють, але потрібні фари під правосторонній рух.')
-  if (i.origin === 'UA') warnings.push('Резидент Іспанії має почати реєстрацію протягом 30 днів після ввезення.')
+  const nu = key ? nuancesFor(key, v.brandTier) : { list: [], mandatory: zero }
+  if (nu.mandatory.max > 0) items.push(item('conversion', m('line.conversionMandatory'), 'fees', nu.mandatory, { estimate: true, note: m('note.conversionMandatory') }))
+  if (v.marketSpec === 'JP') warnings.push(m('warn.rhd'))
+  if (i.origin === 'UA') warnings.push(m('warn.esResident30days'))
 
-  const checklist = [
-    nonEuOrigin ? 'DUA через митного агента, сплата мита та IVA' : 'Договір купівлі та іноземний техпаспорт',
-    v.marketSpec === 'EU' ? 'COC або ficha reducida → ITV → ficha técnica española' : 'Лабораторія (homologación individual) → ITV → ficha técnica española',
-    'Modelo 576 (IEDMT) в AEAT або заява про звільнення (Modelo 06)',
-    'IVTM в ayuntamiento → DGT: tasa 1.1, permiso de circulación → номери',
-  ]
+  const checklist = [m(nonEu ? 'chk.esDua' : 'chk.euIntra'), m(v.marketSpec === 'EU' ? 'chk.esCocPath' : 'chk.esLabPath'), m('chk.es576'), m('chk.esDgt')]
   const taxes = sumItems(items.filter((x) => x.category === 'tax'))
-  return { items, nuances: nu.list, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: cif.likely, meta: { iedmtRate: rateLikely, depreciation: dep, ageYears: Number(age.toFixed(1)) } }
+  return { items, notComputed: [], nuances: nu.list, conversionTotal: nu.mandatory, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: cif.likely, meta: { iedmtRate: rateLikely, depreciation: dep, ageYears: Number(age.toFixed(1)) } }
 }

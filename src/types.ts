@@ -2,7 +2,7 @@ export type Fuel = 'petrol' | 'diesel' | 'hybrid' | 'phev' | 'electric' | 'lpg'
 export type MarketSpec = 'US' | 'EU' | 'JP' | 'KR' | 'OTHER'
 export type BrandTier = 'mass' | 'premium' | 'luxury'
 export type Origin = 'US' | 'EU' | 'UA' | 'JP' | 'KR' | 'OTHER'
-export type Destination = 'UA' | 'ES'
+export type Destination = 'UA' | 'ES' | 'PL' | 'DE' | 'AT' | 'BE' | 'BG' | 'HR' | 'CY' | 'CZ' | 'DK' | 'EE' | 'FI' | 'FR' | 'GR' | 'HU' | 'IE' | 'IT' | 'LV' | 'LT' | 'LU' | 'MT' | 'NL' | 'PT' | 'RO' | 'SK' | 'SI' | 'SE'
 export type Currency = 'EUR' | 'USD' | 'UAH'
 
 export interface Vehicle {
@@ -31,8 +31,6 @@ export interface RouteInput {
   destination: Destination
   purchasePrice: number
   purchaseCurrency: Currency
-  /** Доставка до кордону (входить у митну вартість), у валюті покупки */
-  freightToBorder: number
   /** Є EUR.1 / декларація походження (авто зроблене в ЄС і куплене в ЄС) */
   hasOriginProof: boolean
   /** Іспанія: пільга при переїзді (traslado de residencia) */
@@ -42,13 +40,16 @@ export interface RouteInput {
 export type Range = { min: number; likely: number; max: number }
 export type Category = 'tax' | 'fees'
 
+/** Повідомлення для перекладу: ключ + параметри */
+export interface Msg { key: string; params?: Record<string, string | number> }
+
 export interface LineItem {
   key: string
-  label: string
+  label: Msg
   category: Category
   /** значення в EUR */
   range: Range
-  note?: string
+  note?: Msg
   formula?: string
   /** ринкова оцінка, а не офіційна ставка */
   estimate?: boolean
@@ -57,18 +58,22 @@ export interface LineItem {
 
 export interface Nuance {
   id: string
-  title: string
-  why: string
   required: 'always' | 'likely' | 'sometimes'
   cost: Record<BrandTier, [number, number]>
-  howTo?: string
 }
+export interface CountryInfo { eu: boolean; vat: number; registration: 'computed' | 'none' | 'external'; customs: string }
+
+export interface NotComputed { key: string; source: { title: string; url: string } }
 
 export interface CalcResult {
   items: LineItem[]
+  /** платежі, які існують у країні, але не рахуються тут (посилання на офіційне джерело) */
+  notComputed: NotComputed[]
   nuances: Nuance[]
-  warnings: string[]
-  checklist: string[]
+  warnings: Msg[]
+  checklist: Msg[]
+  /** обов'язкове переобладнання (входить у суму) */
+  conversionTotal: Range
   total: Range
   taxesTotal: Range
   customsValue: number

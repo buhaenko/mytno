@@ -1,4 +1,4 @@
-import type { BrandTier, LineItem, Nuance, Range, Vehicle } from '../../types'
+import type { BrandTier, LineItem, Msg, Nuance, Range, Vehicle } from '../../types'
 import { r, span } from '../money'
 import nuancesData from '../../data/nuances.json'
 
@@ -13,39 +13,25 @@ export function isEuMade(v: Vehicle): boolean {
 }
 
 export function ageYears(v: Vehicle, now = new Date()): number {
-  // приймаємо першу реєстрацію ≈ середина модельного року
   const first = new Date(v.year, 6, 1)
   return Math.max(0, (now.getTime() - first.getTime()) / (365.25 * 24 * 3600 * 1000))
 }
 
-export function nuancesFor(key: string, tier: BrandTier): { list: Nuance[]; total: Range } {
+export const m = (key: string, params?: Record<string, string | number>): Msg => ({ key, params })
+
+/** Нюанси переобладнання: обов'язкові окремо (входять у суму), решта — довідково. */
+export function nuancesFor(key: string, tier: BrandTier): { list: Nuance[]; mandatory: Range } {
   const list = ((nuancesData as unknown as Record<string, Nuance[]>)[key] ?? []) as Nuance[]
-  let min = 0
-  let likely = 0
-  let max = 0
+  let min = 0, likely = 0, max = 0
   for (const n of list) {
+    if (n.required !== 'always') continue
     const [lo, hi] = n.cost[tier]
-    const mid = (lo + hi) / 2
-    max += hi
-    if (n.required === 'always') {
-      min += lo
-      likely += mid
-    } else if (n.required === 'likely') {
-      likely += mid
-    } else {
-      likely += mid * 0.35
-    }
+    min += lo; likely += (lo + hi) / 2; max += hi
   }
-  return { list, total: r(min, likely, max) }
+  return { list, mandatory: r(min, likely, max) }
 }
 
-export function item(
-  key: string,
-  label: string,
-  category: LineItem['category'],
-  range: Range,
-  extra: Partial<Pick<LineItem, 'note' | 'formula' | 'estimate' | 'source'>> = {},
-): LineItem {
+export function item(key: string, label: Msg, category: LineItem['category'], range: Range, extra: Partial<Pick<LineItem, 'note' | 'formula' | 'estimate' | 'source'>> = {}): LineItem {
   return { key, label, category, range, ...extra }
 }
 

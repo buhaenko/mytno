@@ -44,23 +44,28 @@ export function modelYearFromVin(vin: string): number | undefined {
 
 export interface WmiInfo {
   region: 'NA' | 'EU' | 'ASIA' | 'OTHER'
+  /** ISO-код країни (для Intl.DisplayNames), якщо однозначний */
+  countryKey?: string
+  /** запасний підпис, якщо код неоднозначний */
   country: string
 }
 
 export function wmiInfo(vin: string): WmiInfo {
   const c = vin[0] ?? ''
-  if ('12345'.includes(c)) return { region: 'NA', country: c === '2' ? 'Канада' : c === '3' ? 'Мексика' : 'США' }
-  if (c === 'J') return { region: 'ASIA', country: 'Японія' }
-  if (c === 'K') return { region: 'ASIA', country: 'Корея' }
-  if (c === 'L') return { region: 'ASIA', country: 'Китай' }
-  if (c === 'M' || c === 'N' || c === 'P' || c === 'R') return { region: 'ASIA', country: 'Азія' }
+  if ('145'.includes(c)) return { region: 'NA', countryKey: 'US', country: 'US' }
+  if (c === '2') return { region: 'NA', countryKey: 'CA', country: 'CA' }
+  if (c === '3') return { region: 'NA', countryKey: 'MX', country: 'MX' }
+  if (c === 'J') return { region: 'ASIA', countryKey: 'JP', country: 'JP' }
+  if (c === 'K') return { region: 'ASIA', countryKey: 'KR', country: 'KR' }
+  if (c === 'L') return { region: 'ASIA', countryKey: 'CN', country: 'CN' }
+  if (c === 'M' || c === 'N' || c === 'P' || c === 'R') return { region: 'ASIA', country: 'Asia' }
   if ('STUVWXYZ'.includes(c)) {
-    const map: Record<string, string> = { S: 'Велика Британія/Польща', T: 'Чехія/Швейцарія', U: 'Румунія/Словаччина', V: 'Франція/Іспанія', W: 'Німеччина', X: 'Росія/Узбекистан', Y: 'Швеція/Фінляндія/Бельгія', Z: 'Італія' }
-    return { region: 'EU', country: map[c] ?? 'Європа' }
+    const map: Record<string, string> = { S: 'GB/PL', T: 'CZ/CH', U: 'RO/SK', V: 'FR/ES', W: 'DE', X: 'RU/UZ', Y: 'SE/FI/BE', Z: 'IT' }
+    const key = c === 'W' ? 'DE' : c === 'Z' ? 'IT' : undefined
+    return { region: 'EU', countryKey: key, country: map[c] ?? 'EU' }
   }
-  if (c === '9') return { region: 'OTHER', country: 'Бразилія' }
-  if ('678'.includes(c)) return { region: 'OTHER', country: 'Океанія/Аргентина' }
-  return { region: 'OTHER', country: 'Невідомо' }
+  if (c === '9') return { region: 'OTHER', countryKey: 'BR', country: 'BR' }
+  return { region: 'OTHER', country: '—' }
 }
 
 /**
@@ -68,16 +73,16 @@ export function wmiInfo(vin: string): WmiInfo {
  * Евристика: VW-група ставить ZZZ на 4–6 позиціях для не-американських версій;
  * авто для Північної Америки мають правильну контрольну цифру і завод/ринок NA.
  */
-export function detectMarketSpec(vin: string, nhtsaClean: boolean): { spec: MarketSpec; reason: string } {
+export function detectMarketSpec(vin: string, nhtsaClean: boolean): { spec: MarketSpec; reasonKey: string } {
   const w = wmiInfo(vin)
   const hasZZZ = vin.slice(3, 6) === 'ZZZ'
   const cd = checkDigitValid(vin)
-  if (hasZZZ) return { spec: 'EU', reason: 'VIN містить «ZZZ» на позиціях 4–6 — європейська версія (VW Group, не для США).' }
-  if (w.region === 'NA') return { spec: 'US', reason: `Виробник зареєстрований у ${w.country} (перший символ «${vin[0]}»).` }
-  if (w.region === 'ASIA' && vin[0] === 'J' && !cd) return { spec: 'JP', reason: 'Японський VIN без контрольної цифри — версія для Японії/не-США.' }
-  if (w.region === 'ASIA' && vin[0] === 'K' && !cd) return { spec: 'KR', reason: 'Корейський VIN без контрольної цифри — не-американська версія.' }
-  if (cd && nhtsaClean) return { spec: 'US', reason: 'Контрольна цифра сходиться і база NHTSA розпізнала комплектацію — версія для ринку США/Канади.' }
-  if (w.region === 'EU') return { spec: 'EU', reason: `Європейський виробник (${w.country}), контрольної цифри немає — європейська версія.` }
-  if (w.region === 'ASIA') return { spec: 'US', reason: 'Азійський виробник, але VIN з контрольною цифрою — найімовірніше версія для США.' }
-  return { spec: 'OTHER', reason: 'Ринок не визначено за VIN — уточніть вручну.' }
+  if (hasZZZ) return { spec: 'EU', reasonKey: 'specZZZ' }
+  if (w.region === 'NA') return { spec: 'US', reasonKey: 'specNA' }
+  if (w.region === 'ASIA' && vin[0] === 'J' && !cd) return { spec: 'JP', reasonKey: 'specJP' }
+  if (w.region === 'ASIA' && vin[0] === 'K' && !cd) return { spec: 'KR', reasonKey: 'specKR' }
+  if (cd && nhtsaClean) return { spec: 'US', reasonKey: 'specNAcd' }
+  if (w.region === 'EU') return { spec: 'EU', reasonKey: 'specEU' }
+  if (w.region === 'ASIA') return { spec: 'US', reasonKey: 'specAsiaUS' }
+  return { spec: 'OTHER', reasonKey: 'specUnknown' }
 }
