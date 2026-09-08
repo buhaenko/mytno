@@ -16,8 +16,9 @@ const cur = ref<Currency>(props.route.destination === 'UA' ? 'USD' : 'EUR')
 const curOptions: { value: Currency; label: string }[] = [{ value: 'EUR', label: '€' }, { value: 'USD', label: '$' }, { value: 'UAH', label: '₴' }]
 const taxes = computed(() => props.result.items.filter((i) => i.category === 'tax'))
 const fees = computed(() => props.result.items.filter((i) => i.category === 'fees' && i.key !== 'conversion'))
+const conversion = computed(() => props.result.items.find((i) => i.key === 'conversion'))
+const legendLines = computed(() => [t('result.help.nuances'), t('result.notInSum', { tier: t(`result.tier.${props.vehicle.brandTier}`) })])
 const tierCost = (n: { cost: Record<string, [number, number]> }) => n.cost[props.vehicle.brandTier]!
-const optionalNuances = computed(() => props.result.nuances.filter((n) => n.required !== 'always'))
 const refs = computed<Record<string, { title: string; url: string }>>(() => {
   if (props.route.destination === 'UA') return rulesUa.refs
   if (props.route.destination === 'ES') return rulesEs.refs
@@ -60,22 +61,28 @@ const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estim
           <td class="n"><CountUp :value="it.range.likely" :format="money" /></td>
         </tr>
         <template v-if="fees.length || result.nuances.length">
-          <tr class="cat"><td colspan="3">{{ t('result.fees') }} <Help :text="t('result.help.fees') + ' ' + t('result.help.nuances')" /></td></tr>
+          <tr class="cat"><td colspan="3">{{ t('result.fees') }} <Help :text="t('result.help.fees')" /></td></tr>
           <tr v-for="it in fees" :key="it.key">
             <td class="l"><span class="dot red"></span>{{ msg(it.label) }} <Help v-if="it.note || it.source || it.estimate" :lines="helpLines(it)" :source="it.source" /></td>
             <td class="n dim">{{ isRange(it) ? `${money(it.range.min)} – ${money(it.range.max)}` : '' }}</td>
             <td class="n"><CountUp :value="it.range.likely" :format="money" /></td>
           </tr>
-          <tr v-for="n in result.nuances" :key="n.id" :class="{ opt: n.required !== 'always' }">
-            <td class="l"><span class="dot" :class="n.required === 'always' ? 'red' : n.required === 'likely' ? 'amber' : 'grey'" :title="t(`result.legend.${n.required}`)"></span>{{ t(`nuance.${n.id}.title`) }} <Help :text="t(`nuance.${n.id}.why`) + ' ' + t(`result.legend.${n.required}`) + '.'" /></td>
-            <td class="n dim">{{ nuanceCost(tierCost(n)) }}</td>
-            <td class="n"><CountUp v-if="n.required === 'always'" :value="(tierCost(n)[0] + tierCost(n)[1]) / 2" :format="money" /><span v-else class="dim">—</span></td>
-          </tr>
+          <template v-if="conversion">
+            <tr>
+              <td class="l"><span class="dot red"></span>{{ msg(conversion.label) }} <Help :lines="[msg(conversion.note), ...legendLines, t('result.estimateNote')]" /></td>
+              <td class="n dim">{{ isRange(conversion) ? `${money(conversion.range.min)} – ${money(conversion.range.max)}` : '' }}</td>
+              <td class="n"><CountUp :value="conversion.range.likely" :format="money" /></td>
+            </tr>
+            <tr v-for="n in result.nuances" :key="n.id" class="sub" :class="{ opt: n.required !== 'always' }">
+              <td class="l"><span class="dot" :class="n.required === 'always' ? 'red' : n.required === 'likely' ? 'amber' : 'grey'" :title="t(`result.legend.${n.required}`)"></span>{{ t(`nuance.${n.id}.title`) }} <Help :text="t(`nuance.${n.id}.why`) + ' ' + t(`result.legend.${n.required}`) + '.'" /></td>
+              <td class="n dim">{{ nuanceCost(tierCost(n)) }}</td>
+              <td class="n"><CountUp v-if="n.required === 'always'" :value="(tierCost(n)[0] + tierCost(n)[1]) / 2" :format="money" /><span v-else class="dim">—</span></td>
+            </tr>
+          </template>
         </template>
         <tr class="sum"><td>{{ t('result.total') }}</td><td class="n dim">{{ money(result.total.min) }} – {{ money(result.total.max) }}</td><td class="n"><CountUp :value="result.total.likely" :format="money" /></td></tr>
       </tbody>
     </table>
-    <p v-if="optionalNuances.length" class="tiny legend"><span class="li"><span class="dot red"></span>{{ t('result.legend.always') }}</span><span class="li"><span class="dot amber"></span>{{ t('result.legend.likely') }}</span><span class="li"><span class="dot grey"></span>{{ t('result.legend.sometimes') }}</span><span class="li muted">{{ t('result.notInSum', { tier: t(`result.tier.${vehicle.brandTier}`) }) }}</span></p>
     <p class="tiny">{{ t('result.customsValue', { value: money(result.customsValue) }) }} <Help :text="t(route.destination === 'UA' ? 'result.help.customsValueUa' : 'result.help.customsValueEu')" :source="refs.duty" /></p>
 
     <div v-if="result.notComputed.length" class="nc">

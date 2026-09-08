@@ -180,3 +180,7 @@ details .body li { margin: 3px 0; }
 .legend .li { display: inline-flex; align-items: center; white-space: nowrap; }
 .legend .li:last-child { white-space: normal; flex-basis: 100%; }
 .legend .dot { margin-right: 6px; }
+.lines tr.sub td { border-top: 0; padding-top: 2px; padding-bottom: 6px; font-size: 13px; }
+.lines tr.sub td.l { padding-left: 22px; }
+.lines tr.sub .dot { width: 6px; height: 6px; }
+.lines tr.sub + tr:not(.sub) td { border-top: 1px solid var(--line); }
