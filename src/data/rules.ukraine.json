@@ -108,23 +108,23 @@
       "url": "https://zakon.rada.gov.ua/laws/show/2697-20"
     },
     "excise": {
-      "title": "Податковий кодекс, ст. 215.3.5-1 — ставки акцизу на ТЗ (zakon.rada.gov.ua)",
+      "title": "Податковий кодекс України, ст. 215.3.5-1 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/2755-17"
     },
     "vat": {
-      "title": "Податковий кодекс, ст. 193 — ПДВ 20% (zakon.rada.gov.ua)",
+      "title": "Податковий кодекс України, ст. 193 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/2755-17"
     },
     "pension": {
-      "title": "Закон № 400/97-ВР, ст. 4 — збір при першій реєстрації 3/4/5% (zakon.rada.gov.ua)",
+      "title": "Закон № 400/97-ВР, ст. 4 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/400/97-%D0%B2%D1%80"
     },
     "customs": {
-      "title": "Держмитслужба України (customs.gov.ua)",
+      "title": "Державна митна служба України (customs.gov.ua)",
       "url": "https://customs.gov.ua/"
     },
     "fx": {
-      "title": "Офіційний курс НБУ (bank.gov.ua)",
+      "title": "NBU — official exchange rates (bank.gov.ua)",
       "url": "https://bank.gov.ua/ua/markets/exchangerates"
     }
   }

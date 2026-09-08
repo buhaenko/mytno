@@ -1,45 +1,214 @@
 {
   "_note": "Ставки ПДВ: Taxes in Europe Database (Європейська комісія), станом на 1 липня 2025; Румунія 21% з 1 серпня 2025. Митні сайти: офіційний перелік Єврокомісії 'National customs administrations'. Мито на легкові авто з-поза ЄС: TARIC 8703 — 10%.",
-  "vatSource": { "title": "Taxes in Europe Database (Європейська комісія)", "url": "https://ec.europa.eu/taxation_customs/tedb/" },
-  "customsListSource": { "title": "European Commission — National customs administrations", "url": "https://taxation-customs.ec.europa.eu/customs/union-customs-code/national-customs-administrations_en" },
-  "euDutySource": { "title": "TARIC — код 8703 (10%)", "url": "https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp" },
+  "vatSource": {
+    "title": "Taxes in Europe Database (European Commission)",
+    "url": "https://ec.europa.eu/taxation_customs/tedb/"
+  },
+  "customsListSource": {
+    "title": "European Commission — National customs administrations",
+    "url": "https://taxation-customs.ec.europa.eu/customs/union-customs-code/national-customs-administrations_en"
+  },
+  "euDutySource": {
+    "title": "TARIC — heading 8703 (10%)",
+    "url": "https://ec.europa.eu/taxation_customs/dds2/taric/taric_consultation.jsp"
+  },
   "destinations": {
-    "UA": { "eu": false, "vat": 0.20, "registration": "computed", "customs": "https://customs.gov.ua/" },
-    "ES": { "eu": true, "vat": 0.21, "registration": "computed", "customs": "https://www.agenciatributaria.es/" },
-    "PL": { "eu": true, "vat": 0.23, "registration": "computed", "customs": "https://puesc.gov.pl/" },
-    "DE": { "eu": true, "vat": 0.19, "registration": "none", "customs": "https://www.zoll.de" },
-    "AT": { "eu": true, "vat": 0.20, "registration": "external", "customs": "https://www.bmf.gv.at/en.html" },
-    "BE": { "eu": true, "vat": 0.21, "registration": "external", "customs": "https://finances.belgium.be/fr/douanes_accises" },
-    "BG": { "eu": true, "vat": 0.20, "registration": "external", "customs": "https://customs.bg/" },
-    "HR": { "eu": true, "vat": 0.25, "registration": "external", "customs": "https://carina.gov.hr/" },
-    "CY": { "eu": true, "vat": 0.19, "registration": "external", "customs": "https://www.mof.gov.cy/ce" },
-    "CZ": { "eu": true, "vat": 0.21, "registration": "external", "customs": "https://www.celnisprava.gov.cz/" },
-    "DK": { "eu": true, "vat": 0.25, "registration": "external", "customs": "https://www.toldst.dk/" },
-    "EE": { "eu": true, "vat": 0.24, "registration": "external", "customs": "https://www.emta.ee" },
-    "FI": { "eu": true, "vat": 0.255, "registration": "external", "customs": "https://tulli.fi/" },
-    "FR": { "eu": true, "vat": 0.20, "registration": "external", "customs": "https://www.douane.gouv.fr/" },
-    "GR": { "eu": true, "vat": 0.24, "registration": "external", "customs": "https://www.aade.gr/" },
-    "HU": { "eu": true, "vat": 0.27, "registration": "external", "customs": "https://nav.gov.hu/en" },
-    "IE": { "eu": true, "vat": 0.23, "registration": "external", "customs": "https://www.revenue.ie/" },
-    "IT": { "eu": true, "vat": 0.22, "registration": "external", "customs": "https://www.adm.gov.it/portale/" },
-    "LV": { "eu": true, "vat": 0.21, "registration": "external", "customs": "https://www.vid.gov.lv/" },
-    "LT": { "eu": true, "vat": 0.21, "registration": "external", "customs": "https://www.lrmuitine.lt/" },
-    "LU": { "eu": true, "vat": 0.17, "registration": "external", "customs": "https://douanes.public.lu/fr.html" },
-    "MT": { "eu": true, "vat": 0.18, "registration": "external", "customs": "https://customs.gov.mt/" },
-    "NL": { "eu": true, "vat": 0.21, "registration": "external", "customs": "https://www.douane.nl/" },
-    "PT": { "eu": true, "vat": 0.23, "registration": "external", "customs": "https://www.portaldasfinancas.gov.pt/" },
-    "RO": { "eu": true, "vat": 0.21, "registration": "external", "customs": "https://www.customs.ro/ro/" },
-    "SK": { "eu": true, "vat": 0.23, "registration": "external", "customs": "https://www.financnasprava.sk/" },
-    "SI": { "eu": true, "vat": 0.22, "registration": "external", "customs": "https://www.fu.gov.si/" },
-    "SE": { "eu": true, "vat": 0.25, "registration": "external", "customs": "https://www.tullverket.se/" }
+    "UA": {
+      "eu": false,
+      "vat": 0.2,
+      "registration": "computed",
+      "customs": "https://customs.gov.ua/"
+    },
+    "ES": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "computed",
+      "customs": "https://www.agenciatributaria.es/"
+    },
+    "PL": {
+      "eu": true,
+      "vat": 0.23,
+      "registration": "computed",
+      "customs": "https://puesc.gov.pl/"
+    },
+    "DE": {
+      "eu": true,
+      "vat": 0.19,
+      "registration": "none",
+      "customs": "https://www.zoll.de"
+    },
+    "AT": {
+      "eu": true,
+      "vat": 0.2,
+      "registration": "external",
+      "customs": "https://www.bmf.gv.at/en.html"
+    },
+    "BE": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "external",
+      "customs": "https://finances.belgium.be/fr/douanes_accises"
+    },
+    "BG": {
+      "eu": true,
+      "vat": 0.2,
+      "registration": "external",
+      "customs": "https://customs.bg/"
+    },
+    "HR": {
+      "eu": true,
+      "vat": 0.25,
+      "registration": "external",
+      "customs": "https://carina.gov.hr/"
+    },
+    "CY": {
+      "eu": true,
+      "vat": 0.19,
+      "registration": "external",
+      "customs": "https://www.mof.gov.cy/ce"
+    },
+    "CZ": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "external",
+      "customs": "https://www.celnisprava.gov.cz/"
+    },
+    "DK": {
+      "eu": true,
+      "vat": 0.25,
+      "registration": "external",
+      "customs": "https://www.toldst.dk/"
+    },
+    "EE": {
+      "eu": true,
+      "vat": 0.24,
+      "registration": "external",
+      "customs": "https://www.emta.ee"
+    },
+    "FI": {
+      "eu": true,
+      "vat": 0.255,
+      "registration": "external",
+      "customs": "https://tulli.fi/"
+    },
+    "FR": {
+      "eu": true,
+      "vat": 0.2,
+      "registration": "external",
+      "customs": "https://www.douane.gouv.fr/"
+    },
+    "GR": {
+      "eu": true,
+      "vat": 0.24,
+      "registration": "external",
+      "customs": "https://www.aade.gr/"
+    },
+    "HU": {
+      "eu": true,
+      "vat": 0.27,
+      "registration": "external",
+      "customs": "https://nav.gov.hu/en"
+    },
+    "IE": {
+      "eu": true,
+      "vat": 0.23,
+      "registration": "external",
+      "customs": "https://www.revenue.ie/"
+    },
+    "IT": {
+      "eu": true,
+      "vat": 0.22,
+      "registration": "external",
+      "customs": "https://www.adm.gov.it/portale/"
+    },
+    "LV": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "external",
+      "customs": "https://www.vid.gov.lv/"
+    },
+    "LT": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "external",
+      "customs": "https://www.lrmuitine.lt/"
+    },
+    "LU": {
+      "eu": true,
+      "vat": 0.17,
+      "registration": "external",
+      "customs": "https://douanes.public.lu/fr.html"
+    },
+    "MT": {
+      "eu": true,
+      "vat": 0.18,
+      "registration": "external",
+      "customs": "https://customs.gov.mt/"
+    },
+    "NL": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "external",
+      "customs": "https://www.douane.nl/"
+    },
+    "PT": {
+      "eu": true,
+      "vat": 0.23,
+      "registration": "external",
+      "customs": "https://www.portaldasfinancas.gov.pt/"
+    },
+    "RO": {
+      "eu": true,
+      "vat": 0.21,
+      "registration": "external",
+      "customs": "https://www.customs.ro/ro/"
+    },
+    "SK": {
+      "eu": true,
+      "vat": 0.23,
+      "registration": "external",
+      "customs": "https://www.financnasprava.sk/"
+    },
+    "SI": {
+      "eu": true,
+      "vat": 0.22,
+      "registration": "external",
+      "customs": "https://www.fu.gov.si/"
+    },
+    "SE": {
+      "eu": true,
+      "vat": 0.25,
+      "registration": "external",
+      "customs": "https://www.tullverket.se/"
+    }
   },
   "poland": {
-    "source": { "title": "Ustawa o podatku akcyzowym, art. 104–105, 109a, 163a (isap.sejm.gov.pl)", "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20090030011" },
-    "declaration": { "title": "PUESC — podatek akcyzowy za sprowadzony samochód (AKC-US)", "url": "https://puesc.gov.pl/uslugi/podatek-akcyzowy-za-sprowadzony-samochod" },
-    "rates": { "upTo2000": 0.031, "over2000": 0.186, "hybridUpTo2000": 0.0155, "hybrid2000to3500": 0.093, "phevUpTo2000Exempt": true, "phevExemptUntil": "2029-12-31", "electricExempt": true }
+    "source": {
+      "title": "Ustawa o podatku akcyzowym, art. 104–105, 109a, 163a (isap.sejm.gov.pl)",
+      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU20090030011"
+    },
+    "declaration": {
+      "title": "PUESC — podatek akcyzowy za sprowadzony samochód (AKC-US)",
+      "url": "https://puesc.gov.pl/uslugi/podatek-akcyzowy-za-sprowadzony-samochod"
+    },
+    "rates": {
+      "upTo2000": 0.031,
+      "over2000": 0.186,
+      "hybridUpTo2000": 0.0155,
+      "hybrid2000to3500": 0.093,
+      "phevUpTo2000Exempt": true,
+      "phevExemptUntil": "2029-12-31",
+      "electricExempt": true
+    }
   },
   "germany": {
-    "source": { "title": "Zoll — Einfuhrumsatzsteuer (zoll.de)", "url": "https://www.zoll.de/DE/Fachthemen/Steuern/Einfuhrumsatzsteuer/einfuhrumsatzsteuer_node.html" },
-    "relocation": { "title": "Zoll — Übersiedlungsgut (zoll.de)", "url": "https://www.zoll.de/DE/Fachthemen/Zoelle/Zollbefreiungen/Aussertarifliche-Zollbefreiung/Uebersiedlungsgut/Voraussetzungen/voraussetzungen_node.html" }
+    "source": {
+      "title": "Zoll — Einfuhrumsatzsteuer (zoll.de)",
+      "url": "https://www.zoll.de/DE/Fachthemen/Steuern/Einfuhrumsatzsteuer/einfuhrumsatzsteuer_node.html"
+    },
+    "relocation": {
+      "title": "Zoll — Übersiedlungsgut (zoll.de)",
+      "url": "https://www.zoll.de/DE/Fachthemen/Zoelle/Zollbefreiungen/Aussertarifliche-Zollbefreiung/Uebersiedlungsgut/Voraussetzungen/voraussetzungen_node.html"
+    }
   }
 }
