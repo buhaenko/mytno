@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import type { Destination, Fuel, MarketSpec, Origin, Vehicle } from '../types'
 import { checkDigitValid, detectMarketSpec, isValidVinFormat, modelYearFromVin, normalizeVin, wmiInfo } from '../lib/vin'
 import { decodeVin, mapFuel, titleCase } from '../lib/nhtsa'
@@ -50,6 +50,7 @@ function applyReference(v: Vehicle, notes: string[]) {
 }
 
 watch(vin, (v) => { if (isValidVinFormat(v) && v !== vehicle.value.vin) decode() })
+onMounted(() => { if (vehicle.value.vin && !vehicle.value.make) decode() })
 
 async function decode() {
   error.value = ''

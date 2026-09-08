@@ -30,13 +30,12 @@ const msgs = ref<Messages>({})
 const fallback = ref<Messages>({})
 const loaded = ref(false)
 
-/** Order: /uk/… path, ?lang=, saved choice, browser language, geo (optional) */
+/** Order: /uk/… path, ?lang=, browser language, geo (optional) */
 export async function detectLocale(geo?: () => Promise<string | null>): Promise<Locale> {
   const seg = location.pathname.slice(import.meta.env.BASE_URL.length).split('/').filter(Boolean)[0]
   if (isLocale(seg)) return seg
   const q = new URLSearchParams(location.search).get('lang')
   if (isLocale(q)) return q
-  try { const s = localStorage.getItem('lang'); if (isLocale(s)) return s } catch { /* noop */ }
   for (const l of navigator.languages ?? [navigator.language]) {
     const short = l.toLowerCase().split('-')[0]!
     if (isLocale(short)) return short
@@ -45,7 +44,7 @@ export async function detectLocale(geo?: () => Promise<string | null>): Promise<
   return 'en'
 }
 
-export async function setLocale(l: Locale, remember = true) {
+export async function setLocale(l: Locale) {
   const load = loaders[l] ?? loaders.en!
   const [m, f] = await Promise.all([load(), l === 'en' ? Promise.resolve({ default: {} as Messages }) : loaders.en!()])
   msgs.value = m.default
@@ -53,7 +52,6 @@ export async function setLocale(l: Locale, remember = true) {
   locale.value = l
   loaded.value = true
   document.documentElement.lang = l
-  if (remember) { try { localStorage.setItem('lang', l) } catch { /* noop */ } }
 }
 
 export function t(key: string, params?: Record<string, string | number>): string {

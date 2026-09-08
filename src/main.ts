@@ -6,6 +6,6 @@ import { detectLocale, setLocale } from './i18n'
 import { geoCountry } from './lib/share'
 
 detectLocale(geoCountry).then(async (l) => {
-  await setLocale(l, false)
+  await setLocale(l)
   createApp(App).mount('#app')
 })

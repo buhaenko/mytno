@@ -17,7 +17,7 @@ Free, client-side calculator of what it costs to clear customs and register a ca
 ## Share links and the backend
 Share links look like `domain/uk/hr9m`. Codes are stored by a tiny backend in `server/` (Node 24, `node:sqlite`, zero dependencies): `POST /s` → `{code}`, `GET /s/:code`, `GET /geo`, `GET /health`, rate limiting, duplicate de-duplication, hit counter. Run it with `npm run server` (port 8787, database `server/data/links.sqlite`) or the Dockerfile in `server/`. `worker/` holds an equivalent Cloudflare Worker + KV implementation if you prefer serverless. Point the app at it with `VITE_SHARE_API` (`.env.development` already targets `http://localhost:8787`). Without a backend the app falls back to a self-contained `#s=…` link.
 
-State is never lost on reload: the selected countries live in the URL (`?from=LT&to=ES`) and the whole draft is kept in localStorage.
+State is never lost on reload and nothing is stored in the browser: before a result the whole selection is in the URL query (`?from=LT&to=ES&vin=…&price=…`), and as soon as a result exists the address becomes the short code (`/uk/b9q5`). The language is the path prefix.
 
 ## Development
 ```sh

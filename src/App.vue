@@ -8,6 +8,7 @@ import countries from './data/countries.json'
 import { ORIGIN_COUNTRIES, ORIGIN_GROUP } from './data/origins'
 import fxFallback from './data/fx.fallback.json'
 import { LOCALES, LOCALE_NAMES, useI18n, type Locale } from './i18n'
+import { tierForMake } from './lib/models'
 import CarStep from './components/CarStep.vue'
 import ResultView from './components/ResultView.vue'
 import CountrySelect from './components/CountrySelect.vue'
@@ -69,19 +70,56 @@ const showOriginProof = computed(() => destination.value === 'UA' && origin.valu
 const showResidence = computed(() => destination.value !== 'UA' && origin.value !== 'EU')
 
 const shareState = computed(() => ({ v: { ...vehicle.value, decodeNotes: [] }, r: route.value, l: locale.value, oc: originCountry.value }))
-// ---- state in the URL (?from=LT&to=ES) plus a localStorage draft so a reload never loses input ----
-const DRAFT = 'na-nomery:draft'
+// ---- all state lives in the URL: query params before a result, the short share code once one exists ----
 let restoring = true
+const Q = { from: 'from', to: 'to', price: 'price', cur: 'cur', proof: 'proof', reloc: 'reloc' } as const
+function stateQuery(): string {
+  const q = new URLSearchParams()
+  if (originCountry.value) q.set(Q.from, originCountry.value)
+  if (destination.value) q.set(Q.to, destination.value)
+  const v = vehicle.value
+  if (v.vin) q.set('vin', v.vin)
+  if (v.make) { q.set('make', v.make); q.set('model', v.model); q.set('year', String(v.year)); q.set('fuel', v.fuel); q.set('market', v.marketSpec) }
+  if (v.engineCc) q.set('cc', String(v.engineCc))
+  if (v.batteryKwh) q.set('kwh', String(v.batteryKwh))
+  if (v.co2Wltp) q.set('co2', String(v.co2Wltp))
+  if (v.listPriceNewEur) q.set('lp', String(v.listPriceNewEur))
+  if (v.plantCountry) q.set('plant', v.plantCountry)
+  if (v.powerHp) q.set('hp', String(v.powerHp))
+  if (price.value) { q.set(Q.price, String(price.value)); q.set(Q.cur, currency.value) }
+  if (!hasOriginProof.value) q.set(Q.proof, '0')
+  if (residenceTransfer.value) q.set(Q.reloc, '1')
+  const qs = q.toString()
+  return qs ? `?${qs}` : ''
+}
 function syncUrl() {
   if (restoring) return
-  const q = new URLSearchParams()
-  if (originCountry.value) q.set('from', originCountry.value)
-  if (destination.value) q.set('to', destination.value)
-  const qs = q.toString() ? `?${q}` : ''
-  history.replaceState(null, '', `${appUrl(locale.value, '', qs).slice(location.origin.length)}${shareUrl.value ? '' : location.hash.startsWith('#s=') ? '' : location.hash}`)
+  const target = shareUrl.value ? shareUrl.value.slice(location.origin.length) : appUrl(locale.value, '', stateQuery()).slice(location.origin.length)
+  if (location.pathname + location.search + location.hash !== target) history.replaceState(null, '', target)
 }
-watch([originCountry, destination], syncUrl)
-watch(shareState, (st) => { if (restoring) return; try { localStorage.setItem(DRAFT, JSON.stringify(st)) } catch { /* noop */ } }, { deep: true })
+watch([shareState, shareUrl], syncUrl, { deep: true })
+function applyQuery(q: URLSearchParams) {
+  const from = q.get(Q.from), to = q.get(Q.to)
+  if (from && ORIGIN_GROUP[from]) originCountry.value = from
+  if (to && DESTS.includes(to as Destination)) destination.value = to as Destination
+  const num = (k: string) => { const n = Number(q.get(k)); return Number.isFinite(n) && n > 0 ? n : undefined }
+  const v = blankVehicle()
+  v.vin = q.get('vin') ?? undefined
+  v.make = q.get('make') ?? ''; v.model = q.get('model') ?? ''
+  v.year = num('year') ?? v.year
+  const fuel = q.get('fuel'); if (fuel) v.fuel = fuel as Vehicle['fuel']
+  const market = q.get('market'); if (market) v.marketSpec = market as Vehicle['marketSpec']
+  v.engineCc = num('cc'); v.batteryKwh = num('kwh'); v.co2Wltp = num('co2'); v.listPriceNewEur = num('lp'); v.powerHp = num('hp')
+  v.plantCountry = q.get('plant') ?? undefined
+  if (v.make) v.brandTier = tierForMake(v.make)
+  if (v.vin || v.make) vehicle.value = v
+  const p = num(Q.price); if (p) { price.value = p; priceText.value = String(p) }
+  const cur = q.get(Q.cur); if (cur === 'USD' || cur === 'EUR' || cur === 'UAH') currency.value = cur
+  if (q.get(Q.proof) === '0') hasOriginProof.value = false
+  if (q.get(Q.reloc) === '1') residenceTransfer.value = true
+  if (from && to) started.value = true
+}
+
 watch(result, async (r, prev) => {
   if (r && !prev) { await nextTick(); resultEl.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 })
@@ -119,17 +157,7 @@ onMounted(async () => {
   type Shared = { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }
   const shared = await readShared<Shared>()
   if (shared) applyShared(shared)
-  else {
-    let draft: Shared | null = null
-    try { draft = JSON.parse(localStorage.getItem(DRAFT) ?? 'null') } catch { /* noop */ }
-    const q = new URLSearchParams(location.search)
-    const from = q.get('from'), to = q.get('to')
-    if (draft && draft.r && (!from || from === draft.oc) && (!to || to === draft.r.destination)) applyShared(draft)
-    else {
-      if (from && ORIGIN_GROUP[from]) originCountry.value = from
-      if (to && DESTS.includes(to as Destination)) destination.value = to as Destination
-    }
-  }
+  else applyQuery(new URLSearchParams(location.search))
   await nextTick()
   restoring = false
   scheduleShare(0)
