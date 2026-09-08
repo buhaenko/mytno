@@ -133,8 +133,10 @@ watch(cVersion, (i) => {
   <div>
     <div class="f">
       <div class="modes">
-        <button type="button" class="mode" :class="{ on: mode === 'vin' }" @click="mode = 'vin'">{{ t('car.byVin') }}</button>
-        <button type="button" class="mode" :class="{ on: mode === 'catalog' }" @click="openCatalog">{{ t('car.catalog') }}</button>
+        <div class="seg">
+          <button type="button" class="mode" :class="{ on: mode === 'vin' }" @click="mode = 'vin'">{{ t('car.byVin') }}</button>
+          <button type="button" class="mode" :class="{ on: mode === 'catalog' }" @click="openCatalog">{{ t('car.catalog') }}</button>
+        </div>
         <Help :text="t(mode === 'vin' ? 'car.help.vin' : 'car.help.catalog')" :source="mode === 'vin' ? { title: 'NHTSA vPIC API', url: 'https://vpic.nhtsa.dot.gov/api/' } : { title: 'EPA fueleconomy.gov — Vehicle data', url: 'https://www.fueleconomy.gov/feg/download.shtml' }" />
       </div>
       <div v-if="mode === 'vin'" class="vin-row">

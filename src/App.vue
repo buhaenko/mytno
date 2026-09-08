@@ -5,6 +5,7 @@ import { loadFx } from './lib/fx'
 import { calculate } from './lib/calc'
 import { createShareUrl, readShared } from './lib/share'
 import countries from './data/countries.json'
+import { ORIGIN_COUNTRIES, ORIGIN_GROUP } from './data/origins'
 import fxFallback from './data/fx.fallback.json'
 import { LOCALES, LOCALE_NAMES, useI18n, type Locale } from './i18n'
 import CarStep from './components/CarStep.vue'
@@ -15,7 +16,8 @@ import Help from './components/Help.vue'
 const { t, locale, region, setLocale } = useI18n()
 const blankVehicle = (): Vehicle => ({ make: '', model: '', year: new Date().getFullYear() - 5, fuel: 'petrol', marketSpec: 'US', brandTier: 'mass', decodeNotes: [] })
 const vehicle = ref<Vehicle>(blankVehicle())
-const origin = ref<Origin | null>(null)
+const originCountry = ref<string | null>(null)
+const origin = computed<Origin | null>(() => (originCountry.value ? ORIGIN_GROUP[originCountry.value] ?? 'OTHER' : null))
 const destination = ref<Destination | null>(null)
 const price = ref<number>(0)
 const currency = ref<Currency>('USD')
@@ -28,9 +30,13 @@ const shareUrl = ref('')
 const shareBusy = ref(false)
 const copied = ref(false)
 
-const ORIGINS: { value: Origin; flag: string }[] = [{ value: 'US', flag: 'us' }, { value: 'EU', flag: 'eu' }, { value: 'UA', flag: 'ua' }, { value: 'JP', flag: 'jp' }, { value: 'KR', flag: 'kr' }, { value: 'OTHER', flag: 'xx' }]
 const DESTS = Object.keys(countries.destinations) as Destination[]
-const origins = computed(() => ORIGINS.map((o) => ({ value: o.value, flag: o.flag, label: o.value === 'OTHER' ? t('app.origin.OTHER') : region(o.value) })))
+const origins = computed(() => {
+  const list = ORIGIN_COUNTRIES.map((o) => ({ value: o.code, flag: o.code.toLowerCase(), label: region(o.code) }))
+  const first = list.filter((o) => ['US', 'DE', 'PL', 'LT', 'UA', 'JP', 'KR'].includes(o.value))
+  const rest = list.filter((o) => !first.includes(o)).sort((a, b) => a.label.localeCompare(b.label, locale.value))
+  return [...first, ...rest]
+})
 const destinations = computed(() => {
   const list = DESTS.map((d) => ({ value: d, flag: d.toLowerCase(), label: region(d), disabled: origin.value === 'UA' && d === 'UA' }))
   const first = list.filter((d) => d.value === 'UA' || d.value === 'ES' || d.value === 'PL' || d.value === 'DE')
@@ -41,9 +47,9 @@ const currencies: Currency[] = ['USD', 'EUR', 'UAH']
 
 const routeChosen = computed(() => !!origin.value && !!destination.value)
 watch(routeChosen, (v) => { if (v) setTimeout(() => (started.value = true), 250) })
-watch(origin, (o) => {
-  currency.value = o === 'US' ? 'USD' : 'EUR'
-  if (o === 'UA' && destination.value === 'UA') destination.value = null
+watch(originCountry, (c) => {
+  currency.value = c === 'US' || c === 'CA' ? 'USD' : c === 'UA' ? 'UAH' : 'EUR'
+  if (origin.value === 'UA' && destination.value === 'UA') destination.value = null
 })
 
 const route = computed<RouteInput | null>(() => (origin.value && destination.value
@@ -54,7 +60,7 @@ const result = computed<CalcResult | null>(() => (route.value && vehicleReady.va
 const showOriginProof = computed(() => destination.value === 'UA' && origin.value === 'EU')
 const showResidence = computed(() => destination.value !== 'UA' && origin.value !== 'EU')
 
-const shareState = computed(() => ({ v: { ...vehicle.value, decodeNotes: [] }, r: route.value, l: locale.value }))
+const shareState = computed(() => ({ v: { ...vehicle.value, decodeNotes: [] }, r: route.value, l: locale.value, oc: originCountry.value }))
 watch(result, async (r, prev) => {
   shareUrl.value = ''
   if (r && !prev) { await nextTick(); resultEl.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
@@ -68,10 +74,10 @@ async function share() {
     try { await navigator.clipboard.writeText(shareUrl.value); copied.value = true; setTimeout(() => (copied.value = false), 2000) } catch { /* noop */ }
   } finally { shareBusy.value = false }
 }
-function applyShared(s: { v?: Vehicle; r?: RouteInput; l?: Locale }) {
+function applyShared(s: { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }) {
   if (!s.v || !s.r) return
   vehicle.value = { ...blankVehicle(), ...s.v }
-  origin.value = s.r.origin; destination.value = s.r.destination; price.value = s.r.purchasePrice; currency.value = s.r.purchaseCurrency
+  originCountry.value = s.oc ?? (s.r.origin === 'EU' ? 'DE' : s.r.origin === 'OTHER' ? 'GB' : s.r.origin); destination.value = s.r.destination; price.value = s.r.purchasePrice; currency.value = s.r.purchaseCurrency
   hasOriginProof.value = s.r.hasOriginProof; residenceTransfer.value = s.r.residenceTransfer
   started.value = true
 }
@@ -81,7 +87,7 @@ async function changeLocale(l: Locale) {
   history.replaceState(null, '', `${base}${l === 'en' ? '' : l + '/'}${location.hash}`)
 }
 onMounted(async () => {
-  const shared = await readShared<{ v?: Vehicle; r?: RouteInput; l?: Locale }>()
+  const shared = await readShared<{ v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }>()
   if (shared) applyShared(shared)
   Object.assign(fx, await loadFx())
 })
@@ -100,7 +106,7 @@ onMounted(async () => {
         <p>{{ t('app.tagline') }}</p>
       </div>
       <div class="route">
-        <CountrySelect v-model="origin" :options="origins" :placeholder="t('app.from')" />
+        <CountrySelect v-model="originCountry" :options="origins" :placeholder="t('app.from')" />
         <svg class="arrow" viewBox="0 0 24 12" width="24" height="12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
         <CountrySelect v-model="destination" :options="destinations" :placeholder="t('app.to')" />
       </div>
@@ -133,6 +139,6 @@ onMounted(async () => {
       </section>
     </Transition>
 
-    <p v-if="!result" class="foot center">{{ t('app.foot', { date: fx.date }) }}</p>
+    <p v-if="!started" class="foot center">{{ t('app.foot', { date: fx.date }) }}</p>
   </div>
 </template>
