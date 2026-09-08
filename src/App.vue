@@ -83,17 +83,25 @@ function syncUrl() {
 watch([originCountry, destination], syncUrl)
 watch(shareState, (st) => { if (restoring) return; try { localStorage.setItem(DRAFT, JSON.stringify(st)) } catch { /* noop */ } }, { deep: true })
 watch(result, async (r, prev) => {
-  shareUrl.value = ''
   if (r && !prev) { await nextTick(); resultEl.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 })
-async function share() {
-  if (shareBusy.value) return
+// The share link is generated automatically (debounced) as soon as a result exists; clicking the field copies it.
+let shareTimer = 0
+let shareSeq = 0
+watch([result, shareState], ([r]) => {
+  shareUrl.value = ''
+  clearTimeout(shareTimer)
+  if (!r || restoring) return
+  const seq = ++shareSeq
   shareBusy.value = true
-  try {
-    shareUrl.value = await createShareUrl(shareState.value, locale.value)
-    history.replaceState(null, '', shareUrl.value.slice(location.origin.length))
-    try { await navigator.clipboard.writeText(shareUrl.value); copied.value = true; setTimeout(() => (copied.value = false), 2000) } catch { /* noop */ }
-  } finally { shareBusy.value = false }
+  shareTimer = window.setTimeout(async () => {
+    const url = await createShareUrl(shareState.value, locale.value)
+    if (seq === shareSeq) { shareUrl.value = url; shareBusy.value = false }
+  }, 500)
+}, { deep: true })
+async function copyShare() {
+  if (!shareUrl.value) return
+  try { await navigator.clipboard.writeText(shareUrl.value); copied.value = true; setTimeout(() => (copied.value = false), 1500) } catch { /* noop */ }
 }
 function applyShared(s: { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }) {
   if (!s.v || !s.r) return
@@ -164,10 +172,12 @@ onMounted(async () => {
 
     <Transition name="rise">
       <section v-if="result && route" ref="resultEl" class="s result">
-        <ResultView :result="result" :vehicle="vehicle" :route="route" :fx="fx" @share="share">
+        <ResultView :result="result" :vehicle="vehicle" :route="route" :fx="fx">
           <template #share>
-            <button type="button" class="btn" :disabled="shareBusy" @click="share">{{ copied ? t('result.copied') : t('result.share') }}</button>
-            <Transition name="rise"><input v-if="shareUrl" class="in mono-url" :value="shareUrl" readonly @focus="($event.target as HTMLInputElement).select()" /></Transition>
+            <label class="sharebox" :class="{ done: copied }" @click="copyShare">
+              <span class="k">{{ copied ? t('result.copied') : t('result.share') }}</span>
+              <input class="in mono-url" :value="shareUrl || '…'" readonly @focus="($event.target as HTMLInputElement).select()" />
+            </label>
           </template>
         </ResultView>
       </section>

@@ -184,3 +184,8 @@ details .body li { margin: 3px 0; }
 .lines tr.sub td.l { padding-left: 22px; }
 .lines tr.sub .dot { width: 6px; height: 6px; }
 .lines tr.sub + tr:not(.sub) td { border-top: 1px solid var(--line); }
+.sharebox { display: flex; flex-direction: column; gap: 4px; width: 100%; cursor: copy; }
+.sharebox .k { font-size: 11.5px; font-weight: 600; color: var(--muted); transition: color .15s; }
+.sharebox.done .k { color: #1a9c5b; }
+.sharebox .mono-url { cursor: copy; }
+.sharebox:hover .mono-url { border-color: var(--text); }

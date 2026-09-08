@@ -10,7 +10,6 @@ import Help from './Help.vue'
 import CountUp from './CountUp.vue'
 
 const props = defineProps<{ result: CalcResult; vehicle: Vehicle; route: RouteInput; fx: FxRates }>()
-const emit = defineEmits<{ share: [] }>()
 const { t } = useI18n()
 const cur = ref<Currency>(props.route.destination === 'UA' ? 'USD' : 'EUR')
 const curOptions: { value: Currency; label: string }[] = [{ value: 'EUR', label: '€' }, { value: 'USD', label: '$' }, { value: 'UAH', label: '₴' }]
@@ -94,6 +93,6 @@ const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estim
     <details><summary>{{ t('result.steps') }}</summary><ol class="body"><li v-for="(c, i) in result.checklist" :key="i">{{ msg(c) }}</li></ol></details>
     <details><summary>{{ t('result.sources') }}</summary><ul class="body"><li v-for="(r, k) in refs" :key="k"><a :href="r.url" target="_blank" rel="noopener">{{ r.title }}</a></li><li><a :href="fxRef.url" target="_blank" rel="noopener">{{ t('result.fx', { date: fx.date, usd: fx.usdUah.toFixed(2), eur: fx.eurUah.toFixed(2) }) }}</a></li></ul></details>
 
-    <div class="share"><slot name="share"><button type="button" class="btn" @click="emit('share')">{{ t('result.share') }}</button></slot></div>
+    <div class="share"><slot name="share"></slot></div>
   </div>
 </template>
