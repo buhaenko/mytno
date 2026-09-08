@@ -12,8 +12,7 @@ const audi: Vehicle = {
   marketSpec: 'US', plantCountry: 'GERMANY', brandTier: 'premium', co2Wltp: 168, listPriceNewEur: 47150, decodeNotes: [],
 }
 const baseRoute: RouteInput = {
-  origin: 'US', destination: 'UA', purchasePrice: 10000, purchaseCurrency: 'USD', boughtFrom: 'auction', hasOriginProof: true,
-  residenceTransfer: false, salvage: false, repairBudget: 0, delivery: 'auto', usInland: 'near',
+  origin: 'US', destination: 'UA', purchasePrice: 10000, purchaseCurrency: 'USD', freightToBorder: 1500, hasOriginProof: true, residenceTransfer: false,
 }
 
 describe('VIN', () => {
@@ -46,12 +45,14 @@ describe('Ukraine 2026', () => {
   })
   it('US → UA: duty 10%, VAT on value+duty+excise', () => {
     const res = calcUkraine(audi, baseRoute, fx, now)
+    expect(res.customsValue).toBeCloseTo((11500 * fx.usdUah) / fx.eurUah, 2)
     const duty = res.items.find((i) => i.key === 'duty')!
     const vat = res.items.find((i) => i.key === 'vat')!
     expect(duty.range.likely).toBeCloseTo(res.customsValue * 0.1, 2)
     const excise = 50 * 1.984 * 8
     expect(vat.range.likely).toBeCloseTo((res.customsValue + duty.range.likely + excise) * 0.2, 2)
     expect(res.total.likely).toBeGreaterThan(res.taxesTotal.likely)
+    expect(res.items.map((x) => x.category)).not.toContain('logistics')
   })
   it('EU-made + EU purchase + proof → duty 0; without proof → 10%', () => {
     const a = calcUkraine(audi, { ...baseRoute, origin: 'EU', purchaseCurrency: 'EUR' }, fx, now)
@@ -75,7 +76,7 @@ describe('Spain 2026', () => {
     expect(depreciation(20)).toBe(0.1)
   })
   it('UA → ES, 10 000 €: duty 10%, IVA 21% on CIF+duty, IEDMT 14.75% for US spec', () => {
-    const res = calcSpain(audi, { ...baseRoute, origin: 'UA', destination: 'ES', purchaseCurrency: 'EUR', boughtFrom: 'private' }, fx, now)
+    const res = calcSpain(audi, { ...baseRoute, origin: 'UA', destination: 'ES', purchaseCurrency: 'EUR', freightToBorder: 800 }, fx, now)
     const duty = res.items.find((i) => i.key === 'duty')!
     const vat = res.items.find((i) => i.key === 'vat')!
     const iedmt = res.items.find((i) => i.key === 'iedmt')!
@@ -85,17 +86,17 @@ describe('Spain 2026', () => {
     // база: 47150 × 0.19 / (1 + 0.21 + 0.1475)
     expect(iedmt.range.likely).toBeCloseTo(((47150 * 0.19) / 1.3575) * 0.1475, 0)
     expect(res.items.some((i) => i.key === 'homolog')).toBe(true)
-    expect(res.items.some((i) => i.key === 'conversion')).toBe(true)
+    expect(res.nuances.length).toBeGreaterThan(0)
     expect(res.taxesTotal.likely).toBeGreaterThan(4000)
     expect(res.taxesTotal.likely).toBeLessThan(5500)
   })
   it('EU spec from EU: no duty/IVA, COC path, lower IEDMT by CO2', () => {
-    const res = calcSpain({ ...audi, marketSpec: 'EU' }, { ...baseRoute, origin: 'EU', destination: 'ES', purchaseCurrency: 'EUR', boughtFrom: 'private' }, fx, now)
+    const res = calcSpain({ ...audi, marketSpec: 'EU' }, { ...baseRoute, origin: 'EU', destination: 'ES', purchaseCurrency: 'EUR', freightToBorder: 0 }, fx, now)
     expect(res.items.find((i) => i.key === 'duty')).toBeUndefined()
     expect(res.items.find((i) => i.key === 'vat')!.range.likely).toBe(0)
     expect(res.meta.iedmtRate).toBe(0.0975)
     expect(res.items.some((i) => i.key === 'coc')).toBe(true)
-    expect(res.items.some((i) => i.key === 'conversion')).toBe(false)
+    expect(res.nuances.length).toBe(0)
   })
   it('residence transfer zeroes duty, IVA and IEDMT', () => {
     const res = calcSpain(audi, { ...baseRoute, origin: 'UA', destination: 'ES', purchaseCurrency: 'EUR', residenceTransfer: true }, fx, now)

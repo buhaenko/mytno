@@ -19,7 +19,7 @@ export interface Vehicle {
   plantCountry?: string
   body?: string
   drive?: string
-  /** Ціна нового в Іспанії (для бази impuesto de matriculación) */
+  /** Ціна нового в Іспанії (база impuesto de matriculación) */
   listPriceNewEur?: number
   brandTier: BrandTier
   mileageKm?: number
@@ -31,22 +31,16 @@ export interface RouteInput {
   destination: Destination
   purchasePrice: number
   purchaseCurrency: Currency
-  boughtFrom: 'auction' | 'dealer' | 'private'
+  /** Доставка до кордону (входить у митну вартість), у валюті покупки */
+  freightToBorder: number
   /** Є EUR.1 / декларація походження (авто зроблене в ЄС і куплене в ЄС) */
   hasOriginProof: boolean
   /** Іспанія: пільга при переїзді (traslado de residencia) */
   residenceTransfer: boolean
-  /** Іспанія: авто «нове» для ПДВ (< 6 міс або < 6000 км) */
-  salvage: boolean
-  repairBudget: number
-  delivery: 'auto' | 'self'
-  /** США: штат близько до порту (east coast) чи далеко */
-  usInland: 'near' | 'far'
 }
 
 export type Range = { min: number; likely: number; max: number }
-
-export type Category = 'tax' | 'logistics' | 'compliance' | 'fees' | 'repair'
+export type Category = 'tax' | 'fees'
 
 export interface LineItem {
   key: string
@@ -56,9 +50,8 @@ export interface LineItem {
   range: Range
   note?: string
   formula?: string
-  /** true, якщо це прогноз/оцінка, а не фіксована ставка */
+  /** ринкова оцінка, а не офіційна ставка */
   estimate?: boolean
-  /** офіційне джерело ставки */
   source?: { title: string; url: string }
 }
 
@@ -83,11 +76,8 @@ export interface CalcResult {
 }
 
 export interface FxRates {
-  /** UAH за 1 USD */
   usdUah: number
-  /** UAH за 1 EUR */
   eurUah: number
-  /** дата курсу */
   date: string
   source: 'nbu' | 'fallback'
 }
