@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Carina 0% velja samo za avtomobile, izdelane v EU, z dokazilom o poreklu. Za račune do 6 000 € zadostuje izjava prodajalca na računu.',
   'nuance.eu-export-plates.title': 'Tranzitne (izvozne) tablice',
   'nuance.eu-export-plates.why': 'Nemčija: Ausfuhrkennzeichen + zavarovanje za 5–30 dni; Poljska/Litva podobno. Brez njih avtomobila ni mogoče odpeljati.',
+  'notice.intraEuUsed': 'Rabljen avtomobil iz države EU: ni carine in DDV, zato cena ne vpliva na znesek. Plačata se le nacionalni davek na registracijo (tu ni izračunan, glejte vir) in pristojbine za registracijo.',
+  'notice.relocation': 'Selitev: ni carine, DDV in davka na registracijo, zato cena ne vpliva na znesek.',
 } as Record<string, string>

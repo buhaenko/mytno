@@ -195,4 +195,6 @@ export default {
   'nuance.eu-origin-proof.why': 'El arancel 0 % solo aplica a coches fabricados en la UE con prueba de origen. Para facturas de hasta 6 000 € basta la declaración del vendedor en la factura.',
   'nuance.eu-export-plates.title': 'Placas de tránsito (exportación)',
   'nuance.eu-export-plates.why': 'Alemania: Ausfuhrkennzeichen + seguro de 5–30 días; Polonia/Lituania similar. Sin ellas el coche no puede salir por carretera.',
+  'notice.intraEuUsed': 'Coche usado de un país de la UE: no hay arancel ni IVA, por eso el precio no afecta al total. Solo se pagan el impuesto de matriculación nacional (no calculado aquí, véase la fuente) y las tasas de matriculación.',
+  'notice.relocation': 'Traslado de residencia: sin arancel, IVA ni impuesto de matriculación, por eso el precio no afecta al total.',
 } as Record<string, string>

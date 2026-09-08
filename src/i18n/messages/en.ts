@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0% duty applies only to cars manufactured in the EU with proof of origin. For invoices up to €6,000 a seller’s declaration on the invoice is enough.',
   'nuance.eu-export-plates.title': 'Transit (export) plates',
   'nuance.eu-export-plates.why': 'Germany: Ausfuhrkennzeichen + insurance for 5–30 days; Poland/Lithuania similar. Without them the car cannot be driven out.',
+  'notice.intraEuUsed': 'Used car from an EU country: no customs duty or VAT, so the price does not affect the total. Only the national registration tax (not computed here, see the source) and registration fees apply.',
+  'notice.relocation': 'Relocation relief: no duty, VAT or registration tax, so the price does not affect the total.',
 } as Record<string, string>

@@ -189,3 +189,4 @@ details .body li { margin: 3px 0; }
 .sharebox.done .k { color: #1a9c5b; }
 .sharebox .mono-url { cursor: copy; }
 .sharebox:hover .mono-url { border-color: var(--text); }
+.notice { margin-top: 12px; padding: 10px 12px; border-radius: 8px; background: #f4f5f7; font-size: 13px; color: var(--text); }

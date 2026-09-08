@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Clo 0 % sa vzťahuje len na autá vyrobené v EÚ s dokladom o pôvode. Pri faktúrach do 6 000 € stačí vyhlásenie predajcu na faktúre.',
   'nuance.eu-export-plates.title': 'Prevozné (vývozné) tabuľky',
   'nuance.eu-export-plates.why': 'Nemecko: Ausfuhrkennzeichen + poistenie na 5–30 dní; Poľsko/Litva podobne. Bez nich auto nemožno vyviezť po vlastnej osi.',
+  'notice.intraEuUsed': 'Ojazdené auto z krajiny EÚ: žiadne clo ani DPH, cena preto celkovú sumu neovplyvňuje. Platí sa len národná registračná daň (tu sa nepočíta, pozri zdroj) a registračné poplatky.',
+  'notice.relocation': 'Sťahovanie: žiadne clo, DPH ani registračná daň, cena preto celkovú sumu neovplyvňuje.',
 } as Record<string, string>

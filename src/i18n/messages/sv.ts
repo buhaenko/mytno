@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0 % tull gäller endast bilar tillverkade i EU med ursprungsintyg. För fakturor upp till 6 000 € räcker säljarens deklaration på fakturan.',
   'nuance.eu-export-plates.title': 'Transitskyltar (exportskyltar)',
   'nuance.eu-export-plates.why': 'Tyskland: Ausfuhrkennzeichen + försäkring för 5–30 dagar; Polen/Litauen liknande. Utan dem får bilen inte köras ut ur landet.',
+  'notice.intraEuUsed': 'Begagnad bil från ett EU-land: ingen tull eller moms, så priset påverkar inte summan. Endast den nationella registreringsskatten (beräknas inte här, se källan) och registreringsavgifter tillkommer.',
+  'notice.relocation': 'Flyttsakslättnad: ingen tull, moms eller registreringsskatt, så priset påverkar inte summan.',
 } as Record<string, string>

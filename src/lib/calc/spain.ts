@@ -70,6 +70,7 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
   items.push(item('dgt', m('line.esDgt'), 'fees', fixed(F.dgtTasaEur), { source: rules.refs.dgtTasa }))
   items.push(item('plates', m('line.plates'), 'fees', span(F.platesEur), { estimate: true }))
 
+  const notice = !nonEu && !((v.mileageKm !== undefined && v.mileageKm < 6000) || age < 0.5) ? m('notice.intraEuUsed') : exempt ? m('notice.relocation') : undefined
   const key = v.marketSpec === 'US' ? 'US_to_EU' : v.marketSpec === 'JP' ? 'JP_to_EU' : ''
   const nu = key ? nuancesFor(key, v.brandTier) : { list: [], mandatory: zero }
   if (nu.mandatory.max > 0) items.push(item('conversion', m('line.conversionMandatory'), 'fees', nu.mandatory, { estimate: true, note: m('note.conversionMandatory') }))
@@ -78,5 +79,5 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
 
   const checklist = [m(nonEu ? 'chk.esDua' : 'chk.euIntra'), m(v.marketSpec === 'EU' ? 'chk.esCocPath' : 'chk.esLabPath'), m('chk.es576'), m('chk.esDgt')]
   const taxes = sumItems(items.filter((x) => x.category === 'tax'))
-  return { items, notComputed: [], nuances: nu.list, conversionTotal: nu.mandatory, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: cif.likely, meta: { iedmtRate: rateLikely, depreciation: dep, ageYears: Number(age.toFixed(1)) } }
+  return { items, notComputed: [], nuances: nu.list, conversionTotal: nu.mandatory, notice, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: cif.likely, meta: { iedmtRate: rateLikely, depreciation: dep, ageYears: Number(age.toFixed(1)) } }
 }

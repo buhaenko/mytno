@@ -51,6 +51,8 @@ const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estim
       <div class="r"><CountUp :value="result.total.min" :format="money" /> – <CountUp :value="result.total.max" :format="money" /></div>
     </div>
 
+    <p v-if="result.notice" class="notice">{{ msg(result.notice) }}</p>
+
     <table class="lines">
       <tbody>
         <tr class="cat"><td colspan="3">{{ t('result.taxes') }} <Help :text="t('result.help.taxes')" /></td></tr>

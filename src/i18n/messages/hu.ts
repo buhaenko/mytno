@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': 'A 0% vám csak az EU-ban gyártott, származási igazolással rendelkező autókra vonatkozik. A 6 000 € alatti számláknál elegendő az eladó számlán tett nyilatkozata.',
   'nuance.eu-export-plates.title': 'Tranzit (kiviteli) rendszám',
   'nuance.eu-export-plates.why': 'Németország: Ausfuhrkennzeichen + biztosítás 5–30 napra; Lengyelország/Litvánia hasonlóan. Ezek nélkül az autó nem hajtható ki az országból.',
+  'notice.intraEuUsed': 'Használt autó EU-tagországból: nincs vám és áfa, ezért az ár nem befolyásolja a végösszeget. Csak a nemzeti regisztrációs adó (itt nem számoljuk, lásd a forrást) és a forgalomba helyezési díjak fizetendők.',
+  'notice.relocation': 'Költözési kedvezmény: nincs vám, áfa és regisztrációs adó, ezért az ár nem befolyásolja a végösszeget.',
 } as Record<string, string>

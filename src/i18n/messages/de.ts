@@ -195,4 +195,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Zoll 0 % gilt nur für in der EU hergestellte Fahrzeuge mit Ursprungsnachweis. Bei Rechnungen bis 6 000 € genügt die Erklärung des Verkäufers auf der Rechnung.',
   'nuance.eu-export-plates.title': 'Ausfuhrkennzeichen',
   'nuance.eu-export-plates.why': 'Deutschland: Ausfuhrkennzeichen + Versicherung für 5–30 Tage; Polen/Litauen ähnlich. Ohne sie darf das Fahrzeug nicht auf eigener Achse ausreisen.',
+  'notice.intraEuUsed': 'Gebrauchtwagen aus einem EU-Land: kein Zoll und keine Mehrwertsteuer, daher beeinflusst der Preis die Summe nicht. Es fallen nur die nationale Zulassungssteuer (hier nicht berechnet, siehe Quelle) und Zulassungsgebühren an.',
+  'notice.relocation': 'Übersiedlungsgut: kein Zoll, keine Mehrwertsteuer und keine Zulassungssteuer, daher beeinflusst der Preis die Summe nicht.',
 } as Record<string, string>

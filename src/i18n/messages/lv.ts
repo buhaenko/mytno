@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0 % muitas nodoklis attiecas tikai uz ES ražotām automašīnām ar izcelsmes apliecinājumu. Rēķiniem līdz 6 000 € pietiek ar pārdevēja deklarāciju rēķinā.',
   'nuance.eu-export-plates.title': 'Tranzīta (eksporta) numura zīmes',
   'nuance.eu-export-plates.why': 'Vācija: Ausfuhrkennzeichen + apdrošināšana 5–30 dienām; Polija/Lietuva līdzīgi. Bez tām ar automašīnu nevar izbraukt no valsts.',
+  'notice.intraEuUsed': 'Lietots auto no ES valsts: nav muitas nodokļa un PVN, tāpēc cena summu neietekmē. Jāmaksā tikai valsts reģistrācijas nodoklis (šeit netiek aprēķināts, sk. avotu) un reģistrācijas nodevas.',
+  'notice.relocation': 'Pārcelšanās atvieglojums: nav muitas nodokļa, PVN un reģistrācijas nodokļa, tāpēc cena summu neietekmē.',
 } as Record<string, string>

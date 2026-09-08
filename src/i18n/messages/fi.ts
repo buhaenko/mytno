@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0 %:n tulli koskee vain EU:ssa valmistettuja autoja alkuperäselvityksellä. Enintään 6 000 €:n laskuissa myyjän ilmoitus laskulla riittää.',
   'nuance.eu-export-plates.title': 'Siirto- (vienti-) kilvet',
   'nuance.eu-export-plates.why': 'Saksa: Ausfuhrkennzeichen + vakuutus 5–30 päiväksi; Puola/Liettua vastaavasti. Ilman niitä autolla ei voi ajaa maasta pois.',
+  'notice.intraEuUsed': 'Käytetty auto EU-maasta: ei tullia eikä arvonlisäveroa, joten hinta ei vaikuta summaan. Maksettavaksi tulevat vain kansallinen rekisteröintivero (ei lasketa tässä, ks. lähde) ja rekisteröintimaksut.',
+  'notice.relocation': 'Muuttotavarahuojennus: ei tullia, arvonlisäveroa eikä rekisteröintiveroa, joten hinta ei vaikuta summaan.',
 } as Record<string, string>

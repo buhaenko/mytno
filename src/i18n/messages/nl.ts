@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0 % invoerrechten geldt alleen voor in de EU vervaardigde auto’s met bewijs van oorsprong. Voor facturen tot € 6.000 volstaat een verklaring van de verkoper op de factuur.',
   'nuance.eu-export-plates.title': 'Transit- (export)kentekenplaten',
   'nuance.eu-export-plates.why': 'Duitsland: Ausfuhrkennzeichen + verzekering voor 5–30 dagen; Polen/Litouwen vergelijkbaar. Zonder deze platen mag de auto het land niet uitrijden.',
+  'notice.intraEuUsed': 'Gebruikte auto uit een EU-land: geen invoerrechten of btw, dus de prijs heeft geen invloed op het totaal. Alleen de nationale registratiebelasting (hier niet berekend, zie de bron) en registratiekosten zijn verschuldigd.',
+  'notice.relocation': 'Verhuisboedel: geen invoerrechten, btw of registratiebelasting, dus de prijs heeft geen invloed op het totaal.',
 } as Record<string, string>

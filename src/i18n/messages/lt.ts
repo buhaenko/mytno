@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0% muitas taikomas tik ES pagamintiems automobiliams su kilmės įrodymu. Sąskaitoms iki 6 000 € pakanka pardavėjo deklaracijos sąskaitoje.',
   'nuance.eu-export-plates.title': 'Tranzitiniai (eksporto) numeriai',
   'nuance.eu-export-plates.why': 'Vokietija: Ausfuhrkennzeichen + draudimas 5–30 dienų; Lenkijoje / Lietuvoje panašiai. Be jų automobilio išvažiuoti negalima.',
+  'notice.intraEuUsed': 'Naudotas automobilis iš ES šalies: nėra muito ir PVM, todėl kaina sumai įtakos neturi. Mokami tik nacionalinis registracijos mokestis (čia neskaičiuojamas, žr. šaltinį) ir registracijos rinkliavos.',
+  'notice.relocation': 'Persikėlimo lengvata: nėra muito, PVM ir registracijos mokesčio, todėl kaina sumai įtakos neturi.',
 } as Record<string, string>

@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Taxa vamală de 0 % se aplică doar mașinilor fabricate în UE cu dovada originii. Pentru facturi de până la 6.000 € este suficientă declarația vânzătorului pe factură.',
   'nuance.eu-export-plates.title': 'Plăcuțe de tranzit (export)',
   'nuance.eu-export-plates.why': 'Germania: Ausfuhrkennzeichen + asigurare pentru 5–30 de zile; Polonia/Lituania similar. Fără ele mașina nu poate ieși din țară pe roți proprii.',
+  'notice.intraEuUsed': 'Mașină second-hand dintr-o țară UE: fără taxe vamale sau TVA, deci prețul nu influențează totalul. Se plătesc doar taxa națională de înmatriculare (necalculată aici, vezi sursa) și taxele de înmatriculare.',
+  'notice.relocation': 'Scutire la schimbarea reședinței: fără taxe vamale, TVA sau taxă de înmatriculare, deci prețul nu influențează totalul.',
 } as Record<string, string>

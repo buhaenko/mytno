@@ -195,4 +195,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Os direitos a 0 % só se aplicam a carros fabricados na UE com prova de origem. Para faturas até 6 000 € basta a declaração do vendedor na fatura.',
   'nuance.eu-export-plates.title': 'Chapas de trânsito (exportação)',
   'nuance.eu-export-plates.why': 'Alemanha: Ausfuhrkennzeichen + seguro por 5–30 dias; Polónia/Lituânia semelhante. Sem elas o carro não pode sair pela estrada.',
+  'notice.intraEuUsed': 'Carro usado de um país da UE: sem direitos aduaneiros nem IVA, por isso o preço não afeta o total. Pagam-se apenas o imposto de matrícula nacional (não calculado aqui, ver a fonte) e as taxas de matrícula.',
+  'notice.relocation': 'Transferência de residência: sem direitos, IVA nem imposto de matrícula, por isso o preço não afeta o total.',
 } as Record<string, string>

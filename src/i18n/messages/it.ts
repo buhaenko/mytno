@@ -195,4 +195,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Il dazio 0 % vale solo per auto prodotte nell’UE con prova d’origine. Per fatture fino a 6 000 € basta la dichiarazione del venditore in fattura.',
   'nuance.eu-export-plates.title': 'Targhe di transito (esportazione)',
   'nuance.eu-export-plates.why': 'Germania: Ausfuhrkennzeichen + assicurazione 5–30 giorni; Polonia/Lituania simili. Senza, l’auto non può uscire su strada.',
+  'notice.intraEuUsed': 'Auto usata da un paese UE: nessun dazio né IVA, quindi il prezzo non incide sul totale. Si pagano solo la tassa di immatricolazione nazionale (non calcolata qui, vedi la fonte) e gli oneri di immatricolazione.',
+  'notice.relocation': 'Trasferimento di residenza: nessun dazio, IVA o tassa di immatricolazione, quindi il prezzo non incide sul totale.',
 } as Record<string, string>

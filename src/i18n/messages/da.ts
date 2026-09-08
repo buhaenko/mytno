@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0 % told gælder kun for biler fremstillet i EU med oprindelsesbevis. For fakturaer op til 6.000 € er sælgers erklæring på fakturaen tilstrækkelig.',
   'nuance.eu-export-plates.title': 'Transitplader (eksportplader)',
   'nuance.eu-export-plates.why': 'Tyskland: Ausfuhrkennzeichen + forsikring i 5–30 dage; Polen/Litauen tilsvarende. Uden dem kan bilen ikke køres ud af landet.',
+  'notice.intraEuUsed': 'Brugt bil fra et EU-land: ingen told eller moms, så prisen påvirker ikke beløbet. Kun den nationale registreringsafgift (beregnes ikke her, se kilden) og registreringsgebyrer skal betales.',
+  'notice.relocation': 'Flyttegods: ingen told, moms eller registreringsafgift, så prisen påvirker ikke beløbet.',
 } as Record<string, string>

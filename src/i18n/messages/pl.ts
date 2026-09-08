@@ -195,4 +195,6 @@ export default {
   'nuance.eu-origin-proof.why': 'Cło 0% dotyczy tylko aut wyprodukowanych w UE z dowodem pochodzenia. Dla faktur do 6 000 € wystarczy deklaracja sprzedawcy na fakturze.',
   'nuance.eu-export-plates.title': 'Tablice tranzytowe (wywozowe)',
   'nuance.eu-export-plates.why': 'Niemcy: Ausfuhrkennzeichen + ubezpieczenie na 5–30 dni; Polska/Litwa podobnie. Bez nich auto nie wyjedzie o własnych siłach.',
+  'notice.intraEuUsed': 'Używane auto z kraju UE: brak cła i VAT, dlatego cena nie wpływa na sumę. Płaci się tylko krajowy podatek rejestracyjny (tu nieliczony, zob. źródło) i opłaty rejestracyjne.',
+  'notice.relocation': 'Mienie przesiedleńcze: brak cła, VAT i podatku rejestracyjnego, dlatego cena nie wpływa na sumę.',
 } as Record<string, string>

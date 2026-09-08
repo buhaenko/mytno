@@ -74,6 +74,8 @@ export interface CalcResult {
   checklist: Msg[]
   /** mandatory conversion (included in the total) */
   conversionTotal: Range
+  /** prominent one-line explanation shown under the total (e.g. why the price does not matter) */
+  notice?: Msg
   total: Range
   taxesTotal: Range
   customsValue: number

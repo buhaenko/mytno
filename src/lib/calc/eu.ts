@@ -65,10 +65,11 @@ export function calcEu(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date())
   if (exempt) warnings.push(m('warn.relocationConditions'))
   if (v.marketSpec !== 'EU') warnings.push(m('warn.nonEuSpec'))
 
+  const notice = !nonEu && !((v.mileageKm !== undefined && v.mileageKm < 6000) || age < 0.5) ? m('notice.intraEuUsed') : exempt ? m('notice.relocation') : undefined
   const key = v.marketSpec === 'US' ? 'US_to_EU' : v.marketSpec === 'JP' ? 'JP_to_EU' : ''
   const nu = key ? nuancesFor(key, v.brandTier) : { list: [], mandatory: zero }
   if (nu.mandatory.max > 0) items.push(item('conversion', m('line.conversionMandatory'), 'fees', nu.mandatory, { estimate: true, note: m('note.conversionMandatory') }))
   const checklist = [m(nonEu ? 'chk.euImport' : 'chk.euIntra'), m('chk.euConformity'), m('chk.euRegister')]
   const taxes = sumItems(items.filter((x) => x.category === 'tax'))
-  return { items, notComputed, nuances: nu.list, conversionTotal: nu.mandatory, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: cif.likely, meta: { vat: c.vat } }
+  return { items, notComputed, nuances: nu.list, conversionTotal: nu.mandatory, notice, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: cif.likely, meta: { vat: c.vat } }
 }

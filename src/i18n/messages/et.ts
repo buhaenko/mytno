@@ -203,4 +203,6 @@ export default {
   'nuance.eu-origin-proof.why': '0 % tollimaks kehtib ainult ELis toodetud autodele päritolutõendiga. Arvete puhul kuni 6 000 € piisab müüja deklaratsioonist arvel.',
   'nuance.eu-export-plates.title': 'Transiit- (ekspordi-) numbrimärgid',
   'nuance.eu-export-plates.why': 'Saksamaa: Ausfuhrkennzeichen + kindlustus 5–30 päevaks; Poola/Leedu sarnaselt. Ilma nendeta ei saa autoga riigist välja sõita.',
+  'notice.intraEuUsed': 'Kasutatud auto EL-i riigist: tollimaksu ega käibemaksu ei ole, seega hind summat ei mõjuta. Tasuda tuleb ainult riiklik registreerimismaks (siin ei arvutata, vt allikat) ja registreerimistasud.',
+  'notice.relocation': 'Kolimissoodustus: tollimaksu, käibemaksu ega registreerimismaksu ei ole, seega hind summat ei mõjuta.',
 } as Record<string, string>
