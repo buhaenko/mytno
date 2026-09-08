@@ -115,3 +115,37 @@ details .body li { margin: 3px 0; }
 .f.span { grid-column: 1 / -1; }
 .check { padding-top: 22px; }
 @media (max-width: 560px) { .check { padding-top: 0; } }
+/* hero → compact route bar */
+.hero { padding-top: 22vh; transition: padding .55s cubic-bezier(.2,.7,.2,1); }
+.hero.compact { padding-top: 0; }
+.hero-text { text-align: center; max-height: 200px; opacity: 1; overflow: hidden; transition: max-height .45s ease, opacity .3s ease, margin .45s ease; margin-bottom: 26px; }
+.hero-text h1 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; }
+.hero-text p { color: var(--muted); margin-top: 8px; font-size: 14.5px; }
+.compact .hero-text { max-height: 0; opacity: 0; margin-bottom: 0; }
+.route { display: flex; align-items: center; gap: 12px; justify-content: center; transition: transform .45s ease; }
+.route .arrow { color: var(--line-strong); flex: 0 0 auto; }
+.compact .route { justify-content: flex-start; }
+.csel { position: relative; flex: 1 1 0; max-width: 260px; }
+.csel-btn { width: 100%; display: flex; align-items: center; gap: 10px; font: inherit; font-size: 16px; padding: 12px 14px; border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; color: var(--text); cursor: pointer; transition: padding .35s ease, font-size .35s ease, border-color .12s; text-align: left; }
+.csel-btn .chev { margin-left: auto; color: var(--muted); flex: 0 0 auto; }
+.csel-btn.empty { color: var(--muted); }
+.csel-btn:hover, .csel.open .csel-btn { border-color: var(--text); }
+.compact .csel-btn { font-size: 13.5px; padding: 7px 10px; }
+.compact .csel { max-width: 200px; }
+.csel-list { position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; right: 0; margin: 0; padding: 4px; list-style: none; background: #fff; border: 1px solid var(--line-strong); border-radius: 8px; box-shadow: 0 10px 30px -10px rgba(0,0,0,.25); }
+.csel-list button { width: 100%; display: flex; align-items: center; gap: 10px; font: inherit; font-size: 14px; padding: 8px 10px; border: 0; border-radius: 6px; background: transparent; color: var(--text); cursor: pointer; text-align: left; }
+.csel-list button:hover { background: #f3f3f3; }
+.csel-list button.on { background: var(--accent-soft); color: var(--accent); }
+.csel-list button:disabled { opacity: .35; cursor: not-allowed; }
+.drop-enter-active, .drop-leave-active { transition: opacity .15s ease, transform .15s ease; }
+.drop-enter-from, .drop-leave-to { opacity: 0; transform: translateY(-4px); }
+.modes { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+.mode { font: inherit; font-size: 13px; font-weight: 600; padding: 6px 10px; border: 0; border-radius: 6px; background: transparent; color: var(--muted); cursor: pointer; }
+.mode.on { background: #f0f0f0; color: var(--text); }
+.cta { margin-top: 18px; }
+.btn.big { font-size: 15px; padding: 12px 22px; }
+.result.stale { opacity: .45; transition: opacity .3s; }
+.share { margin-top: 26px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+.mono-url { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.foot.center { text-align: center; margin-top: 60px; }
+@media (max-width: 560px) { .route { flex-direction: column; align-items: stretch; } .route .arrow { transform: rotate(90deg); align-self: center; } .csel { max-width: none; } .compact .route { flex-direction: row; } .compact .csel { max-width: none; } }

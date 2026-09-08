@@ -4,11 +4,10 @@ import type { CalcResult, Currency, FxRates, LineItem, RouteInput, Vehicle } fro
 import { fmt } from '../lib/money'
 import rulesUa from '../data/rules.ukraine.json'
 import rulesEs from '../data/rules.spain.json'
-import Chips from './Chips.vue'
 import Help from './Help.vue'
 import CountUp from './CountUp.vue'
 
-const props = defineProps<{ result: CalcResult; vehicle: Vehicle; route: RouteInput; fx: FxRates }>()
+const props = defineProps<{ result: CalcResult; vehicle: Vehicle; route: RouteInput; fx: FxRates; shareUrl: string }>()
 const cur = ref<Currency>(props.route.destination === 'UA' ? 'USD' : 'EUR')
 const curOptions: { value: Currency; label: string }[] = [{ value: 'EUR', label: '€' }, { value: 'USD', label: '$' }, { value: 'UAH', label: '₴' }]
 const taxes = computed(() => props.result.items.filter((i) => i.category === 'tax'))
@@ -20,13 +19,19 @@ const isRange = (it: LineItem) => Math.abs(it.range.max - it.range.min) >= 1
 const reqLabel = { always: 'обов\'язково', likely: 'найімовірніше', sometimes: 'іноді' }
 const nuanceCost = (c: [number, number]) => (c[0] === 0 && c[1] === 0 ? '—' : `${money(c[0])} – ${money(c[1])}`)
 const helpLines = (it: LineItem) => [it.note, it.estimate ? 'Ринкова ціна послуги, не державна ставка.' : undefined].filter((x): x is string => !!x)
+const copied = ref(false)
+const shown = ref(false)
+async function share() {
+  shown.value = true
+  try { await navigator.clipboard.writeText(props.shareUrl); copied.value = true; setTimeout(() => (copied.value = false), 2000) } catch { /* noop */ }
+}
 </script>
 
 <template>
   <div>
     <div class="toolbar">
       <h2>Розмитнення <Help text="Податки за офіційними ставками та обов'язкові збори за постановку на облік. Ціна авто, доставка, брокери й ремонт сюди не входять. Діапазон: від «усе гладко» до «митниця переоцінила на 15%»." /></h2>
-      <Chips v-model="cur" :options="curOptions" />
+      <div class="chips"><button v-for="c in curOptions" :key="c.value" type="button" class="chip" :class="{ on: cur === c.value }" @click="cur = c.value">{{ c.label }}</button></div>
     </div>
     <div class="total">
       <div class="n"><CountUp :value="result.total.likely" :format="money" /></div>
@@ -52,10 +57,7 @@ const helpLines = (it: LineItem) => [it.note, it.estimate ? 'Ринкова ці
     </table>
     <p class="tiny">Митна вартість {{ money(result.customsValue) }} <Help :text="route.destination === 'UA' ? 'Ціна + доставка до кордону. Митниця звіряє з довідниками і може підняти — це верхня межа діапазону.' : 'CIF: ціна + доставка та страховка до кордону ЄС. База для мита; IVA рахується від CIF + мито.'" :source="refs.duty" /></p>
 
-    <details v-if="result.warnings.length">
-      <summary>Зверніть увагу ({{ result.warnings.length }})</summary>
-      <ul class="body"><li v-for="(w, i) in result.warnings" :key="i">{{ w }}</li></ul>
-    </details>
+    <details v-if="result.warnings.length"><summary>Зверніть увагу ({{ result.warnings.length }})</summary><ul class="body"><li v-for="(w, i) in result.warnings" :key="i">{{ w }}</li></ul></details>
     <details v-if="result.nuances.length">
       <summary>Переобладнання та нюанси ({{ result.nuances.length }})</summary>
       <div class="body" style="padding-left:0">
@@ -66,13 +68,12 @@ const helpLines = (it: LineItem) => [it.note, it.estimate ? 'Ринкова ці
         <p class="tiny" style="margin-top:6px">Не входить у суму. Ціни запчастин і робіт на подібних авто класу «{{ { mass: 'масовий', premium: 'преміум', luxury: 'люкс' }[vehicle.brandTier] }}».</p>
       </div>
     </details>
-    <details>
-      <summary>Порядок дій</summary>
-      <ol class="body"><li v-for="(c, i) in result.checklist" :key="i">{{ c }}</li></ol>
-    </details>
-    <details>
-      <summary>Джерела</summary>
-      <ul class="body"><li v-for="(r, k) in refs" :key="k"><a :href="r.url" target="_blank" rel="noopener">{{ r.title }}</a></li><li><a :href="fxRef.url" target="_blank" rel="noopener">{{ fxRef.title }}</a>, {{ fx.date }}: $ {{ fx.usdUah.toFixed(2) }}, € {{ fx.eurUah.toFixed(2) }}</li></ul>
-    </details>
+    <details><summary>Порядок дій</summary><ol class="body"><li v-for="(c, i) in result.checklist" :key="i">{{ c }}</li></ol></details>
+    <details><summary>Джерела</summary><ul class="body"><li v-for="(r, k) in refs" :key="k"><a :href="r.url" target="_blank" rel="noopener">{{ r.title }}</a></li><li><a :href="fxRef.url" target="_blank" rel="noopener">{{ fxRef.title }}</a>, {{ fx.date }}: $ {{ fx.usdUah.toFixed(2) }}, € {{ fx.eurUah.toFixed(2) }}</li></ul></details>
+
+    <div class="share">
+      <button type="button" class="btn" @click="share">{{ copied ? 'Посилання скопійовано' : 'Поділитися розрахунком' }}</button>
+      <Transition name="rise"><input v-if="shown" class="in mono-url" :value="shareUrl" readonly @focus="($event.target as HTMLInputElement).select()" /></Transition>
+    </div>
   </div>
 </template>
