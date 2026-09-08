@@ -1,5 +1,5 @@
 {
-  "_note": "Ставки ПДВ: Taxes in Europe Database (Європейська комісія), станом на 1 липня 2025; Румунія 21% з 1 серпня 2025. Митні сайти: офіційний перелік Єврокомісії 'National customs administrations'. Мито на легкові авто з-поза ЄС: TARIC 8703 — 10%.",
+  "_note": "VAT rates: Taxes in Europe Database (European Commission) as of 1 July 2025; Romania 21% from 1 August 2025. Customs sites: European Commission list 'National customs administrations'. Duty on passenger cars from outside the EU: TARIC 8703 - 10%.",
   "vatSource": {
     "title": "Taxes in Europe Database (European Commission)",
     "url": "https://ec.europa.eu/taxation_customs/tedb/"

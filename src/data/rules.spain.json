@@ -1,10 +1,10 @@
 {
   "effective": "2026-01-01",
   "sources": [
-    "Ley 38/1992 de Impuestos Especiales, arts. 65–70 (IEDMT)",
-    "Agencia Tributaria — importar un vehículo: deuda aduanera (arancel 10%, IVA 21%)",
-    "DGT — importar un vehículo de fuera de la UE / matricular vehículo de la UE; tasa 1.1",
-    "RDL 2/2004 Haciendas Locales, art. 95 (IVTM); RD 750/2010 (homologación individual)"
+    "Ley 38/1992, arts. 65-70 (IEDMT)",
+    "Agencia Tributaria - importing a vehicle: customs debt (duty 10%, IVA 21%)",
+    "DGT - importing a vehicle from outside the EU / registering an EU vehicle; fee 1.1",
+    "RDL 2/2004 art. 95 (IVTM); RD 750/2010 (individual type approval)"
   ],
   "duty": 0.1,
   "vat": 0.21,

@@ -20,6 +20,14 @@ const originCountry = ref<string | null>(null)
 const origin = computed<Origin | null>(() => (originCountry.value ? ORIGIN_GROUP[originCountry.value] ?? 'OTHER' : null))
 const destination = ref<Destination | null>(null)
 const price = ref<number>(0)
+const priceText = ref('')
+// Accepts '20 000', '20,000', '20.000', '20000' — digits only, thousands separators ignored
+function onPriceInput(e: Event) {
+  const raw = (e.target as HTMLInputElement).value
+  priceText.value = raw
+  const digits = raw.replace(/[^\d]/g, '')
+  price.value = digits ? Number(digits) : 0
+}
 const currency = ref<Currency>('USD')
 const hasOriginProof = ref(true)
 const residenceTransfer = ref(false)
@@ -61,7 +69,7 @@ const showOriginProof = computed(() => destination.value === 'UA' && origin.valu
 const showResidence = computed(() => destination.value !== 'UA' && origin.value !== 'EU')
 
 const shareState = computed(() => ({ v: { ...vehicle.value, decodeNotes: [] }, r: route.value, l: locale.value, oc: originCountry.value }))
-// ---- стан у URL (?from=LT&to=ES) і чернетка в localStorage, щоб перезавантаження нічого не збивало ----
+// ---- state in the URL (?from=LT&to=ES) plus a localStorage draft so a reload never loses input ----
 const DRAFT = 'na-nomery:draft'
 let restoring = true
 function syncUrl() {
@@ -90,7 +98,7 @@ async function share() {
 function applyShared(s: { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }) {
   if (!s.v || !s.r) return
   vehicle.value = { ...blankVehicle(), ...s.v }
-  originCountry.value = s.oc ?? (s.r.origin === 'EU' ? 'DE' : s.r.origin === 'OTHER' ? 'GB' : s.r.origin); destination.value = s.r.destination; price.value = s.r.purchasePrice; currency.value = s.r.purchaseCurrency
+  originCountry.value = s.oc ?? (s.r.origin === 'EU' ? 'DE' : s.r.origin === 'OTHER' ? 'GB' : s.r.origin); destination.value = s.r.destination; price.value = s.r.purchasePrice; priceText.value = s.r.purchasePrice ? String(s.r.purchasePrice) : ''; currency.value = s.r.purchaseCurrency
   hasOriginProof.value = s.r.hasOriginProof; residenceTransfer.value = s.r.residenceTransfer
   started.value = true
 }
@@ -146,7 +154,7 @@ onMounted(async () => {
       <section v-if="started && routeChosen && vehicleReady" class="s">
         <div class="row three">
           <div class="f"><label>{{ t('price.label') }} <Help :text="t('price.help')" /></label>
-            <div class="group"><input v-model.number="price" type="number" class="in" min="0" step="100" placeholder="10000" /><select v-model="currency" class="in"><option v-for="c in currencies" :key="c" :value="c">{{ c }}</option></select></div>
+            <div class="group"><input :value="priceText" type="text" inputmode="numeric" autocomplete="off" class="in" placeholder="10000" @input="onPriceInput" /><select v-model="currency" class="in"><option v-for="c in currencies" :key="c" :value="c">{{ c }}</option></select></div>
           </div>
           <label v-if="showOriginProof" class="check"><input v-model="hasOriginProof" type="checkbox" /><span>{{ t('price.originProof') }}</span><Help :text="t('price.help.originProof')" :source="{ title: 'zakon.rada.gov.ua', url: 'https://zakon.rada.gov.ua/laws/show/2697-20' }" /></label>
           <label v-if="showResidence" class="check"><input v-model="residenceTransfer" type="checkbox" /><span>{{ t('price.residence') }}</span><Help :text="t('price.help.residence')" :source="{ title: 'Regulation (EC) 1186/2009', url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009R1186' }" /></label>

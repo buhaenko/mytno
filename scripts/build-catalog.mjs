@@ -1,5 +1,5 @@
-// Будує статичний каталог авто з бази EPA (fueleconomy.gov): усі моделі 1984–2026 з двигуном, паливом, CO₂.
-// Використання: node scripts/build-catalog.mjs [шлях до vehicles.csv]  (без аргументу — завантажить zip з fueleconomy.gov)
+// Builds the static vehicle catalogue from the EPA database (fueleconomy.gov): every model 1984–2026 with engine, fuel and CO₂.
+// Usage: node scripts/build-catalog.mjs [path to vehicles.csv]  (without an argument the zip is downloaded from fueleconomy.gov)
 import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { execSync } from 'node:child_process'
 import { tmpdir } from 'node:os'
@@ -58,7 +58,7 @@ for (const r of rows.slice(1)) {
   const cc = displ ? Math.round(displ * 1000) : 0
   const cyl = Number(r[C.cyl]) || 0
   const co2gpm = Number(r[C.co2]) || 0
-  const co2 = co2gpm > 0 ? Math.round(co2gpm * 0.621371) : 0 // г/км (EPA, комбінований)
+  const co2 = co2gpm > 0 ? Math.round(co2gpm * 0.621371) : 0 // g/km (EPA combined)
   const trany = r[C.trany].trim().replace('Automatic', 'AT').replace('Manual', 'MT')
   const drive = r[C.drive].trim()
   const ev = r[C.ev].trim()

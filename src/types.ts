@@ -19,7 +19,7 @@ export interface Vehicle {
   plantCountry?: string
   body?: string
   drive?: string
-  /** Ціна нового в Іспанії (база impuesto de matriculación) */
+  /** New list price in Spain (base for impuesto de matriculación) */
   listPriceNewEur?: number
   brandTier: BrandTier
   mileageKm?: number
@@ -31,27 +31,27 @@ export interface RouteInput {
   destination: Destination
   purchasePrice: number
   purchaseCurrency: Currency
-  /** Є EUR.1 / декларація походження (авто зроблене в ЄС і куплене в ЄС) */
+  /** EUR.1 / origin declaration available (car built in the EU and bought in the EU) */
   hasOriginProof: boolean
-  /** Іспанія: пільга при переїзді (traslado de residencia) */
+  /** Relief on transfer of normal residence (traslado de residencia) */
   residenceTransfer: boolean
 }
 
 export type Range = { min: number; likely: number; max: number }
 export type Category = 'tax' | 'fees'
 
-/** Повідомлення для перекладу: ключ + параметри */
+/** Translatable message: key + params */
 export interface Msg { key: string; params?: Record<string, string | number> }
 
 export interface LineItem {
   key: string
   label: Msg
   category: Category
-  /** значення в EUR */
+  /** amounts in EUR */
   range: Range
   note?: Msg
   formula?: string
-  /** ринкова оцінка, а не офіційна ставка */
+  /** market estimate rather than an official rate */
   estimate?: boolean
   source?: { title: string; url: string }
 }
@@ -67,12 +67,12 @@ export interface NotComputed { key: string; source: { title: string; url: string
 
 export interface CalcResult {
   items: LineItem[]
-  /** платежі, які існують у країні, але не рахуються тут (посилання на офіційне джерело) */
+  /** charges that exist in the country but are not computed here (link to the official source) */
   notComputed: NotComputed[]
   nuances: Nuance[]
   warnings: Msg[]
   checklist: Msg[]
-  /** обов'язкове переобладнання (входить у суму) */
+  /** mandatory conversion (included in the total) */
   conversionTotal: Range
   total: Range
   taxesTotal: Range

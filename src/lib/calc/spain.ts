@@ -53,7 +53,7 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
   const iedmt = exempt ? zero : { min: base.min * rateMin, likely: base.likely * rateLikely, max: base.max * rateLikely }
   const co2Note = exempt ? m('note.relocation') : nonEuSpec ? m(knownCo2 ? 'note.iedmtNoCertCo2Alt' : 'note.iedmtNoCert', { rate: rateLikely * 100, co2: v.co2Wltp ?? 0, alt: rateMin * 100 }) : m('note.iedmtCo2', { co2: knownCo2 ? String(v.co2Wltp) : '—', rate: rateLikely * 100 })
   items.push(item('iedmt', m('line.iedmt', { rate: exempt ? 0 : rateLikely * 100 }), 'tax', iedmt, { formula: 'rate(CO₂) × base', note: m('note.join', { a: co2Note.key, b: baseNote.key }), source: rules.refs.iedmt }))
-  // note.join — спеціальний ключ: UI зʼєднує два повідомлення; параметри для них передаємо окремо
+  // 'join' is a special key: the UI concatenates two messages whose params are passed separately
   items[items.length - 1]!.note = { key: 'join', params: { a: JSON.stringify(co2Note), b: JSON.stringify(baseNote) } }
   if (nonEuSpec && !exempt) warnings.push(m('warn.esNoCertCo2'))
   if (!knownCo2 && !nonEuSpec) warnings.push(m('warn.esEnterCo2'))

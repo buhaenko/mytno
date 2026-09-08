@@ -17,7 +17,7 @@ export interface NhtsaDecoded {
   plantCity?: string
   errorCode: string
   errorText: string
-  /** true, якщо помилок 0 (декод чистий) */
+  /** true when the decode reported no errors */
   clean: boolean
 }
 

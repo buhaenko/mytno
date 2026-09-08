@@ -84,7 +84,7 @@ describe('Spain 2026', () => {
     expect(duty.range.likely).toBeCloseTo(res.customsValue * 0.1, 2)
     expect(vat.range.likely).toBeCloseTo((res.customsValue + duty.range.likely) * 0.21, 2)
     expect(res.meta.iedmtRate).toBe(0.1475)
-    // база: 47150 × 0.19 / (1 + 0.21 + 0.1475)
+    // base: 47150 × 0.19 / (1 + 0.21 + 0.1475)
     expect(iedmt.range.likely).toBeCloseTo(((47150 * 0.19) / 1.3575) * 0.1475, 0)
     expect(res.items.some((i) => i.key === 'homolog')).toBe(true)
     expect(res.items.some((i) => i.key === 'conversion')).toBe(true)

@@ -24,7 +24,7 @@ const isElectrified = computed(() => vehicle.value.fuel === 'electric' || vehicl
 const fuels: Fuel[] = ['petrol', 'diesel', 'hybrid', 'phev', 'electric', 'lpg']
 const markets: MarketSpec[] = ['US', 'EU', 'JP', 'KR', 'OTHER']
 
-/** Підпис версії з каталогу EPA локалізованою мовою. */
+/** Localized label for an EPA catalogue version. */
 function versionLabel(v: CatalogVersion): string {
   const [cc, cyl, fuel, co2, trany, drive, ev] = v
   const parts: string[] = []
@@ -82,7 +82,7 @@ async function decode() {
             notes.push(t('car.note.epa', { model: cm.model, version: versionLabel(pick) }) + (pick[3] ? ' ' + t('car.note.epaCo2') : ''))
           }
         }
-      } catch { /* каталог недоступний */ }
+      } catch { /* catalogue unavailable */ }
     }
     applyReference(v, notes)
     if (!d.displacementCc && !v.engineCc && fuel !== 'electric') notes.push(t('car.note.nhtsaLimited', { country: w.countryKey ? region(w.countryKey) : w.country }))

@@ -1,6 +1,6 @@
 import type { Fuel } from '../types'
 
-/** [cc, cylinders, fuel, co2 г/км (EPA), трансмісія, привід, електромотор, epaId] */
+/** [cc, cylinders, fuel, co2 g/km (EPA), transmission, drive, electric motor, epaId] */
 export type CatalogVersion = [number, number, string, number, string, string, string, number]
 export type CatalogYear = Record<string, Record<string, CatalogVersion[]>>
 export interface CatalogIndex { years: number[]; makesByYear: Record<string, string[]>; source: string; built: string }
@@ -31,17 +31,17 @@ export function versionFuel(v: CatalogVersion): Fuel {
 export function versionLabel(v: CatalogVersion): string {
   const [cc, cyl, fuel, co2, trany, drive, ev] = v
   const parts: string[] = []
-  if (fuel === 'electric') parts.push('електро', ev || '')
+  if (fuel === 'electric') parts.push('electric', ev || '')
   else {
-    parts.push(`${(cc / 1000).toFixed(1)} л`, cyl ? `${cyl} цил.` : '')
-    parts.push({ petrol: 'бензин', diesel: 'дизель', hybrid: 'гібрид', phev: 'plug-in', cng: 'CNG', hydrogen: 'H₂' }[fuel] ?? fuel)
+    parts.push(`${(cc / 1000).toFixed(1)} L`, cyl ? `${cyl} cyl.` : '')
+    parts.push({ petrol: 'petrol', diesel: 'diesel', hybrid: 'hybrid', phev: 'plug-in', cng: 'CNG', hydrogen: 'H₂' }[fuel] ?? fuel)
   }
   parts.push(trany.replace(/\s*\(.*\)/, ''), drive.replace('-Wheel Drive', 'WD').replace('Front', 'F').replace('Rear', 'R').replace('All', 'A').replace('4WD or ', '').replace('Part-time ', ''))
-  if (co2) parts.push(`${co2} г/км`)
+  if (co2) parts.push(`${co2} g/km`)
   return parts.filter(Boolean).join(' · ')
 }
 
-/** Найкращий збіг моделі з каталогу за назвою (NHTSA model + series + trim). */
+/** Best catalogue model match by name (NHTSA model + series + trim). */
 export function matchCatalogModel(year: CatalogYear, make: string, name: string): { model: string; versions: CatalogVersion[] } | undefined {
   const mk = Object.keys(year).find((k) => k.toLowerCase() === make.toLowerCase() || k.toLowerCase().startsWith(make.toLowerCase().split(' ')[0]!))
   if (!mk) return undefined
@@ -51,7 +51,7 @@ export function matchCatalogModel(year: CatalogYear, make: string, name: string)
     const mt = model.toLowerCase().split(/[\s/()-]+/).filter(Boolean)
     const overlap = mt.filter((t) => tokens.includes(t)).length
     if (!overlap) continue
-    const score = overlap * 10 - Math.abs(mt.length - overlap) // штраф за зайві слова в назві каталогу
+    const score = overlap * 10 - Math.abs(mt.length - overlap) // penalise extra words in the catalogue name
     if (!best || score > best.score) best = { model, score }
   }
   return best ? { model: best.model, versions: year[mk]![best.model]! } : undefined

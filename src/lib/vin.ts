@@ -14,7 +14,7 @@ export function isValidVinFormat(vin: string): boolean {
   return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin)
 }
 
-/** Контрольна цифра (позиція 9) — використовується на авто для Північної Америки (і в частини китайських/корейських VIN). */
+/** Check digit (position 9) — used on North American vehicles (and some Chinese/Korean VINs). */
 export function checkDigitValid(vin: string): boolean {
   if (!isValidVinFormat(vin)) return false
   let sum = 0
@@ -29,13 +29,13 @@ export function checkDigitValid(vin: string): boolean {
 }
 
 const YEAR_CODES = '123456789ABCDEFGHJKLMNPRSTVWXY'
-/** Рік моделі за 10-м символом (для VIN з контрольною цифрою — однозначно; інакше орієнтовно). */
+/** Model year from the 10th character (exact for VINs with a check digit, approximate otherwise). */
 export function modelYearFromVin(vin: string): number | undefined {
   const c = vin[9]
   if (!c) return undefined
   const idx = YEAR_CODES.indexOf(c)
   if (idx < 0) return undefined
-  // 2001..2030; для 7-ї позиції з літерою — 2010+ (стандарт NHTSA)
+  // 2001..2030; a letter in position 7 means 2010+ (NHTSA rule)
   const base = 2001 + idx // '1' → 2001 ... 'Y' → 2030
   const seventhIsLetter = /[A-Z]/.test(vin[6] ?? '')
   if (!seventhIsLetter && base >= 2010) return base - 30 // 1980..2000
@@ -44,9 +44,9 @@ export function modelYearFromVin(vin: string): number | undefined {
 
 export interface WmiInfo {
   region: 'NA' | 'EU' | 'ASIA' | 'OTHER'
-  /** ISO-код країни (для Intl.DisplayNames), якщо однозначний */
+  /** ISO country code (for Intl.DisplayNames) when unambiguous */
   countryKey?: string
-  /** запасний підпис, якщо код неоднозначний */
+  /** fallback label when the code is ambiguous */
   country: string
 }
 
@@ -69,9 +69,9 @@ export function wmiInfo(vin: string): WmiInfo {
 }
 
 /**
- * Для якого ринку зроблене авто. Це ключове для омологації в ЄС.
- * Евристика: VW-група ставить ZZZ на 4–6 позиціях для не-американських версій;
- * авто для Північної Америки мають правильну контрольну цифру і завод/ринок NA.
+ * Which market the car was built for — decisive for EU type approval.
+ * Heuristic: VW Group uses ZZZ in positions 4–6 on non-US versions;
+ * North American cars carry a valid check digit and an NA manufacturer.
  */
 export function detectMarketSpec(vin: string, nhtsaClean: boolean): { spec: MarketSpec; reasonKey: string } {
   const w = wmiInfo(vin)

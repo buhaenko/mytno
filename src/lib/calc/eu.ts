@@ -20,7 +20,7 @@ export function polandExciseRate(v: Vehicle): { rate: number; note: string } {
   return cc > 2000 ? { rate: R.over2000, note: 'over' } : { rate: R.upTo2000, note: 'upTo' }
 }
 
-/** Загальний розрахунок для країн ЄС (крім Іспанії, яка має власний модуль): мито 10% + ПДВ країни (+ акциз у Польщі). */
+/** Generic EU calculation (Spain has its own module): 10% duty + national VAT (+ excise in Poland). */
 export function calcEu(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date()): CalcResult {
   const c = COUNTRIES[i.destination]
   const price = toEur(i.purchasePrice, i.purchaseCurrency, fx)

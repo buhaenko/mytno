@@ -2,9 +2,9 @@ name = "na-nomery-share"
 main = "index.js"
 compatibility_date = "2026-01-01"
 
-# 1) npx wrangler kv namespace create LINKS   → підставте id нижче
+# 1) npx wrangler kv namespace create LINKS   -> paste the id below
 # 2) npx wrangler deploy
-# 3) у GitHub Actions задайте VITE_SHARE_API = https://<worker>.workers.dev
+# 3) set VITE_SHARE_API = https://<worker>.workers.dev in GitHub Actions
 [[kv_namespaces]]
 binding = "LINKS"
 id = "REPLACE_WITH_KV_ID"

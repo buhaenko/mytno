@@ -11,7 +11,7 @@ onBeforeUnmount(() => { document.removeEventListener('click', onDoc); document.r
 
 <template>
   <span ref="root" class="help">
-    <button type="button" class="q" :class="{ on: open }" aria-label="Пояснення" @click.stop="open = !open">?</button>
+    <button type="button" class="q" :class="{ on: open }" aria-label="Help" @click.stop="open = !open">?</button>
     <span v-if="open" class="pop" role="dialog">
       <slot>
         <span v-if="text">{{ text }}</span>

@@ -1,6 +1,6 @@
 import type { Origin } from '../types'
 
-/** Країна покупки → група митних правил. ЄС-27 → 'EU'; Північна Америка → 'US'; решта → відповідна група або 'OTHER'. */
+/** Country of purchase → customs rule group. EU-27 → 'EU'; North America → 'US'; others → their group or 'OTHER'. */
 export const ORIGIN_COUNTRIES: { code: string; group: Origin }[] = [
   { code: 'US', group: 'US' }, { code: 'CA', group: 'US' }, { code: 'MX', group: 'US' },
   { code: 'DE', group: 'EU' }, { code: 'PL', group: 'EU' }, { code: 'LT', group: 'EU' }, { code: 'NL', group: 'EU' }, { code: 'BE', group: 'EU' }, { code: 'FR', group: 'EU' },

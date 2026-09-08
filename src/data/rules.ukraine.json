@@ -1,10 +1,10 @@
 {
   "effective": "2026-01-01",
   "sources": [
-    "Податковий кодекс України (ст. 215 — акциз, ст. 193 — ПДВ 20%)",
-    "Митний тариф України (Закон № 2697-IX), група 8703",
-    "Закон «Про збір на обов'язкове державне пенсійне страхування», ст. 4",
-    "Держмитслужба — офіційний калькулятор митних платежів"
+    "Tax Code of Ukraine (art. 215 - excise, art. 193 - VAT 20%)",
+    "Customs Tariff of Ukraine (Law No. 2697-IX), heading 8703",
+    "Law 'On the levy for mandatory state pension insurance', art. 4",
+    "State Customs Service - official customs payments calculator"
   ],
   "duty": {
     "default": 0.1,
@@ -104,23 +104,23 @@
   },
   "refs": {
     "duty": {
-      "title": "Митний тариф України, група 8703 (zakon.rada.gov.ua)",
+      "title": "Customs Tariff of Ukraine, heading 8703 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/2697-20"
     },
     "excise": {
-      "title": "Податковий кодекс України, ст. 215.3.5-1 (zakon.rada.gov.ua)",
+      "title": "Tax Code of Ukraine, art. 215.3.5-1 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/2755-17"
     },
     "vat": {
-      "title": "Податковий кодекс України, ст. 193 (zakon.rada.gov.ua)",
+      "title": "Tax Code of Ukraine, art. 193 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/2755-17"
     },
     "pension": {
-      "title": "Закон № 400/97-ВР, ст. 4 (zakon.rada.gov.ua)",
+      "title": "Law No. 400/97-VR, art. 4 (zakon.rada.gov.ua)",
       "url": "https://zakon.rada.gov.ua/laws/show/400/97-%D0%B2%D1%80"
     },
     "customs": {
-      "title": "Державна митна служба України (customs.gov.ua)",
+      "title": "State Customs Service of Ukraine (customs.gov.ua)",
       "url": "https://customs.gov.ua/"
     },
     "fx": {

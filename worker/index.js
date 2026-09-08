@@ -1,7 +1,7 @@
-// Cloudflare Worker: короткі коди для share-посилань (KV) + країна за IP для вибору мови.
-// Деплой: npx wrangler deploy (у папці worker/). Потрібен KV namespace LINKS (див. wrangler.toml).
+// Cloudflare Worker alternative to server/: short share codes in KV + country by IP for language detection.
+// Deploy: npx wrangler deploy (inside worker/). Needs the KV namespace LINKS (see wrangler.toml).
 const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type' }
-const ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789' // без 0/o, 1/l/i
+const ALPHABET = 'abcdefghjkmnpqrstuvwxyz23456789' // no 0/o, 1/l/i
 function code(n = 5) {
   const buf = new Uint8Array(n); crypto.getRandomValues(buf)
   return [...buf].map((b) => ALPHABET[b % ALPHABET.length]).join('')

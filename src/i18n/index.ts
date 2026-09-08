@@ -6,7 +6,7 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   uk: 'Українська', en: 'English', es: 'Español', de: 'Deutsch', pl: 'Polski', fr: 'Français', it: 'Italiano', pt: 'Português', nl: 'Nederlands', ro: 'Română',
   cs: 'Čeština', sk: 'Slovenčina', hu: 'Magyar', bg: 'Български', hr: 'Hrvatski', sl: 'Slovenščina', lt: 'Lietuvių', lv: 'Latviešu', et: 'Eesti', fi: 'Suomi', sv: 'Svenska', da: 'Dansk', el: 'Ελληνικά',
 }
-/** Мова за замовчуванням для країни (гео/IP). */
+/** Default language per country (geo/IP). */
 export const COUNTRY_LOCALE: Record<string, Locale> = {
   UA: 'uk', ES: 'es', DE: 'de', AT: 'de', PL: 'pl', FR: 'fr', BE: 'fr', LU: 'fr', IT: 'it', PT: 'pt', NL: 'nl', RO: 'ro', MD: 'ro', CZ: 'cs', SK: 'sk', HU: 'hu',
   BG: 'bg', HR: 'hr', SI: 'sl', LT: 'lt', LV: 'lv', EE: 'et', FI: 'fi', SE: 'sv', DK: 'da', GR: 'el', CY: 'el', IE: 'en', MT: 'en', GB: 'en', US: 'en', CH: 'de',
@@ -17,7 +17,7 @@ export function isLocale(x: string | null | undefined): x is Locale {
 }
 
 type Messages = Record<string, string>
-// glob: відсутній файл перекладу не ламає збірку — мова просто відкотиться до англійської
+// glob: a missing translation file does not break the build — the locale falls back to English
 const files = import.meta.glob<{ default: Messages }>('./messages/*.ts')
 const loaders: Partial<Record<Locale, () => Promise<{ default: Messages }>>> = {}
 for (const [path, loader] of Object.entries(files)) {
@@ -30,7 +30,7 @@ const msgs = ref<Messages>({})
 const fallback = ref<Messages>({})
 const loaded = ref(false)
 
-/** /uk/…, ?lang=, збережений вибір, мова браузера, гео (опційно) */
+/** Order: /uk/… path, ?lang=, saved choice, browser language, geo (optional) */
 export async function detectLocale(geo?: () => Promise<string | null>): Promise<Locale> {
   const seg = location.pathname.slice(import.meta.env.BASE_URL.length).split('/').filter(Boolean)[0]
   if (isLocale(seg)) return seg

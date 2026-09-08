@@ -17,7 +17,7 @@ export function tierForMake(make: string): BrandTier {
   return 'mass'
 }
 
-/** Шукає в довіднику найближчий двигун для авто (за маркою, моделлю, роком, об'ємом і паливом). */
+/** Finds the closest reference engine for a car (by make, model, year, displacement, power and fuel). */
 export function matchReference(v: Pick<Vehicle, 'make' | 'model' | 'year' | 'engineCc' | 'fuel' | 'powerHp'>): { entry: ModelEntry; engine: ModelEngine } | undefined {
   const make = v.make.toLowerCase()
   const modelTokens = v.model.toLowerCase().split(/[\s/()-]+/).filter(Boolean)

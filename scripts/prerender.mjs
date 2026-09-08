@@ -1,4 +1,4 @@
-// Після `vite build`: створює dist/<lang>/index.html з локалізованими meta, hreflang, JSON-LD, а також sitemap.xml і robots.txt.
+// Runs after `vite build`: writes dist/<lang>/index.html with localized meta, hreflang, JSON-LD, plus sitemap.xml and robots.txt.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 

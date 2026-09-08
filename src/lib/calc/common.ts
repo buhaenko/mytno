@@ -19,7 +19,7 @@ export function ageYears(v: Vehicle, now = new Date()): number {
 
 export const m = (key: string, params?: Record<string, string | number>): Msg => ({ key, params })
 
-/** Нюанси переобладнання: обов'язкові окремо (входять у суму), решта — довідково. */
+/** Conversion items: mandatory ones are summed (included in the total), the rest are informational. */
 export function nuancesFor(key: string, tier: BrandTier): { list: Nuance[]; mandatory: Range } {
   const list = ((nuancesData as unknown as Record<string, Nuance[]>)[key] ?? []) as Nuance[]
   let min = 0, likely = 0, max = 0

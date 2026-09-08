@@ -1,6 +1,6 @@
 /**
- * Share-посилання: `domain/<код>` (4–10 символів) через Cloudflare Worker + KV (VITE_SHARE_API).
- * Без воркера — самодостатнє посилання `#s=…`. Читаються обидва формати (і старий `#c=`).
+ * Share links: `domain/<code>` (4–10 chars) via the share backend (VITE_SHARE_API: server/ or worker/).
+ * Without a backend we fall back to a self-contained `#s=…` link. Both formats (and the legacy `#c=`) are readable.
  */
 const API = (import.meta.env.VITE_SHARE_API as string | undefined)?.replace(/\/$/, '')
 const BASE = import.meta.env.BASE_URL
@@ -16,7 +16,7 @@ export function decodeState<T>(s: string): T | null {
   try { return JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/'))))) as T } catch { return null }
 }
 
-/** Сегменти шляху після BASE_URL: [locale?, code?] */
+/** Path segments after BASE_URL: [locale?, code?] */
 export function pathParts(): { locale?: string; code?: string } {
   const segs = location.pathname.slice(BASE.length).split('/').filter(Boolean)
   const out: { locale?: string; code?: string } = {}
