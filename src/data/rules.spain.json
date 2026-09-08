@@ -1,0 +1,65 @@
+{
+  "effective": "2026-01-01",
+  "sources": [
+    "Ley 38/1992, arts. 65–70 (IEDMT: тарифи за CO₂ WLTP, base imponible для вживаних, пільга traslado de residencia)",
+    "Orden HAC/… precios medios de venta (щорічні таблиці + коефіцієнти амортизації, Anexo IV)",
+    "Reglamento (CE) 1186/2009 (франшиза мита при переїзді), Ley 37/1992 IVA art. 13/86 (імпорт, нові ТЗ)",
+    "TARIC 8703: мито 10%; DGT tasa 1.1 = 99,77 € (2026); RD 750/2010 homologación individual"
+  ],
+  "duty": 0.10,
+  "vat": 0.21,
+  "vatCanarias": 0.07,
+  "iedmt": {
+    "brackets": [
+      { "maxCo2": 120, "rate": 0.0 },
+      { "maxCo2": 160, "rate": 0.0475 },
+      { "maxCo2": 200, "rate": 0.0975 },
+      { "maxCo2": null, "rate": 0.1475 }
+    ],
+    "unknownCo2Rate": 0.1475,
+    "depreciation": [
+      { "maxYears": 1, "pct": 1.00 },
+      { "maxYears": 2, "pct": 0.84 },
+      { "maxYears": 3, "pct": 0.67 },
+      { "maxYears": 4, "pct": 0.56 },
+      { "maxYears": 5, "pct": 0.47 },
+      { "maxYears": 6, "pct": 0.39 },
+      { "maxYears": 7, "pct": 0.34 },
+      { "maxYears": 8, "pct": 0.28 },
+      { "maxYears": 9, "pct": 0.24 },
+      { "maxYears": 10, "pct": 0.19 },
+      { "maxYears": 11, "pct": 0.17 },
+      { "maxYears": 12, "pct": 0.13 },
+      { "maxYears": null, "pct": 0.10 }
+    ]
+  },
+  "fees": {
+    "dgtTasaEur": 99.77,
+    "itvImportEur": [40, 70],
+    "cocFromManufacturerEur": [100, 300],
+    "fichaReducidaEur": [100, 250],
+    "individualHomologationEur": [500, 1200],
+    "platesEur": [20, 40],
+    "gestoriaEur": [150, 350],
+    "ivtmByCvf": [
+      { "maxCvf": 8, "eur": 25 },
+      { "maxCvf": 12, "eur": 68 },
+      { "maxCvf": 16, "eur": 144 },
+      { "maxCvf": 20, "eur": 179 },
+      { "maxCvf": null, "eur": 224 }
+    ]
+  },
+  "logistics": {
+    "uaToEs": { "autovozEur": [1200, 2000], "selfDriveEur": [700, 1100], "greenCardEur": [100, 200] },
+    "euToEs": { "autovozEur": [600, 1200], "selfDriveEur": [300, 600] },
+    "usToEs": {
+      "auctionFeePct": 0.07,
+      "auctionFixedUsd": 200,
+      "inlandNearUsd": [250, 600],
+      "inlandFarUsd": [600, 1100],
+      "oceanUsd": [1300, 2200],
+      "portAgentEur": [300, 600],
+      "transitInsurancePct": 0.015
+    }
+  }
+}

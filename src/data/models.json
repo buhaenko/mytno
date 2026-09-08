@@ -1,0 +1,91 @@
+[
+  { "make": "Audi", "model": "A4 (B9)", "years": [2016, 2023], "tier": "premium", "engines": [
+    { "label": "2.0 TFSI 190 к.с.", "cc": 1984, "fuel": "petrol", "hp": 190, "co2": 148, "listEur": 42000 },
+    { "label": "2.0 TFSI quattro 252 к.с.", "cc": 1984, "fuel": "petrol", "hp": 252, "co2": 168, "listEur": 47150 },
+    { "label": "2.0 TDI 150 к.с.", "cc": 1968, "fuel": "diesel", "hp": 150, "co2": 128, "listEur": 40500 },
+    { "label": "2.0 TDI quattro 190 к.с.", "cc": 1968, "fuel": "diesel", "hp": 190, "co2": 141, "listEur": 46000 } ] },
+  { "make": "Audi", "model": "A5 (F5)", "years": [2017, 2024], "tier": "premium", "engines": [
+    { "label": "2.0 TFSI quattro 252 к.с.", "cc": 1984, "fuel": "petrol", "hp": 252, "co2": 170, "listEur": 52000 },
+    { "label": "2.0 TDI 190 к.с.", "cc": 1968, "fuel": "diesel", "hp": 190, "co2": 140, "listEur": 49000 } ] },
+  { "make": "Audi", "model": "A6 (C8)", "years": [2018, 2024], "tier": "premium", "engines": [
+    { "label": "45 TFSI quattro 245 к.с.", "cc": 1984, "fuel": "petrol", "hp": 245, "co2": 172, "listEur": 58000 },
+    { "label": "40 TDI 204 к.с.", "cc": 1968, "fuel": "diesel", "hp": 204, "co2": 143, "listEur": 56000 } ] },
+  { "make": "Audi", "model": "Q5 (FY)", "years": [2017, 2024], "tier": "premium", "engines": [
+    { "label": "45 TFSI quattro 252 к.с.", "cc": 1984, "fuel": "petrol", "hp": 252, "co2": 185, "listEur": 55000 },
+    { "label": "40 TDI quattro 204 к.с.", "cc": 1968, "fuel": "diesel", "hp": 204, "co2": 160, "listEur": 54000 } ] },
+  { "make": "BMW", "model": "3 Series (G20)", "years": [2019, 2024], "tier": "premium", "engines": [
+    { "label": "320i 184 к.с.", "cc": 1998, "fuel": "petrol", "hp": 184, "co2": 150, "listEur": 44000 },
+    { "label": "330i 258 к.с.", "cc": 1998, "fuel": "petrol", "hp": 258, "co2": 158, "listEur": 50500 },
+    { "label": "320d 190 к.с.", "cc": 1995, "fuel": "diesel", "hp": 190, "co2": 130, "listEur": 46500 } ] },
+  { "make": "BMW", "model": "5 Series (G30)", "years": [2017, 2023], "tier": "premium", "engines": [
+    { "label": "530i 252 к.с.", "cc": 1998, "fuel": "petrol", "hp": 252, "co2": 160, "listEur": 58000 },
+    { "label": "520d 190 к.с.", "cc": 1995, "fuel": "diesel", "hp": 190, "co2": 132, "listEur": 55000 } ] },
+  { "make": "BMW", "model": "X3 (G01)", "years": [2018, 2024], "tier": "premium", "engines": [
+    { "label": "xDrive30i 252 к.с.", "cc": 1998, "fuel": "petrol", "hp": 252, "co2": 186, "listEur": 57000 },
+    { "label": "xDrive20d 190 к.с.", "cc": 1995, "fuel": "diesel", "hp": 190, "co2": 154, "listEur": 55000 } ] },
+  { "make": "BMW", "model": "X5 (G05)", "years": [2019, 2024], "tier": "luxury", "engines": [
+    { "label": "xDrive40i 340 к.с.", "cc": 2998, "fuel": "petrol", "hp": 340, "co2": 215, "listEur": 82000 },
+    { "label": "xDrive30d 265 к.с.", "cc": 2993, "fuel": "diesel", "hp": 265, "co2": 185, "listEur": 80000 } ] },
+  { "make": "Mercedes-Benz", "model": "C-Class (W205)", "years": [2015, 2021], "tier": "premium", "engines": [
+    { "label": "C 200 184 к.с.", "cc": 1497, "fuel": "petrol", "hp": 184, "co2": 150, "listEur": 43000 },
+    { "label": "C 300 258 к.с.", "cc": 1991, "fuel": "petrol", "hp": 258, "co2": 160, "listEur": 50000 },
+    { "label": "C 220 d 194 к.с.", "cc": 1950, "fuel": "diesel", "hp": 194, "co2": 133, "listEur": 46000 } ] },
+  { "make": "Mercedes-Benz", "model": "E-Class (W213)", "years": [2016, 2023], "tier": "premium", "engines": [
+    { "label": "E 300 258 к.с.", "cc": 1991, "fuel": "petrol", "hp": 258, "co2": 168, "listEur": 60000 },
+    { "label": "E 220 d 194 к.с.", "cc": 1950, "fuel": "diesel", "hp": 194, "co2": 140, "listEur": 57000 } ] },
+  { "make": "Mercedes-Benz", "model": "GLC (X253)", "years": [2016, 2022], "tier": "premium", "engines": [
+    { "label": "GLC 300 258 к.с.", "cc": 1991, "fuel": "petrol", "hp": 258, "co2": 185, "listEur": 56000 },
+    { "label": "GLC 220 d 194 к.с.", "cc": 1950, "fuel": "diesel", "hp": 194, "co2": 160, "listEur": 54000 } ] },
+  { "make": "Volkswagen", "model": "Golf 8", "years": [2020, 2024], "tier": "mass", "engines": [
+    { "label": "1.5 TSI 150 к.с.", "cc": 1498, "fuel": "petrol", "hp": 150, "co2": 125, "listEur": 30000 },
+    { "label": "2.0 TDI 150 к.с.", "cc": 1968, "fuel": "diesel", "hp": 150, "co2": 118, "listEur": 32000 } ] },
+  { "make": "Volkswagen", "model": "Passat (B8)", "years": [2015, 2023], "tier": "mass", "engines": [
+    { "label": "1.5 TSI 150 к.с.", "cc": 1498, "fuel": "petrol", "hp": 150, "co2": 135, "listEur": 35000 },
+    { "label": "2.0 TDI 150 к.с.", "cc": 1968, "fuel": "diesel", "hp": 150, "co2": 122, "listEur": 37000 } ] },
+  { "make": "Volkswagen", "model": "Tiguan II", "years": [2016, 2024], "tier": "mass", "engines": [
+    { "label": "1.5 TSI 150 к.с.", "cc": 1498, "fuel": "petrol", "hp": 150, "co2": 150, "listEur": 36000 },
+    { "label": "2.0 TDI 150 к.с.", "cc": 1968, "fuel": "diesel", "hp": 150, "co2": 140, "listEur": 38500 } ] },
+  { "make": "Skoda", "model": "Octavia IV", "years": [2020, 2024], "tier": "mass", "engines": [
+    { "label": "1.5 TSI 150 к.с.", "cc": 1498, "fuel": "petrol", "hp": 150, "co2": 125, "listEur": 28000 },
+    { "label": "2.0 TDI 150 к.с.", "cc": 1968, "fuel": "diesel", "hp": 150, "co2": 115, "listEur": 30000 } ] },
+  { "make": "Toyota", "model": "RAV4 (XA50)", "years": [2019, 2024], "tier": "mass", "engines": [
+    { "label": "2.5 Hybrid 218/222 к.с.", "cc": 2487, "fuel": "hybrid", "hp": 218, "co2": 126, "listEur": 40000 },
+    { "label": "2.0 175 к.с.", "cc": 1987, "fuel": "petrol", "hp": 175, "co2": 155, "listEur": 34000 } ] },
+  { "make": "Toyota", "model": "Camry (XV70)", "years": [2018, 2024], "tier": "mass", "engines": [
+    { "label": "2.5 Hybrid 218 к.с.", "cc": 2487, "fuel": "hybrid", "hp": 218, "co2": 120, "listEur": 40000 },
+    { "label": "2.5 (US) 206 к.с.", "cc": 2487, "fuel": "petrol", "hp": 206, "co2": 175, "listEur": 36000 } ] },
+  { "make": "Toyota", "model": "Corolla (E210)", "years": [2019, 2024], "tier": "mass", "engines": [
+    { "label": "1.8 Hybrid 122/140 к.с.", "cc": 1798, "fuel": "hybrid", "hp": 122, "co2": 102, "listEur": 27000 },
+    { "label": "2.0 (US) 169 к.с.", "cc": 1987, "fuel": "petrol", "hp": 169, "co2": 150, "listEur": 25000 } ] },
+  { "make": "Tesla", "model": "Model 3", "years": [2017, 2024], "tier": "premium", "engines": [
+    { "label": "RWD 60 кВт·год", "cc": 0, "fuel": "electric", "hp": 283, "co2": 0, "listEur": 42000, "kwh": 60 },
+    { "label": "Long Range 75–82 кВт·год", "cc": 0, "fuel": "electric", "hp": 351, "co2": 0, "listEur": 50000, "kwh": 78 } ] },
+  { "make": "Tesla", "model": "Model Y", "years": [2020, 2024], "tier": "premium", "engines": [
+    { "label": "RWD 60 кВт·год", "cc": 0, "fuel": "electric", "hp": 299, "co2": 0, "listEur": 45000, "kwh": 60 },
+    { "label": "Long Range 78 кВт·год", "cc": 0, "fuel": "electric", "hp": 378, "co2": 0, "listEur": 52000, "kwh": 78 } ] },
+  { "make": "Hyundai", "model": "Tucson (NX4)", "years": [2021, 2024], "tier": "mass", "engines": [
+    { "label": "1.6 T-GDI 150 к.с.", "cc": 1598, "fuel": "petrol", "hp": 150, "co2": 145, "listEur": 32000 },
+    { "label": "1.6 T-GDI Hybrid 230 к.с.", "cc": 1598, "fuel": "hybrid", "hp": 230, "co2": 130, "listEur": 38000 },
+    { "label": "2.5 (US) 187 к.с.", "cc": 2497, "fuel": "petrol", "hp": 187, "co2": 175, "listEur": 33000 } ] },
+  { "make": "Kia", "model": "Sportage (NQ5)", "years": [2022, 2024], "tier": "mass", "engines": [
+    { "label": "1.6 T-GDI 150 к.с.", "cc": 1598, "fuel": "petrol", "hp": 150, "co2": 148, "listEur": 31000 },
+    { "label": "2.5 (US) 187 к.с.", "cc": 2497, "fuel": "petrol", "hp": 187, "co2": 178, "listEur": 32000 } ] },
+  { "make": "Ford", "model": "Mustang (S550)", "years": [2015, 2023], "tier": "premium", "engines": [
+    { "label": "2.3 EcoBoost 317 к.с.", "cc": 2261, "fuel": "petrol", "hp": 317, "co2": 199, "listEur": 47000 },
+    { "label": "5.0 V8 GT 450 к.с.", "cc": 4951, "fuel": "petrol", "hp": 450, "co2": 270, "listEur": 58000 } ] },
+  { "make": "Ford", "model": "Escape / Kuga III", "years": [2020, 2024], "tier": "mass", "engines": [
+    { "label": "1.5 EcoBoost 150 к.с.", "cc": 1497, "fuel": "petrol", "hp": 150, "co2": 145, "listEur": 33000 },
+    { "label": "2.5 PHEV 225 к.с.", "cc": 2488, "fuel": "phev", "hp": 225, "co2": 32, "listEur": 42000 } ] },
+  { "make": "Lexus", "model": "RX (AL20)", "years": [2016, 2022], "tier": "luxury", "engines": [
+    { "label": "RX 450h 313 к.с.", "cc": 3456, "fuel": "hybrid", "hp": 313, "co2": 140, "listEur": 75000 },
+    { "label": "RX 350 (US) 300 к.с.", "cc": 3456, "fuel": "petrol", "hp": 300, "co2": 230, "listEur": 70000 } ] },
+  { "make": "Honda", "model": "CR-V (RW)", "years": [2017, 2022], "tier": "mass", "engines": [
+    { "label": "1.5 VTEC Turbo 193 к.с.", "cc": 1498, "fuel": "petrol", "hp": 193, "co2": 160, "listEur": 36000 },
+    { "label": "2.0 Hybrid 184 к.с.", "cc": 1993, "fuel": "hybrid", "hp": 184, "co2": 125, "listEur": 40000 } ] },
+  { "make": "Mazda", "model": "CX-5 (KF)", "years": [2017, 2024], "tier": "mass", "engines": [
+    { "label": "2.0 Skyactiv-G 165 к.с.", "cc": 1998, "fuel": "petrol", "hp": 165, "co2": 155, "listEur": 33000 },
+    { "label": "2.5 Skyactiv-G 194 к.с.", "cc": 2488, "fuel": "petrol", "hp": 194, "co2": 170, "listEur": 38000 } ] },
+  { "make": "Nissan", "model": "Rogue / X-Trail (T32)", "years": [2014, 2020], "tier": "mass", "engines": [
+    { "label": "2.5 (US) 170 к.с.", "cc": 2488, "fuel": "petrol", "hp": 170, "co2": 180, "listEur": 32000 },
+    { "label": "1.6 dCi 130 к.с.", "cc": 1598, "fuel": "diesel", "hp": 130, "co2": 129, "listEur": 31000 } ] }
+]

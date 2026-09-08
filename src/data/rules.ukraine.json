@@ -1,0 +1,53 @@
+{
+  "effective": "2026-01-01",
+  "sources": [
+    "Податковий кодекс України, ст. 215.3.5-1 (акциз на ТЗ), ст. 193 (ПДВ 20%)",
+    "Митний тариф України, група 8703; Угода про асоціацію ЄС–Україна (тарифні квоти/графік лібералізації)",
+    "Закон «Про збір на обов'язкове державне пенсійне страхування», ст. 4 (3/4/5% при першій реєстрації)",
+    "Держбюджет-2026: прожитковий мінімум для працездатних 3 328 грн"
+  ],
+  "duty": { "default": 0.10, "euOriginWithProof": 0.0, "electric": 0.0 },
+  "excise": {
+    "petrolPerLitreUpTo3000": 50,
+    "petrolPerLitreOver3000": 100,
+    "dieselPerLitreUpTo3500": 75,
+    "dieselPerLitreOver3500": 150,
+    "hybridFlat": 100,
+    "electricPerKwh": 1,
+    "ageCoefMin": 1,
+    "ageCoefMax": 15
+  },
+  "vat": 0.20,
+  "pension": {
+    "subsistenceMinimumUah": 3328,
+    "tiers": [
+      { "uptoMultiples": 165, "rate": 0.03 },
+      { "uptoMultiples": 290, "rate": 0.04 },
+      { "uptoMultiples": null, "rate": 0.05 }
+    ]
+  },
+  "fees": {
+    "brokerUsd": [150, 300],
+    "certificateOfConformityUsd": [100, 200],
+    "registrationUah": [1500, 3500],
+    "translationUah": [300, 900],
+    "expertAssessmentUah": [0, 800]
+  },
+  "logistics": {
+    "us": {
+      "auctionFeePct": 0.07,
+      "auctionFixedUsd": 200,
+      "inlandNearUsd": [250, 600],
+      "inlandFarUsd": [600, 1100],
+      "oceanUsd": [1000, 1500],
+      "portToUaUsd": [600, 1000],
+      "portHandlingUsd": [200, 400],
+      "transitInsurancePct": 0.015
+    },
+    "eu": {
+      "autovozEur": [500, 1000],
+      "selfDriveEur": [250, 450],
+      "exportPlatesEur": [150, 300]
+    }
+  }
+}
