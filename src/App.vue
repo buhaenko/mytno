@@ -3,7 +3,7 @@ import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue'
 import type { CalcResult, Currency, Destination, FxRates, Origin, RouteInput, Vehicle } from './types'
 import { loadFx } from './lib/fx'
 import { calculate } from './lib/calc'
-import { createShareUrl, readShared } from './lib/share'
+import { appUrl, createShareUrl, readShared } from './lib/share'
 import countries from './data/countries.json'
 import { ORIGIN_COUNTRIES, ORIGIN_GROUP } from './data/origins'
 import fxFallback from './data/fx.fallback.json'
@@ -61,6 +61,19 @@ const showOriginProof = computed(() => destination.value === 'UA' && origin.valu
 const showResidence = computed(() => destination.value !== 'UA' && origin.value !== 'EU')
 
 const shareState = computed(() => ({ v: { ...vehicle.value, decodeNotes: [] }, r: route.value, l: locale.value, oc: originCountry.value }))
+// ---- стан у URL (?from=LT&to=ES) і чернетка в localStorage, щоб перезавантаження нічого не збивало ----
+const DRAFT = 'na-nomery:draft'
+let restoring = true
+function syncUrl() {
+  if (restoring) return
+  const q = new URLSearchParams()
+  if (originCountry.value) q.set('from', originCountry.value)
+  if (destination.value) q.set('to', destination.value)
+  const qs = q.toString() ? `?${q}` : ''
+  history.replaceState(null, '', `${appUrl(locale.value, '', qs).slice(location.origin.length)}${shareUrl.value ? '' : location.hash.startsWith('#s=') ? '' : location.hash}`)
+}
+watch([originCountry, destination], syncUrl)
+watch(shareState, (st) => { if (restoring) return; try { localStorage.setItem(DRAFT, JSON.stringify(st)) } catch { /* noop */ } }, { deep: true })
 watch(result, async (r, prev) => {
   shareUrl.value = ''
   if (r && !prev) { await nextTick(); resultEl.value?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
@@ -69,8 +82,8 @@ async function share() {
   if (shareBusy.value) return
   shareBusy.value = true
   try {
-    shareUrl.value = await createShareUrl(shareState.value)
-    history.replaceState(null, '', shareUrl.value.slice(shareUrl.value.indexOf('#')))
+    shareUrl.value = await createShareUrl(shareState.value, locale.value)
+    history.replaceState(null, '', shareUrl.value.slice(location.origin.length))
     try { await navigator.clipboard.writeText(shareUrl.value); copied.value = true; setTimeout(() => (copied.value = false), 2000) } catch { /* noop */ }
   } finally { shareBusy.value = false }
 }
@@ -83,12 +96,25 @@ function applyShared(s: { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string |
 }
 async function changeLocale(l: Locale) {
   await setLocale(l)
-  const base = import.meta.env.BASE_URL
-  history.replaceState(null, '', `${base}${l === 'en' ? '' : l + '/'}${location.hash}`)
+  history.replaceState(null, '', `${appUrl(l, '', location.search).slice(location.origin.length)}${location.hash}`)
 }
 onMounted(async () => {
-  const shared = await readShared<{ v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }>()
+  type Shared = { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }
+  const shared = await readShared<Shared>()
   if (shared) applyShared(shared)
+  else {
+    let draft: Shared | null = null
+    try { draft = JSON.parse(localStorage.getItem(DRAFT) ?? 'null') } catch { /* noop */ }
+    const q = new URLSearchParams(location.search)
+    const from = q.get('from'), to = q.get('to')
+    if (draft && draft.r && (!from || from === draft.oc) && (!to || to === draft.r.destination)) applyShared(draft)
+    else {
+      if (from && ORIGIN_GROUP[from]) originCountry.value = from
+      if (to && DESTS.includes(to as Destination)) destination.value = to as Destination
+    }
+  }
+  await nextTick()
+  restoring = false
   Object.assign(fx, await loadFx())
 })
 </script>

@@ -1,8 +1,13 @@
 /**
- * Share-посилання. Якщо задано VITE_SHARE_API (Cloudflare Worker + KV) — короткий код #c=ab3k9.
- * Інакше — компактний самодостатній стан у #s= (без сервера). Обидва формати читаються.
+ * Share-посилання: `domain/<код>` (4–10 символів) через Cloudflare Worker + KV (VITE_SHARE_API).
+ * Без воркера — самодостатнє посилання `#s=…`. Читаються обидва формати (і старий `#c=`).
  */
 const API = (import.meta.env.VITE_SHARE_API as string | undefined)?.replace(/\/$/, '')
+const BASE = import.meta.env.BASE_URL
+const CODE = /^[a-z0-9]{4,10}$/
+const LOCALE = /^[a-z]{2}$/
+
+export const hasShareApi = !!API
 
 export function encodeState(obj: unknown): string {
   return btoa(unescape(encodeURIComponent(JSON.stringify(obj)))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
@@ -11,25 +16,40 @@ export function decodeState<T>(s: string): T | null {
   try { return JSON.parse(decodeURIComponent(escape(atob(s.replace(/-/g, '+').replace(/_/g, '/'))))) as T } catch { return null }
 }
 
-export async function createShareUrl(state: unknown): Promise<string> {
-  const base = `${location.origin}${location.pathname}`
+/** Сегменти шляху після BASE_URL: [locale?, code?] */
+export function pathParts(): { locale?: string; code?: string } {
+  const segs = location.pathname.slice(BASE.length).split('/').filter(Boolean)
+  const out: { locale?: string; code?: string } = {}
+  for (const s of segs) {
+    if (!out.locale && LOCALE.test(s)) out.locale = s
+    else if (!out.code && CODE.test(s)) out.code = s
+  }
+  return out
+}
+
+export function appUrl(locale: string, path = '', query = ''): string {
+  return `${location.origin}${BASE}${locale === 'en' ? '' : locale + '/'}${path}${query}`
+}
+
+export async function createShareUrl(state: unknown, locale: string): Promise<string> {
   if (API) {
     try {
       const res = await fetch(`${API}/s`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(state) })
-      if (res.ok) { const { code } = (await res.json()) as { code: string }; return `${base}#c=${code}` }
-    } catch { /* fallback нижче */ }
+      if (res.ok) { const { code } = (await res.json()) as { code: string }; return appUrl(locale, code) }
+    } catch { /* fallback */ }
   }
-  return `${base}#s=${encodeState(state)}`
+  return `${appUrl(locale)}#s=${encodeState(state)}`
 }
 
 export async function readShared<T>(): Promise<T | null> {
-  const h = location.hash
-  const c = h.match(/^#c=([a-z0-9]{5,10})$/)
+  const { code } = pathParts()
+  const legacy = location.hash.match(/^#c=([a-z0-9]{4,10})$/)?.[1]
+  const c = code ?? legacy
   if (c && API) {
-    try { const res = await fetch(`${API}/s/${c[1]}`); if (res.ok) return (await res.json()) as T } catch { /* noop */ }
+    try { const res = await fetch(`${API}/s/${c}`); if (res.ok) return (await res.json()) as T } catch { /* noop */ }
     return null
   }
-  const s = h.match(/^#s=([A-Za-z0-9_-]+=*)$/)
+  const s = location.hash.match(/^#s=([A-Za-z0-9_-]+=*)$/)
   return s ? decodeState<T>(s[1]!) : null
 }
 

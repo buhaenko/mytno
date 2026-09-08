@@ -15,7 +15,7 @@ Free, client-side calculator of what it costs to clear customs and register a ca
 - Rules: `src/data/rules.ukraine.json`, `rules.spain.json`, `countries.json` (EU VAT rates, customs sites, Polish excise).
 
 ## Share links
-Short codes (`#c=ab3k9`) need the Cloudflare Worker in `worker/` (KV store, no database). Without `VITE_SHARE_API` the app falls back to self-contained links (`#s=…`). The worker also provides `/geo` for language detection by IP.
+Short links look like `domain/uk/hr9m` and need the Cloudflare Worker in `worker/` (KV store, no database): `cd worker && npx wrangler login && npx wrangler kv namespace create LINKS` (paste the id into `wrangler.toml`) `&& npx wrangler deploy`, then set `VITE_SHARE_API` to the worker URL. Without it the app falls back to self-contained links (`#s=…`). The worker also provides `/geo` for language detection by IP. Selected countries live in the URL (`?from=LT&to=ES`) and the whole draft is kept in localStorage, so a reload never loses state.
 
 ## Dev
 ```sh

@@ -32,7 +32,7 @@ const loaded = ref(false)
 
 /** /uk/…, ?lang=, збережений вибір, мова браузера, гео (опційно) */
 export async function detectLocale(geo?: () => Promise<string | null>): Promise<Locale> {
-  const seg = location.pathname.replace(import.meta.env.BASE_URL, '/').split('/').filter(Boolean)[0]
+  const seg = location.pathname.slice(import.meta.env.BASE_URL.length).split('/').filter(Boolean)[0]
   if (isLocale(seg)) return seg
   const q = new URLSearchParams(location.search).get('lang')
   if (isLocale(q)) return q

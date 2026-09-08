@@ -18,14 +18,14 @@ export default {
       if (text.length > 4096) return json({ error: 'too large' }, 413)
       try { JSON.parse(text) } catch { return json({ error: 'bad json' }, 400) }
       for (let i = 0; i < 5; i++) {
-        const c = code(5 + i)
+        const c = code(4 + i)
         if (await env.LINKS.get(c)) continue
         await env.LINKS.put(c, text, { expirationTtl: 60 * 60 * 24 * 365 })
         return json({ code: c })
       }
       return json({ error: 'retry' }, 500)
     }
-    const m = url.pathname.match(/^\/s\/([a-z0-9]{5,10})$/)
+    const m = url.pathname.match(/^\/s\/([a-z0-9]{4,10})$/)
     if (req.method === 'GET' && m) {
       const v = await env.LINKS.get(m[1])
       return v ? new Response(v, { headers: { ...CORS, 'content-type': 'application/json', 'cache-control': 'public, max-age=86400' } }) : json({ error: 'not found' }, 404)
