@@ -46,8 +46,8 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
   let freightToBorder = zero
   if (i.origin === 'UA') {
     const deliv = i.delivery === 'self' ? span(L.uaToEs.selfDriveEur) : span(L.uaToEs.autovozEur)
-    items.push(item('delivery', i.delivery === 'self' ? 'Перегін своїм ходом Україна → Іспанія (~3 000 км: пальне, платні дороги, 2 ночівлі)' : 'Автовоз Україна → Іспанія', 'logistics', deliv, { estimate: true }))
-    if (i.delivery === 'self') items.push(item('greencard', 'Зелена карта на українське авто (1–2 міс)', 'logistics', span(L.uaToEs.greenCardEur), { estimate: true }))
+    items.push(item('delivery', i.delivery === 'self' ? 'Своїм ходом Україна → Іспанія' : 'Автовоз Україна → Іспанія', 'logistics', deliv, { estimate: true }))
+    if (i.delivery === 'self') items.push(item('greencard', 'Зелена карта', 'logistics', span(L.uaToEs.greenCardEur), { estimate: true }))
     freightToBorder = i.delivery === 'self' ? r(0, 150, 300) : scaleR(deliv, 0.5)
   } else if (i.origin === 'EU') {
     const deliv = i.delivery === 'self' ? span(L.euToEs.selfDriveEur) : span(L.euToEs.autovozEur)
@@ -60,9 +60,9 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
     const inland = scaleR(i.usInland === 'far' ? span(L.usToEs.inlandFarUsd) : span(L.usToEs.inlandNearUsd), usd(1))
     const ocean = scaleR(span(L.usToEs.oceanUsd), usd(1))
     items.push(item('inland', 'Доставка по США до порту', 'logistics', inland, { estimate: true }))
-    items.push(item('ocean', 'Морський фрахт до Валенсії/Барселони/Більбао (RoRo або контейнер)', 'logistics', ocean, { estimate: true }))
-    items.push(item('port', 'Портовий агент, вивантаження, T1/DUA', 'logistics', span(L.usToEs.portAgentEur), { estimate: true }))
-    items.push(item('insurance', 'Страхування перевезення (опційно)', 'logistics', r(0, price * L.usToEs.transitInsurancePct, price * 0.02), { estimate: true }))
+    items.push(item('ocean', 'Морський фрахт до Іспанії', 'logistics', ocean, { estimate: true }))
+    items.push(item('port', 'Портовий агент, DUA', 'logistics', span(L.usToEs.portAgentEur), { estimate: true }))
+    items.push(item('insurance', 'Страхування перевезення', 'logistics', r(0, price * L.usToEs.transitInsurancePct, price * 0.02), { estimate: true }))
     freightToBorder = addR(inland, ocean)
   } else {
     const ocean = scaleR(r(1500, 2200, 3000), usd(1))
@@ -80,15 +80,16 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
     items.push(item('duty', `Мито (arancel) ${exempt ? '0% — пільга при переїзді' : pct(rules.duty)}`, 'tax', duty, {
       formula: '10% × CIF (ціна + доставка + страховка до кордону ЄС)',
       note: isEuMade(v) ? 'Авто зроблене в ЄС, але «повернення товару» без мита діє лише протягом 3 років після вивозу з ЄС — практично не застосовується.' : undefined,
+      source: exempt ? rules.refs.franquicia : rules.refs.duty,
     }))
     const vat = exempt ? zero : scaleR(addR(cif, duty), rules.vat)
-    items.push(item('vat', `IVA при імпорті ${exempt ? '0% — пільга при переїзді' : pct(rules.vat)}`, 'tax', vat, { formula: '21% × (CIF + мито)', note: 'Канари: IGIC 7% замість IVA; Сеута/Мелілья: IPSI.' }))
+    items.push(item('vat', `IVA при імпорті ${exempt ? '0% — пільга при переїзді' : pct(rules.vat)}`, 'tax', vat, { formula: '21% × (CIF + мито)', note: 'Канари: IGIC 7% замість IVA; Сеута/Мелілья: IPSI.', source: exempt ? rules.refs.franquicia : rules.refs.vat }))
   } else {
     const isNew = (v.mileageKm !== undefined && v.mileageKm < 6000) || age < 0.5
     if (isNew) {
-      items.push(item('vat', 'IVA 21% (авто «нове» для ПДВ: < 6 міс або < 6 000 км)', 'tax', scaleR(fixed(price), rules.vat), { note: 'Для нових авто з ЄС ПДВ платиться в Іспанії, навіть якщо вже сплачений у країні покупки (потім повертається там).' }))
+      items.push(item('vat', 'IVA 21% (авто «нове» для ПДВ: < 6 міс або < 6 000 км)', 'tax', scaleR(fixed(price), rules.vat), { note: 'Для нових авто з ЄС ПДВ платиться в Іспанії, навіть якщо вже сплачений у країні покупки (потім повертається там).', source: rules.refs.dgtEu }))
     } else {
-      items.push(item('vat', 'IVA: не платиться (вживане авто з ЄС)', 'tax', zero, { note: 'Куплене у приватника або у дилера за схемою маржі (REBU) — додаткового ПДВ немає.' }))
+      items.push(item('vat', 'IVA: не платиться (вживане авто з ЄС)', 'tax', zero, { note: 'Куплене у приватника або у дилера за схемою маржі (REBU) — додаткового ПДВ немає.', source: rules.refs.dgtEu }))
     }
   }
 
@@ -115,12 +116,12 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
   const iedmt = exempt
     ? zero
     : { min: base.min * rateMin, likely: base.likely * rateLikely, max: base.max * rateLikely }
-  const co2Label = exempt
-    ? '0% — пільга при переїзді'
+  const co2Note = exempt
+    ? 'Пільга при переїзді: 0%.'
     : isUsSpec
-      ? `${pct(rateLikely)} (CO₂ не сертифіковано в ЄС${knownCo2 ? `; якщо лабораторія впише ${v.co2Wltp} г/км WLTP → ${pct(rateMin)}` : ''})`
-      : `${pct(rateLikely)} за CO₂ ${knownCo2 ? `${v.co2Wltp} г/км WLTP` : 'невідомо → максимальна ставка'}`
-  items.push(item('iedmt', `Impuesto de matriculación ${co2Label}`, 'tax', iedmt, { formula: 'ставка за CO₂ × база (таблична ціна × коефіцієнт віку)', note: baseNote }))
+      ? `CO₂ не сертифіковано в ЄС → ${pct(rateLikely)}.${knownCo2 ? ` Якщо лабораторія впише ${v.co2Wltp} г/км WLTP → ${pct(rateMin)}.` : ''}`
+      : `CO₂ ${knownCo2 ? `${v.co2Wltp} г/км WLTP` : 'невідомо'} → ${pct(rateLikely)}.`
+  items.push(item('iedmt', `Impuesto de matriculación ${exempt ? '0%' : pct(rateLikely)}`, 'tax', iedmt, { formula: 'ставка за CO₂ × база (таблична ціна × коефіцієнт віку)', note: `${co2Note} ${baseNote}`, source: rules.refs.iedmt }))
   if (isUsSpec && !exempt) warnings.push('Для авто без європейської сертифікації CO₂ Hacienda застосовує максимальну ставку 14,75%. Лабораторія при омологації іноді вписує WLTP європейського аналога — тоді ставка нижча.')
   if (!knownCo2 && !isUsSpec) warnings.push('Вкажіть CO₂ (WLTP, з COC або техпаспорта): без нього рахуємо максимальну ставку 14,75%.')
   if (exempt) warnings.push('Пільга «traslado de residencia»: авто у власності ≥ 6 міс до переїзду, ви жили поза ЄС ≥ 12 міс, ввезення протягом 12 міс після зміни резиденції, заборона продажу 12 міс. Якщо ви ВЖЕ резидент Іспанії (у т. ч. тимчасовий захист) і купуєте авто зараз — пільга не діє.')
@@ -128,23 +129,23 @@ export function calcSpain(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date
   // ---------- Омологація / ITV / DGT ----------
   const F = rules.fees
   if (v.marketSpec === 'EU') {
-    items.push(item('coc', 'COC від виробника (сертифікат відповідності ЄС)', 'compliance', span(F.cocFromManufacturerEur), { estimate: true, note: 'Замовляється у дилера/виробника за VIN. Якщо є оригінальний COC — 0 €.' }))
-    items.push(item('ficha', 'Ficha técnica reducida + ITV імпортного авто', 'compliance', addR(span(F.fichaReducidaEur), span(F.itvImportEur)), { estimate: true }))
+    items.push(item('coc', 'COC від виробника', 'compliance', span(F.cocFromManufacturerEur), { estimate: true, note: 'Замовляється у дилера/виробника за VIN. Якщо є оригінальний COC — 0 €.', source: rules.refs.dgtEu }))
+    items.push(item('ficha', 'Ficha reducida + ITV', 'compliance', addR(span(F.fichaReducidaEur), span(F.itvImportEur)), { estimate: true, note: 'Тарифи ITV встановлює кожна автономія; ficha reducida виписує інженер або лабораторія.', source: rules.refs.dgtEu }))
   } else {
-    items.push(item('homolog', 'Індивідуальна омологація (лабораторія + ficha reducida + інспекція ITV)', 'compliance', span(F.individualHomologationEur), { estimate: true, note: 'Обов\'язкова для авто без європейського типового схвалення (US/JP/KR-версії). Термін 3–8 тижнів.' }))
-    items.push(item('itv', 'ITV імпортного авто', 'compliance', span(F.itvImportEur), { estimate: true }))
+    items.push(item('homolog', 'Індивідуальна омологація', 'compliance', span(F.individualHomologationEur), { estimate: true, note: 'Лабораторія + ficha técnica reducida + інспекція ITV. Обов\'язкова для авто без європейського типового схвалення (US/JP/KR-версії). Термін 3–8 тижнів.', source: rules.refs.homolog }))
+    items.push(item('itv', 'ITV імпортного авто', 'compliance', span(F.itvImportEur), { estimate: true, note: 'Тариф залежить від автономії.', source: rules.refs.dgtNonEu }))
   }
-  items.push(item('dgt', 'Tasa DGT 1.1 (матрікуляція)', 'fees', fixed(F.dgtTasaEur)))
+  items.push(item('dgt', 'Tasa DGT 1.1', 'fees', fixed(F.dgtTasaEur), { source: rules.refs.dgtTasa }))
   items.push(item('plates', 'Номерні знаки', 'fees', span(F.platesEur), { estimate: true }))
-  items.push(item('gestoria', 'Gestoría (оформлення під ключ)', 'fees', span(F.gestoriaEur), { estimate: true, note: 'Можна зробити самому через sede.dgt.gob.es і AEAT (модель 576) — тоді 0 €.' }))
+  items.push(item('gestoria', 'Gestoría', 'fees', span(F.gestoriaEur), { estimate: true, note: 'Можна зробити самому через sede.dgt.gob.es і AEAT (модель 576) — тоді 0 €.' }))
   const cvf = cvfFromCc(v.engineCc)
   const ivtm = v.fuel === 'electric' ? ivtmAnnual(cvf) * 0.25 : ivtmAnnual(cvf)
-  items.push(item('ivtm', `IVTM (щорічний муніципальний податок, ≈${cvf.toFixed(1)} фіск. к.с.)`, 'fees', r(ivtm * 0.6, ivtm, ivtm * 1.2), { estimate: true, note: 'Залежить від муніципалітету; у перший рік пропорційно кварталам. Електро/гібриди мають знижки до 75% у багатьох містах.' }))
+  items.push(item('ivtm', 'IVTM (щорічний)', 'fees', r(ivtm * 0.6, ivtm, ivtm * 1.2), { estimate: true, note: `Муніципальний податок за ≈${cvf.toFixed(1)} фіскальними к.с.; ставка залежить від міста, у перший рік пропорційно кварталам. Електро/гібриди мають знижки до 75% у багатьох містах.`, source: rules.refs.ivtm }))
 
   // ---------- Переобладнання ----------
   const key = v.marketSpec === 'US' ? 'US_to_EU' : v.marketSpec === 'JP' ? 'JP_to_EU' : ''
   const nu = key ? nuancesFor(key, v.brandTier) : { list: [], total: zero }
-  if (key) items.push(item('conversion', 'Переобладнання під норми ЄС (світло, спідометр, тонування)', 'compliance', nu.total, { estimate: true, note: 'Деталі нижче в «Нюансах». Мінімум = лише обов\'язкове, максимум = усе нове оригінальне.' }))
+  if (key) items.push(item('conversion', 'Переобладнання під норми ЄС', 'compliance', nu.total, { estimate: true, note: 'Світло, спідометр, тонування — деталі нижче в «Нюансах». Мінімум = лише обов\'язкове, максимум = усе нове оригінальне.' }))
 
   // ---------- Ремонт ----------
   if (i.salvage && i.repairBudget > 0) {

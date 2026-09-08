@@ -54,7 +54,7 @@ export function calcUkraine(v: Vehicle, i: RouteInput, fx: FxRates, now = new Da
   if (i.origin === 'US') {
     if (i.boughtFrom === 'auction') {
       const fee = price * L.us.auctionFeePct + usd(L.us.auctionFixedUsd)
-      items.push(item('auction', 'Збори аукціону (Copart/IAAI: buyer fee, gate, doc)', 'logistics', r(fee * 0.8, fee, fee * 1.25), { estimate: true, note: 'Залежить від ціни лоту й типу акаунта (брокерський/дилерський).' }))
+      items.push(item('auction', 'Збори аукціону', 'logistics', r(fee * 0.8, fee, fee * 1.25), { estimate: true, note: 'Залежить від ціни лоту й типу акаунта (брокерський/дилерський).' }))
     }
     const inland = i.usInland === 'far' ? span(L.us.inlandFarUsd) : span(L.us.inlandNearUsd)
     const inlandEur = scaleR(inland, usd(1))
@@ -62,15 +62,15 @@ export function calcUkraine(v: Vehicle, i: RouteInput, fx: FxRates, now = new Da
     const handling = scaleR(span(L.us.portHandlingUsd), usd(1))
     const portToUa = scaleR(span(L.us.portToUaUsd), usd(1))
     items.push(item('inland', 'Доставка по США до порту', 'logistics', inlandEur, { estimate: true }))
-    items.push(item('ocean', 'Морський фрахт до Клайпеди/Гданська/Бремергафена (контейнер, збірний)', 'logistics', ocean, { estimate: true }))
-    items.push(item('port', 'Портові збори, експедитор, вивантаження', 'logistics', handling, { estimate: true }))
-    items.push(item('port-ua', 'Порт → Україна (автовоз/лафет) + оформлення транзиту', 'logistics', portToUa, { estimate: true }))
-    items.push(item('insurance', 'Страхування на час перевезення (опційно)', 'logistics', r(0, price * L.us.transitInsurancePct, price * 0.02), { estimate: true }))
+    items.push(item('ocean', 'Морський фрахт до Європи', 'logistics', ocean, { estimate: true }))
+    items.push(item('port', 'Порт, експедитор', 'logistics', handling, { estimate: true }))
+    items.push(item('port-ua', 'Порт → Україна', 'logistics', portToUa, { estimate: true }))
+    items.push(item('insurance', 'Страхування перевезення', 'logistics', r(0, price * L.us.transitInsurancePct, price * 0.02), { estimate: true }))
     freightToBorder = addR(inlandEur, ocean)
   } else if (i.origin === 'EU') {
     const deliv = i.delivery === 'self' ? span(L.eu.selfDriveEur) : span(L.eu.autovozEur)
-    items.push(item('delivery', i.delivery === 'self' ? 'Перегін своїм ходом (пальне, дороги, ночівля)' : 'Автовоз ЄС → Україна', 'logistics', deliv, { estimate: true }))
-    items.push(item('export-plates', 'Транзитні/експортні номери + страховка', 'logistics', span(L.eu.exportPlatesEur), { estimate: true }))
+    items.push(item('delivery', i.delivery === 'self' ? 'Своїм ходом' : 'Автовоз ЄС → Україна', 'logistics', deliv, { estimate: true }))
+    items.push(item('export-plates', 'Транзитні номери', 'logistics', span(L.eu.exportPlatesEur), { estimate: true }))
     if (i.delivery !== 'self') freightToBorder = scaleR(deliv, 0.7)
   } else {
     const ocean = scaleR(r(1500, 2000, 2800), usd(1))
@@ -100,11 +100,11 @@ export function calcUkraine(v: Vehicle, i: RouteInput, fx: FxRates, now = new Da
     }
   }
   const duty = scaleR(customsValue, dutyRate)
-  items.push(item('duty', `Ввізне мито ${pct(dutyRate)}`, 'tax', duty, { note: dutyNote, formula: `${pct(dutyRate)} × митна вартість` }))
+  items.push(item('duty', `Ввізне мито ${pct(dutyRate)}`, 'tax', duty, { note: dutyNote, formula: `${pct(dutyRate)} × митна вартість`, source: rules.refs.duty }))
 
   // ---------- Акциз ----------
   const ex = exciseUa(v, now)
-  items.push(item('excise', 'Акцизний податок', 'tax', fixed(ex.eur), { formula: ex.formula, note: v.fuel === 'electric' ? 'З 01.01.2026 пільги на електромобілі скасовані: акциз 1 €/кВт·год, ПДВ 20%.' : 'Ставка в євро за літр × повні роки з року, наступного за роком випуску (мін. 1, макс. 15).' }))
+  items.push(item('excise', 'Акцизний податок', 'tax', fixed(ex.eur), { formula: ex.formula, note: v.fuel === 'electric' ? 'З 01.01.2026 пільги на електромобілі скасовані: акциз 1 €/кВт·год, ПДВ 20%.' : 'Ставка в євро за літр × повні роки з року, наступного за роком випуску (мін. 1, макс. 15).', source: rules.refs.excise }))
   if (v.fuel !== 'electric' && v.fuel !== 'hybrid' && v.fuel !== 'phev') {
     warnings.push(`Коефіцієнт віку ${ageCoefUa(v.year, now)}: береться рік ВИРОБНИЦТВА з документів. Для US-авто модельний рік (${v.year}) може бути на 1 більший за фактичний рік випуску — тоді акциз буде більший на один крок.`)
   }
@@ -112,7 +112,7 @@ export function calcUkraine(v: Vehicle, i: RouteInput, fx: FxRates, now = new Da
   // ---------- ПДВ ----------
   const vatBase = addR(addR(customsValue, duty), fixed(ex.eur))
   const vat = scaleR(vatBase, rules.vat)
-  items.push(item('vat', `ПДВ ${pct(rules.vat)}`, 'tax', vat, { formula: '20% × (митна вартість + мито + акциз)' }))
+  items.push(item('vat', `ПДВ ${pct(rules.vat)}`, 'tax', vat, { formula: '20% × (митна вартість + мито + акциз)', source: rules.refs.vat }))
 
   // ---------- Пенсійний збір ----------
   const pension = {
@@ -121,15 +121,15 @@ export function calcUkraine(v: Vehicle, i: RouteInput, fx: FxRates, now = new Da
     max: customsValue.max * pensionRate(customsValue.max * fx.eurUah),
   }
   const pr = pensionRate(customsValue.likely * fx.eurUah)
-  items.push(item('pension', `Збір до Пенсійного фонду ${pct(pr)} (перша реєстрація)`, 'tax', pension, { note: `3% до ${(165 * rules.pension.subsistenceMinimumUah).toLocaleString('uk-UA')} ₴, 4% до ${(290 * rules.pension.subsistenceMinimumUah).toLocaleString('uk-UA')} ₴, 5% вище (прожитковий мінімум 2026 = ${rules.pension.subsistenceMinimumUah} ₴).` }))
+  items.push(item('pension', `Пенсійний збір ${pct(pr)}`, 'tax', pension, { note: `3% до ${(165 * rules.pension.subsistenceMinimumUah).toLocaleString('uk-UA')} ₴, 4% до ${(290 * rules.pension.subsistenceMinimumUah).toLocaleString('uk-UA')} ₴, 5% вище (прожитковий мінімум 2026 = ${rules.pension.subsistenceMinimumUah} ₴).`, source: rules.refs.pension }))
 
   // ---------- Збори та послуги ----------
   const F = rules.fees
-  items.push(item('broker', 'Митний брокер + електронна декларація', 'fees', scaleR(span(F.brokerUsd), usd(1)), { estimate: true }))
-  items.push(item('coc', 'Сертифікат відповідності (ОТК)', 'compliance', scaleR(span(F.certificateOfConformityUsd), usd(1)), { estimate: true, note: 'Обов\'язковий для першої реєстрації імпортованого авто. Мінімум Євро-2 для вживаних.' }))
-  if (i.origin === 'EU' || i.origin === 'OTHER') items.push(item('translation', 'Переклад документів (техпаспорт, договір)', 'fees', scaleR(span(F.translationUah), uah(1)), { estimate: true }))
-  items.push(item('registration', 'Реєстрація в сервісному центрі МВС + номери + техпаспорт', 'fees', scaleR(span(F.registrationUah), uah(1)), { estimate: true }))
-  items.push(item('expert', 'Експертна оцінка (якщо вимагає митниця)', 'fees', scaleR(span(F.expertAssessmentUah, 0), uah(1)), { estimate: true }))
+  items.push(item('broker', 'Митний брокер', 'fees', scaleR(span(F.brokerUsd), usd(1)), { estimate: true, note: 'Ринкова ціна послуги; самостійне декларування через кабінет Держмитслужби — 0.', source: rules.refs.customs }))
+  items.push(item('coc', 'Сертифікат відповідності (ОТК)', 'compliance', scaleR(span(F.certificateOfConformityUsd), usd(1)), { estimate: true, note: 'Обов\'язковий для першої реєстрації імпортованого авто. Мінімум Євро-2 для вживаних.', source: rules.refs.customs }))
+  if (i.origin === 'EU' || i.origin === 'OTHER') items.push(item('translation', 'Переклад документів', 'fees', scaleR(span(F.translationUah), uah(1)), { estimate: true }))
+  items.push(item('registration', 'Реєстрація в СЦ МВС, номери', 'fees', scaleR(span(F.registrationUah), uah(1)), { estimate: true }))
+  items.push(item('expert', 'Експертна оцінка', 'fees', scaleR(span(F.expertAssessmentUah, 0), uah(1)), { estimate: true }))
 
   // ---------- Ремонт ----------
   if (i.salvage && i.repairBudget > 0) {

@@ -44,7 +44,7 @@ export function item(
   label: string,
   category: LineItem['category'],
   range: Range,
-  extra: Partial<Pick<LineItem, 'note' | 'formula' | 'estimate'>> = {},
+  extra: Partial<Pick<LineItem, 'note' | 'formula' | 'estimate' | 'source'>> = {},
 ): LineItem {
   return { key, label, category, range, ...extra }
 }

@@ -58,6 +58,8 @@ export interface LineItem {
   formula?: string
   /** true, якщо це прогноз/оцінка, а не фіксована ставка */
   estimate?: boolean
+  /** офіційне джерело ставки */
+  source?: { title: string; url: string }
 }
 
 export interface Nuance {

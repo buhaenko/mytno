@@ -5,6 +5,7 @@ import { checkDigitValid, detectMarketSpec, isValidVinFormat, modelYearFromVin, 
 import { decodeVin, mapFuel, titleCase } from '../lib/nhtsa'
 import { MAKES, MODELS, matchReference, tierForMake } from '../lib/models'
 import Chips from './Chips.vue'
+import Help from './Help.vue'
 
 const vehicle = defineModel<Vehicle>({ required: true })
 const props = defineProps<{ destination: Destination; origin: Origin }>()
@@ -20,22 +21,15 @@ const vinOk = computed(() => isValidVinFormat(vin.value))
 
 const fuelOptions: { value: Fuel; label: string }[] = [
   { value: 'petrol', label: 'Бензин' }, { value: 'diesel', label: 'Дизель' }, { value: 'hybrid', label: 'Гібрид' },
-  { value: 'phev', label: 'Plug-in гібрид' }, { value: 'electric', label: 'Електро' }, { value: 'lpg', label: 'Газ/бензин' },
+  { value: 'phev', label: 'Plug-in' }, { value: 'electric', label: 'Електро' }, { value: 'lpg', label: 'Газ' },
 ]
-const marketOptions: { value: MarketSpec; label: string; hint: string }[] = [
-  { value: 'US', label: 'для США', hint: 'Американська версія — без ЄС-омологації' },
-  { value: 'EU', label: 'для Європи', hint: 'Європейська версія — є COC' },
-  { value: 'JP', label: 'для Японії', hint: 'Праве кермо' },
-  { value: 'KR', label: 'для Кореї', hint: '' },
-  { value: 'OTHER', label: 'інше', hint: 'ОАЕ, Китай' },
+const marketOptions: { value: MarketSpec; label: string }[] = [
+  { value: 'US', label: 'США' }, { value: 'EU', label: 'Європа' }, { value: 'JP', label: 'Японія' }, { value: 'KR', label: 'Корея' }, { value: 'OTHER', label: 'інше' },
 ]
-const tierOptions = [
-  { value: 'mass' as const, label: 'масовий' }, { value: 'premium' as const, label: 'преміум' }, { value: 'luxury' as const, label: 'люкс' },
-]
+const tierOptions = [{ value: 'mass' as const, label: 'масовий' }, { value: 'premium' as const, label: 'преміум' }, { value: 'luxury' as const, label: 'люкс' }]
 const isElectrified = computed(() => vehicle.value.fuel === 'electric' || vehicle.value.fuel === 'phev')
 const forSpain = computed(() => props.destination === 'ES')
 
-// автодекод, коли введено 17 валідних символів
 watch(vin, (v) => { if (isValidVinFormat(v) && v !== vehicle.value.vin) decode() })
 
 async function decode() {
@@ -61,17 +55,15 @@ async function decode() {
     if (ref) {
       v.co2Wltp = ref.engine.co2 || undefined
       v.listPriceNewEur = ref.engine.listEur
-      // NHTSA часто дає округлений об'єм (2.0 л → 2000); беремо точний з довідника, якщо він у межах 5%
       if (ref.engine.cc && (!v.engineCc || (v.engineCc % 100 === 0 && Math.abs(v.engineCc - ref.engine.cc) / ref.engine.cc < 0.05))) v.engineCc = ref.engine.cc
       if (!v.batteryKwh && ref.engine.kwh) v.batteryKwh = ref.engine.kwh
       if (!v.powerHp) v.powerHp = ref.engine.hp
       notes.push(`Довідник: ${ref.entry.model} · ${ref.engine.label} → CO₂ ${ref.engine.co2 || '—'} г/км, ціна нового ≈ ${ref.engine.listEur.toLocaleString('uk-UA')} €.`)
     } else if (!d.displacementCc && fuel !== 'electric') {
-      notes.push(`База знає лише марку, рік і завод (виробник з ${w.country}). Заповніть об'єм, паливо${forSpain.value ? ', CO₂ і ціну нового' : ''}.`)
+      notes.push(`NHTSA знає лише марку, рік і завод (виробник з ${w.country}). Заповніть об'єм і паливо${forSpain.value ? ', CO₂ і ціну нового' : ''}.`)
     }
-    if (!make) notes.push('VIN не розпізнано. Введіть дані вручну.')
     if (!checkDigitValid(vin.value) && w.region === 'NA') notes.push('Контрольна цифра не сходиться — перевірте VIN.')
-    if (!d.clean && d.errorText && make) notes.push(`NHTSA: ${d.errorText.split(';')[0]}`)
+    if (!make) error.value = 'VIN не розпізнано. Введіть дані вручну.'
     vehicle.value = v
     manual.value = false
   } catch (e) {
@@ -81,7 +73,6 @@ async function decode() {
   }
 }
 
-// ---- вручну ----
 const mMake = ref('')
 const mModelIdx = ref(-1)
 const mEngineIdx = ref(-1)
@@ -94,76 +85,71 @@ watch(mEngineIdx, (idx) => {
   const eng = entry?.engines[idx]
   if (!entry || !eng) return
   vehicle.value = {
-    ...vehicle.value, vin: undefined, make: entry.make, model: entry.model, engineCc: eng.cc || undefined, fuel: eng.fuel, powerHp: eng.hp,
-    batteryKwh: eng.kwh, co2Wltp: eng.co2 || undefined, listPriceNewEur: eng.listEur, brandTier: entry.tier, plantCountry: undefined, year: vehicle.value.year,
+    ...vehicle.value, vin: undefined, make: entry.make, model: entry.model, year: vehicle.value.year, engineCc: eng.cc || undefined, fuel: eng.fuel, powerHp: eng.hp,
+    batteryKwh: eng.kwh, co2Wltp: eng.co2 || undefined, listPriceNewEur: eng.listEur, brandTier: entry.tier, plantCountry: undefined,
     marketSpec: props.origin === 'US' ? 'US' : props.origin === 'JP' ? 'JP' : props.origin === 'KR' ? 'KR' : 'EU',
-    decodeNotes: ['Дані з довідника. Ринок (США/Європа) вкажіть самі — це вирішує омологацію.'],
+    decodeNotes: ['Дані з довідника моделей. Ринок (США/Європа) вкажіть самі.'],
   }
 })
-function blank() {
-  vehicle.value = { ...vehicle.value, vin: undefined, make: vehicle.value.make || '', model: vehicle.value.model || '', decodeNotes: [] }
-  manual.value = true
-  mMake.value = ''
-}
+function blank() { vehicle.value = { ...vehicle.value, vin: undefined, decodeNotes: [] }; manual.value = true; mMake.value = '' }
 function openManual() { manual.value = true; vinRaw.value = '' }
 </script>
 
 <template>
   <div>
     <div v-if="!manual" class="f">
+      <label>VIN <Help text="17 символів з техпаспорта або аукціонного лота. Розпізнаємо через базу NHTSA (США): марка, модель, двигун, завод, ринок. Для європейських VIN база знає менше — решту підтягуємо з довідника або вводите самі." :source="{ title: 'NHTSA vPIC API', url: 'https://vpic.nhtsa.dot.gov/api/' }" /></label>
       <div style="display:flex; gap:8px">
-        <input v-model="vinRaw" class="in mono big" placeholder="VIN · 17 символів" maxlength="20" autocomplete="off" spellcheck="false" @keyup.enter="decode" />
-        <button v-if="!ready || loading" class="btn" :disabled="!vinOk || loading" @click="decode"><span v-if="loading" class="spin"></span>{{ loading ? '' : 'Знайти' }}</button>
+        <input v-model="vinRaw" class="in mono big" placeholder="WAUANAF42HN008179" maxlength="20" autocomplete="off" spellcheck="false" @keyup.enter="decode" />
+        <button v-if="!ready || loading" class="btn" :disabled="!vinOk || loading" @click="decode"><span v-if="loading" class="spin"></span><span v-else>Знайти</span></button>
       </div>
-      <span class="hint">Підтягнемо марку, модель, двигун, завод і ринок. <button class="link" @click="openManual">Немає VIN — ввести вручну</button></span>
-      <p v-if="error" class="note danger">{{ error }}</p>
+      <p class="muted" style="font-size:12.5px"><button class="link" @click="openManual">Немає VIN — обрати модель</button></p>
+      <p v-if="error" class="err">{{ error }}</p>
     </div>
 
     <div v-else>
       <div class="row three">
         <div class="f"><label>Марка</label>
-          <select v-model="mMake" class="in"><option value="" disabled>Оберіть</option><option v-for="mk in MAKES" :key="mk" :value="mk">{{ mk }}</option></select></div>
+          <select v-model="mMake" class="in"><option value="" disabled>—</option><option v-for="mk in MAKES" :key="mk" :value="mk">{{ mk }}</option></select></div>
         <div class="f"><label>Модель</label>
-          <select v-model="mModelIdx" class="in" :disabled="!mMake"><option :value="-1" disabled>Оберіть</option><option v-for="x in modelsForMake" :key="x.i" :value="x.i">{{ x.m.model }}</option></select></div>
+          <select v-model="mModelIdx" class="in" :disabled="!mMake"><option :value="-1" disabled>—</option><option v-for="x in modelsForMake" :key="x.i" :value="x.i">{{ x.m.model }}</option></select></div>
         <div class="f"><label>Двигун</label>
-          <select v-model="mEngineIdx" class="in" :disabled="mModelIdx < 0"><option :value="-1" disabled>Оберіть</option><option v-for="(e, i) in enginesForModel" :key="i" :value="i">{{ e.label }}</option></select></div>
+          <select v-model="mEngineIdx" class="in" :disabled="mModelIdx < 0"><option :value="-1" disabled>—</option><option v-for="(e, i) in enginesForModel" :key="i" :value="i">{{ e.label }}</option></select></div>
       </div>
-      <p class="hint small muted" style="margin-top:8px">Немає в списку? <button class="link" @click="blank">Заповнити поля самому</button> · <button class="link" @click="manual = false">Повернутися до VIN</button></p>
+      <p class="muted" style="font-size:12.5px; margin-top:6px"><button class="link" @click="blank">Немає в списку</button> · <button class="link" @click="manual = false">Ввести VIN</button></p>
     </div>
 
     <Transition name="fade">
-      <div v-if="ready || manual" style="margin-top:18px">
-        <div v-if="ready" class="car">
-          <div class="name">{{ vehicle.make }} {{ vehicle.model }} <span class="muted" style="font-weight:400">{{ vehicle.year }}</span></div>
+      <div v-if="ready || manual">
+        <div class="car">
+          <div class="name">
+            <span>{{ vehicle.make }} {{ vehicle.model }} <span class="muted" style="font-weight:400">{{ vehicle.year }}</span></span>
+            <Help v-if="vehicle.decodeNotes.length" :lines="vehicle.decodeNotes" />
+          </div>
           <div class="tags">
-            <span class="tag accent">{{ marketOptions.find((m) => m.value === vehicle.marketSpec)?.label }}</span>
             <span v-if="vehicle.plantCountry" class="tag">завод: {{ vehicle.plantCountry.toLowerCase() }}</span>
             <span v-if="vehicle.drive" class="tag">{{ vehicle.drive.split('/')[0] }}</span>
           </div>
         </div>
-        <p v-for="(n, i) in vehicle.decodeNotes" :key="i" class="note">{{ n }}</p>
-
-        <div class="row three" style="margin-top:10px">
+        <div class="row four">
           <div class="f"><label>Марка</label><input v-model="vehicle.make" class="in" /></div>
           <div class="f"><label>Модель</label><input v-model="vehicle.model" class="in" /></div>
           <div class="f"><label>Рік</label><input v-model.number="vehicle.year" type="number" class="in" min="1980" :max="new Date().getFullYear() + 1" /></div>
           <div class="f"><label>Паливо</label><select v-model="vehicle.fuel" class="in"><option v-for="f in fuelOptions" :key="f.value" :value="f.value">{{ f.label }}</option></select></div>
-          <div v-if="vehicle.fuel !== 'electric'" class="f"><label>Об'єм, см³</label><input v-model.number="vehicle.engineCc" type="number" class="in" placeholder="1984" /></div>
-          <div v-if="isElectrified" class="f"><label>Батарея, кВт·год</label><input v-model.number="vehicle.batteryKwh" type="number" class="in" placeholder="75" /></div>
+          <div v-if="vehicle.fuel !== 'electric'" class="f"><label>Об'єм, см³ <Help :text="destination === 'UA' ? 'Акциз в Україні: ставка в € за літр × вік. 2.0 л = 1 984 см³, а не 2 000.' : 'Впливає на IVTM (щорічний муніципальний податок) через фіскальні к.с.'" /></label><input v-model.number="vehicle.engineCc" type="number" class="in" placeholder="1984" /></div>
+          <div v-if="isElectrified" class="f"><label>Батарея, кВт·год <Help text="Україна: акциз 1 € за кВт·год ємності." /></label><input v-model.number="vehicle.batteryKwh" type="number" class="in" placeholder="75" /></div>
           <template v-if="forSpain">
-            <div class="f"><label>CO₂ WLTP, г/км</label><input v-model.number="vehicle.co2Wltp" type="number" class="in" placeholder="168" /></div>
-            <div class="f"><label>Ціна нового в Іспанії, €</label><input v-model.number="vehicle.listPriceNewEur" type="number" class="in" placeholder="47150" /></div>
+            <div class="f"><label>CO₂ WLTP <Help text="Ставка impuesto de matriculación: до 120 г/км — 0%, 120–160 — 4,75%, 160–200 — 9,75%, від 200 або без сертифікації — 14,75%. Береться з COC або європейського техпаспорта; для US-авто зазвичай відсутній." :source="{ title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }" /></label><input v-model.number="vehicle.co2Wltp" type="number" class="in" placeholder="168" /></div>
+            <div class="f"><label>Ціна нового, € <Help text="Ціна нового авто цієї версії в Іспанії. Hacienda рахує impuesto de matriculación не від вашої ціни, а від табличної ціни нового × коефіцієнт віку (Orden anual de precios medios). Без неї беремо вашу ціну." :source="{ title: 'AEAT — Vehículos: valoración', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" /></label><input v-model.number="vehicle.listPriceNewEur" type="number" class="in" placeholder="47150" /></div>
           </template>
+          <div class="f" style="grid-column: 1 / -1"><label>Зроблене для ринку <Help text="Версія для США/Японії не має європейського сертифіката відповідності (COC): в ЄС потрібна індивідуальна омологація і переобладнання світла. Визначаємо за VIN: «ZZZ» на позиціях 4–6 — Європа; правильна контрольна цифра на 9-й позиції — Північна Америка." /></label><Chips v-model="vehicle.marketSpec" :options="marketOptions" /></div>
         </div>
-
-        <div class="f" style="margin-top:14px"><label>Зроблене для ринку</label><Chips v-model="vehicle.marketSpec" :options="marketOptions" /></div>
-
-        <p style="margin-top:12px"><button class="link" @click="more = !more">{{ more ? 'Сховати' : 'Більше параметрів' }}</button></p>
-        <div v-if="more" class="row three" style="margin-top:10px">
-          <div class="f"><label>Потужність, к.с.</label><input v-model.number="vehicle.powerHp" type="number" class="in" /></div>
+        <p style="margin-top:8px"><button class="link" @click="more = !more">{{ more ? 'Менше' : 'Більше параметрів' }}</button></p>
+        <div v-if="more" class="row four" style="margin-top:8px">
+          <div class="f"><label>К.с.</label><input v-model.number="vehicle.powerHp" type="number" class="in" /></div>
           <div class="f"><label>Пробіг, км</label><input v-model.number="vehicle.mileageKm" type="number" class="in" /></div>
-          <div class="f"><label>Країна заводу</label><input v-model="vehicle.plantCountry" class="in" placeholder="GERMANY" /><span class="hint">мито 0% в UA лише для зібраних у ЄС</span></div>
-          <div class="f" style="grid-column: 1 / -1"><label>Клас бренду (ціни запчастин)</label><Chips v-model="vehicle.brandTier" :options="tierOptions" /></div>
+          <div class="f"><label>Завод <Help text="Мито 0% в Україні лише для авто, зібраних у ЄС (з EUR.1). Купівля в ЄС авто американського складання — 10%." /></label><input v-model="vehicle.plantCountry" class="in" placeholder="GERMANY" /></div>
+          <div class="f"><label>Бренд <Help text="Клас бренду визначає ціни запчастин для переобладнання (фари, ліхтарі)." /></label><Chips v-model="vehicle.brandTier" :options="tierOptions" /></div>
         </div>
       </div>
     </Transition>

@@ -1,12 +1,16 @@
 {
   "effective": "2026-01-01",
   "sources": [
-    "Податковий кодекс України, ст. 215.3.5-1 (акциз на ТЗ), ст. 193 (ПДВ 20%)",
-    "Митний тариф України, група 8703; Угода про асоціацію ЄС–Україна (тарифні квоти/графік лібералізації)",
-    "Закон «Про збір на обов'язкове державне пенсійне страхування», ст. 4 (3/4/5% при першій реєстрації)",
-    "Держбюджет-2026: прожитковий мінімум для працездатних 3 328 грн"
+    "Податковий кодекс України (ст. 215 — акциз, ст. 193 — ПДВ 20%)",
+    "Митний тариф України (Закон № 2697-IX), група 8703",
+    "Закон «Про збір на обов'язкове державне пенсійне страхування», ст. 4",
+    "Держмитслужба — офіційний калькулятор митних платежів"
   ],
-  "duty": { "default": 0.10, "euOriginWithProof": 0.0, "electric": 0.0 },
+  "duty": {
+    "default": 0.1,
+    "euOriginWithProof": 0.0,
+    "electric": 0.0
+  },
   "excise": {
     "petrolPerLitreUpTo3000": 50,
     "petrolPerLitreOver3000": 100,
@@ -17,37 +21,111 @@
     "ageCoefMin": 1,
     "ageCoefMax": 15
   },
-  "vat": 0.20,
+  "vat": 0.2,
   "pension": {
     "subsistenceMinimumUah": 3328,
     "tiers": [
-      { "uptoMultiples": 165, "rate": 0.03 },
-      { "uptoMultiples": 290, "rate": 0.04 },
-      { "uptoMultiples": null, "rate": 0.05 }
+      {
+        "uptoMultiples": 165,
+        "rate": 0.03
+      },
+      {
+        "uptoMultiples": 290,
+        "rate": 0.04
+      },
+      {
+        "uptoMultiples": null,
+        "rate": 0.05
+      }
     ]
   },
   "fees": {
-    "brokerUsd": [150, 300],
-    "certificateOfConformityUsd": [100, 200],
-    "registrationUah": [1500, 3500],
-    "translationUah": [300, 900],
-    "expertAssessmentUah": [0, 800]
+    "brokerUsd": [
+      150,
+      300
+    ],
+    "certificateOfConformityUsd": [
+      100,
+      200
+    ],
+    "registrationUah": [
+      1500,
+      3500
+    ],
+    "translationUah": [
+      300,
+      900
+    ],
+    "expertAssessmentUah": [
+      0,
+      800
+    ]
   },
   "logistics": {
     "us": {
       "auctionFeePct": 0.07,
       "auctionFixedUsd": 200,
-      "inlandNearUsd": [250, 600],
-      "inlandFarUsd": [600, 1100],
-      "oceanUsd": [1000, 1500],
-      "portToUaUsd": [600, 1000],
-      "portHandlingUsd": [200, 400],
+      "inlandNearUsd": [
+        250,
+        600
+      ],
+      "inlandFarUsd": [
+        600,
+        1100
+      ],
+      "oceanUsd": [
+        1000,
+        1500
+      ],
+      "portToUaUsd": [
+        600,
+        1000
+      ],
+      "portHandlingUsd": [
+        200,
+        400
+      ],
       "transitInsurancePct": 0.015
     },
     "eu": {
-      "autovozEur": [500, 1000],
-      "selfDriveEur": [250, 450],
-      "exportPlatesEur": [150, 300]
+      "autovozEur": [
+        500,
+        1000
+      ],
+      "selfDriveEur": [
+        250,
+        450
+      ],
+      "exportPlatesEur": [
+        150,
+        300
+      ]
+    }
+  },
+  "refs": {
+    "duty": {
+      "title": "Митний тариф України, група 8703 (zakon.rada.gov.ua)",
+      "url": "https://zakon.rada.gov.ua/laws/show/2697-20"
+    },
+    "excise": {
+      "title": "Податковий кодекс, ст. 215.3.5-1 — ставки акцизу на ТЗ (zakon.rada.gov.ua)",
+      "url": "https://zakon.rada.gov.ua/laws/show/2755-17"
+    },
+    "vat": {
+      "title": "Податковий кодекс, ст. 193 — ПДВ 20% (zakon.rada.gov.ua)",
+      "url": "https://zakon.rada.gov.ua/laws/show/2755-17"
+    },
+    "pension": {
+      "title": "Закон № 400/97-ВР, ст. 4 — збір при першій реєстрації 3/4/5% (zakon.rada.gov.ua)",
+      "url": "https://zakon.rada.gov.ua/laws/show/400/97-%D0%B2%D1%80"
+    },
+    "customs": {
+      "title": "Держмитслужба України (customs.gov.ua)",
+      "url": "https://customs.gov.ua/"
+    },
+    "fx": {
+      "title": "Офіційний курс НБУ (bank.gov.ua)",
+      "url": "https://bank.gov.ua/ua/markets/exchangerates"
     }
   }
 }
