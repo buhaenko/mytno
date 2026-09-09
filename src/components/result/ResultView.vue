@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 import type { Currency, Estimate, FxRates, Msg, Trip, Vehicle } from '../../types'
 import ukraine from '@config/rules.ukraine.json'
 import spain from '@config/rules.spain.json'
@@ -11,9 +11,8 @@ import Breakdown from './Breakdown.vue'
 import HelpTip from '../controls/HelpTip.vue'
 
 const props = defineProps<{ estimate: Estimate; vehicle: Vehicle; trip: Trip; fx: FxRates }>()
+const currency = defineModel<Currency>('currency', { required: true })
 const { t, locale } = useI18n()
-
-const currency = ref<Currency>(props.trip.destination === 'UA' ? 'USD' : 'EUR')
 const format = (value: number) => formatMoney(value, currency.value, props.fx, locale.value)
 const translate = (m: Msg) => t(m.key, m.params)
 

@@ -52,20 +52,26 @@ const destinations = computed(() =>
   })), PINNED_DESTINATIONS))
 
 const snapshot = computed<Snapshot | null>(() =>
-  calc.trip.value ? { vehicle: vehicle.value, trip: calc.trip.value, originCountry: originCountry.value, locale: locale.value } : null)
+  calc.trip.value
+    ? { vehicle: vehicle.value, trip: calc.trip.value, originCountry: originCountry.value, display: calc.display.value, locale: locale.value }
+    : null)
 
 const showOriginProof = computed(() => destination.value === 'UA' && calc.origin.value === 'EU')
 const showResidenceRelief = computed(() => destination.value !== 'UA' && calc.origin.value !== 'EU')
 
 /**
- * The address bar is the state. It is rewritten as the numbers change, so copying
- * it is all sharing takes — no code to mint, nothing kept on a server.
+ * The address bar is the state. It is written out once the first screen is restored and
+ * again whenever anything changes, so every value on screen is in the URL and copying it
+ * is all sharing takes — no code to mint, nothing kept on a server.
  */
-watch(snapshot, (state) => {
-  if (restoring.value || !state) return
+function writeUrl() {
+  const state = snapshot.value
+  if (!state) return
   const target = appPath(locale.value, toQuery(state))
   if (location.pathname + location.search !== target) history.replaceState(null, '', target)
-}, { deep: true })
+}
+
+watch(snapshot, () => { if (!restoring.value) writeUrl() }, { deep: true })
 
 watch(calc.routeChosen, (chosen) => { if (chosen) setTimeout(() => (started.value = true), 250) })
 
@@ -88,6 +94,7 @@ onMounted(async () => {
 
   await nextTick()
   restoring.value = false
+  writeUrl()
   await calc.refreshRates()
 })
 </script>
@@ -135,7 +142,7 @@ onMounted(async () => {
 
     <Transition name="rise">
       <StepSection v-if="calc.result.value && calc.trip.value" ref="resultStep" :title="t('step.result')" plain>
-        <ResultView :estimate="calc.result.value" :vehicle="vehicle" :trip="calc.trip.value" :fx="fx" />
+        <ResultView v-model:currency="calc.display.value" :estimate="calc.result.value" :vehicle="vehicle" :trip="calc.trip.value" :fx="fx" />
       </StepSection>
     </Transition>
 

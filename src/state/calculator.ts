@@ -4,7 +4,7 @@ import countries from '@config/countries.json'
 import { estimate } from '../lib/calc'
 import { fallbackRates, loadFx } from '../lib/fx'
 import { ORIGIN_GROUP } from '../lib/origins'
-import { blankVehicle, type Snapshot } from './snapshot'
+import { blankVehicle, type Restored } from './snapshot'
 
 export const DESTINATIONS = Object.keys(countries.destinations) as Destination[]
 
@@ -13,7 +13,9 @@ export const vehicle = ref<Vehicle>(blankVehicle())
 export const originCountry = ref<string | null>(null)
 export const destination = ref<Destination | null>(null)
 export const price = ref(0)
-export const currency = ref<Currency>('USD')
+/** Everything is reckoned in euro, so that is what both the price and the total start in. */
+export const currency = ref<Currency>('EUR')
+export const display = ref<Currency>('EUR')
 export const hasOriginProof = ref(true)
 export const residenceTransfer = ref(false)
 export const fx = reactive<FxRates>(fallbackRates())
@@ -43,21 +45,21 @@ export const trip = computed<Trip | null>(() =>
 export const result = computed<Estimate | null>(() =>
   trip.value && vehicleReady.value && price.value > 0 ? estimate(vehicle.value, trip.value, fx) : null)
 
-/** Where the car is bought decides the currency people will type in. */
-watch(originCountry, (code) => {
-  currency.value = code === 'US' || code === 'CA' ? 'USD' : code === 'UA' ? 'UAH' : 'EUR'
+/** A car cannot be brought from Ukraine to Ukraine. */
+watch(originCountry, () => {
   if (origin.value === 'UA' && destination.value === 'UA') destination.value = null
 })
 
-export function apply(state: Partial<Snapshot>) {
+/** Everything on screen comes from the query string, and nothing that is absent is guessed. */
+export function apply(state: Restored) {
   if (state.vehicle) vehicle.value = state.vehicle
-  if (state.originCountry !== undefined) originCountry.value = state.originCountry
-  if (!state.trip) return
-  destination.value = state.trip.destination
-  price.value = state.trip.price
-  currency.value = state.trip.currency
-  hasOriginProof.value = state.trip.hasOriginProof
-  residenceTransfer.value = state.trip.residenceTransfer
+  originCountry.value = state.originCountry
+  destination.value = state.destination
+  price.value = state.price
+  currency.value = state.currency
+  display.value = state.display
+  hasOriginProof.value = state.hasOriginProof
+  residenceTransfer.value = state.residenceTransfer
 }
 
 export const refreshRates = async () => Object.assign(fx, await loadFx())

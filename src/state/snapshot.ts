@@ -12,7 +12,21 @@ export interface Snapshot {
   trip: Trip
   /** The country the car is bought in; the trip only keeps its customs group. */
   originCountry: string | null
+  /** The currency the total is read in, which is not necessarily the one it was paid in. */
+  display: Currency
   locale: Locale
+}
+
+/** What a query string restores. Nothing is assumed: an empty query picks nothing. */
+export interface Restored {
+  vehicle?: Vehicle
+  originCountry: string | null
+  destination: Destination | null
+  price: number
+  currency: Currency
+  display: Currency
+  hasOriginProof: boolean
+  residenceTransfer: boolean
 }
 
 export const blankVehicle = (): Vehicle => ({
@@ -34,7 +48,7 @@ export function toQuery(s: Snapshot): string {
   }
   put('cc', v.engineCc); put('kwh', v.batteryKwh); put('co2', v.co2Wltp); put('lp', v.listPriceEur)
   put('hp', v.powerHp); put('plant', v.plantCountry)
-  if (s.trip.price) { put('price', s.trip.price); put('cur', s.trip.currency) }
+  put('price', s.trip.price); put('cur', s.trip.currency); put('show', s.display)
   if (!s.trip.hasOriginProof) q.set('proof', '0')
   if (s.trip.residenceTransfer) q.set('reloc', '1')
 
@@ -42,10 +56,14 @@ export function toQuery(s: Snapshot): string {
   return query ? `?${query}` : ''
 }
 
-export function fromQuery(q: URLSearchParams, destinations: readonly string[]): Partial<Snapshot> {
+export function fromQuery(q: URLSearchParams, destinations: readonly string[]): Restored {
   const num = (key: string) => {
     const n = Number(q.get(key))
     return Number.isFinite(n) && n > 0 ? n : undefined
+  }
+  const currency = (key: string, fallback: Currency): Currency => {
+    const value = q.get(key)
+    return value === 'USD' || value === 'EUR' || value === 'UAH' ? value : fallback
   }
   const from = q.get('from')
   const to = q.get('to')
@@ -68,17 +86,14 @@ export function fromQuery(q: URLSearchParams, destinations: readonly string[]): 
   }
   if (vehicle.make) vehicle.brandTier = tierForMake(vehicle.make)
 
-  const currency = q.get('cur')
   return {
     originCountry: from && ORIGIN_GROUP[from] ? from : null,
+    destination: to && destinations.includes(to) ? (to as Destination) : null,
     vehicle: vehicle.vin || vehicle.make ? vehicle : undefined,
-    trip: {
-      origin: from && ORIGIN_GROUP[from] ? ORIGIN_GROUP[from] : 'US',
-      destination: (to && destinations.includes(to) ? to : 'UA') as Destination,
-      price: num('price') ?? 0,
-      currency: (currency === 'USD' || currency === 'EUR' || currency === 'UAH' ? currency : 'EUR') as Currency,
-      hasOriginProof: q.get('proof') !== '0',
-      residenceTransfer: q.get('reloc') === '1',
-    },
-  } as Partial<Snapshot>
+    price: num('price') ?? 0,
+    currency: currency('cur', 'EUR'),
+    display: currency('show', 'EUR'),
+    hasOriginProof: q.get('proof') !== '0',
+    residenceTransfer: q.get('reloc') === '1',
+  }
 }

@@ -102,8 +102,14 @@ DGT fee, plates, mandatory lighting conversion.
   public APIs do not already give.
 - **The address bar is the share link.** State lives in the URL and nowhere else — no localStorage,
   no share codes: the language is a path segment (`/uk/`), the calculation is a readable query
-  (`?from=US&to=UA&vin=…&price=…`), rewritten with `history.replaceState` as the numbers change.
-  Copying the address is the whole sharing mechanism, which is why there is no share button.
+  (`?from=US&to=UA&vin=…&price=20000&cur=USD&show=EUR`), written once the first screen is restored
+  and again on every change. Every value on screen is in it, the currency the total is *read* in
+  (`show`) included, so copying the address reproduces the screen exactly. That is the whole sharing
+  mechanism, which is why there is no share button.
+- **Euro is the base and nothing is picked for the visitor.** Amounts are held in euro, and both the
+  price field and the total start in euro; an empty query chooses no country, no currency and no
+  destination. An earlier version defaulted the destination to Ukraine and switched the price
+  currency by country of purchase, which made the tool look Ukrainian and moved fields on its own.
 - **Design**: soft off-white canvas `#F4F4F6`, near-white surfaces, hairline borders, no shadows on
   cards, Inter only (no display serif), JetBrains Mono for the small labels, one warm orange accent
   `#E2662A` used sparingly. Everything explanatory hides behind a “?”. The steps are labels, not
