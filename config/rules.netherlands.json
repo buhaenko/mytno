@@ -1,0 +1,37 @@
+{
+  "_note": "BPM is due on the first registration on a Dutch plate — new or used, from inside the EU or outside it. The base is CO2 and age only: the purchase price never enters it. Where a car has no certified CO2 the Belastingdienst applies a punitive forfait (petrol 550 g/km, diesel 395 g/km for cars first registered from 1 July 2020; 507/356 from 2015; 350/302 from 2009), which is real but so far above any actual car that showing it as an estimate would mislead — we ask for the CO2 instead.",
+  "effective": "2026-01-01",
+  "source": {
+    "title": "Belastingdienst — bpm berekenen voor een personenauto (belastingdienst.nl)",
+    "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/bpm/content/personenauto-bpm-tarief-berekenen"
+  },
+  "depreciationSource": {
+    "title": "Belastingdienst — forfaitaire afschrijvingstabel (belastingdienst.nl)",
+    "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/bpm/content/bpm-afschrijving-koerslijst-taxatierapport-forfaitaire-tabel"
+  },
+  "co2Brackets": [
+    { "from": 0, "fixed": 687, "perGram": 2 },
+    { "from": 77, "fixed": 841, "perGram": 82 },
+    { "from": 100, "fixed": 2727, "perGram": 181 },
+    { "from": 139, "fixed": 9786, "perGram": 297 },
+    { "from": 155, "fixed": 14538, "perGram": 594 }
+  ],
+  "diesel": { "threshold": 69, "perGram": 114.83 },
+  "depreciation": [
+    { "fromMonths": 0, "startPct": 0, "monthlyPct": 12 },
+    { "fromMonths": 1, "startPct": 12, "monthlyPct": 4 },
+    { "fromMonths": 3, "startPct": 20, "monthlyPct": 3.5 },
+    { "fromMonths": 5, "startPct": 27, "monthlyPct": 1.5 },
+    { "fromMonths": 9, "startPct": 33, "monthlyPct": 1 },
+    { "fromMonths": 18, "startPct": 42, "monthlyPct": 0.75 },
+    { "fromMonths": 30, "startPct": 51, "monthlyPct": 0.5 },
+    { "fromMonths": 42, "startPct": 57, "monthlyPct": 0.42 },
+    { "fromMonths": 54, "startPct": 62, "monthlyPct": 0.42 },
+    { "fromMonths": 66, "startPct": 67, "monthlyPct": 0.42 },
+    { "fromMonths": 78, "startPct": 72, "monthlyPct": 0.25 },
+    { "fromMonths": 90, "startPct": 75, "monthlyPct": 0.25 },
+    { "fromMonths": 102, "startPct": 78, "monthlyPct": 0.25 },
+    { "fromMonths": 114, "startPct": 81, "monthlyPct": 0.19 }
+  ],
+  "maxDepreciationPct": 100
+}

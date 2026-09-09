@@ -1,0 +1,174 @@
+{
+  "_note": "ISV, Código do Imposto sobre Veículos (Lei 22-A/2007). The tax is a cylinder-capacity component plus an environmental component, each of them rate × value − deduction; a negative environmental result is netted against the cylinder one (art. 7.º §4). A car already registered in another EU state pays it too, reduced by the years-of-use table (art. 11.º). The table has not changed since the 2024 budget and was not touched by the 2026 one.",
+  "effective": "2026-01-01",
+  "source": {
+    "title": "Código do ISV, Lei 22-A/2007, arts. 7.º, 8.º e 11.º — texto consolidado (diariodarepublica.pt)",
+    "url": "https://diariodarepublica.pt/dr/legislacao-consolidada/lei/2007-34445975-114488809"
+  },
+  "cylinder": [
+    {
+      "maxCc": 1000,
+      "perCc": 1.09,
+      "deduct": 849.03
+    },
+    {
+      "maxCc": 1250,
+      "perCc": 1.18,
+      "deduct": 850.69
+    },
+    {
+      "maxCc": null,
+      "perCc": 5.61,
+      "deduct": 6194.88
+    }
+  ],
+  "environmental": {
+    "petrol": [
+      {
+        "maxCo2": 110,
+        "perGram": 0.44,
+        "deduct": 43.02
+      },
+      {
+        "maxCo2": 115,
+        "perGram": 1.1,
+        "deduct": 115.8
+      },
+      {
+        "maxCo2": 120,
+        "perGram": 1.38,
+        "deduct": 147.79
+      },
+      {
+        "maxCo2": 130,
+        "perGram": 5.27,
+        "deduct": 619.17
+      },
+      {
+        "maxCo2": 145,
+        "perGram": 6.38,
+        "deduct": 762.73
+      },
+      {
+        "maxCo2": 175,
+        "perGram": 41.54,
+        "deduct": 5819.56
+      },
+      {
+        "maxCo2": 195,
+        "perGram": 51.38,
+        "deduct": 7247.39
+      },
+      {
+        "maxCo2": 235,
+        "perGram": 193.01,
+        "deduct": 34190.52
+      },
+      {
+        "maxCo2": null,
+        "perGram": 233.81,
+        "deduct": 41910.96
+      }
+    ],
+    "diesel": [
+      {
+        "maxCo2": 110,
+        "perGram": 1.72,
+        "deduct": 11.5
+      },
+      {
+        "maxCo2": 120,
+        "perGram": 18.96,
+        "deduct": 1906.19
+      },
+      {
+        "maxCo2": 140,
+        "perGram": 65.04,
+        "deduct": 7360.85
+      },
+      {
+        "maxCo2": 150,
+        "perGram": 127.4,
+        "deduct": 16080.57
+      },
+      {
+        "maxCo2": 160,
+        "perGram": 160.81,
+        "deduct": 21176.06
+      },
+      {
+        "maxCo2": 170,
+        "perGram": 221.69,
+        "deduct": 29227.38
+      },
+      {
+        "maxCo2": 190,
+        "perGram": 274.08,
+        "deduct": 36987.98
+      },
+      {
+        "maxCo2": null,
+        "perGram": 282.35,
+        "deduct": 38271.32
+      }
+    ]
+  },
+  "usedReduction": [
+    {
+      "maxYears": 1,
+      "pct": 10
+    },
+    {
+      "maxYears": 2,
+      "pct": 20
+    },
+    {
+      "maxYears": 3,
+      "pct": 28
+    },
+    {
+      "maxYears": 4,
+      "pct": 35
+    },
+    {
+      "maxYears": 5,
+      "pct": 43
+    },
+    {
+      "maxYears": 6,
+      "pct": 52
+    },
+    {
+      "maxYears": 7,
+      "pct": 60
+    },
+    {
+      "maxYears": 8,
+      "pct": 65
+    },
+    {
+      "maxYears": 9,
+      "pct": 70
+    },
+    {
+      "maxYears": 10,
+      "pct": 75
+    },
+    {
+      "maxYears": null,
+      "pct": 80
+    }
+  ],
+  "minimumEur": 100,
+  "intermediate": {
+    "_note": "Art. 8.º, as amended by the 2026 budget. Pure electric cars are outside the tax altogether (art. 2.º §2 a). The plug-in rate also requires an electric range of at least 50 km, which we cannot read from the car's data — the note says so.",
+    "phevRate": 0.25,
+    "phevMaxCo2": 50,
+    "phevMinRangeKm": 50
+  },
+  "dieselSurcharge": {
+    "_note": "Art. 7.º §3: a diesel car pays €500 more unless its particulate emissions are below 0.001 g/km. That figure is on the certificate of conformity and not in any of our inputs — a modern diesel with a filter is normally below it — so the note says so and the number does not include it.",
+    "eur": 500,
+    "particulateThresholdGkm": 0.001
+  }
+}

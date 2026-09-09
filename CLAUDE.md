@@ -69,8 +69,11 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Spain | arancel 10%, IVA 21%, IEDMT by CO₂ (0 / 4.75 / 9.75 / 14.75%) on the Hacienda table price × age coefficient |
 | Poland | duty, akcyza 3.1% / 18.6% (reliefs for hybrids and EVs), VAT 23% |
 | Austria | duty, VAT 20%, **NoVA**: `(CO₂ − 91) / 5` of the price, max 80%, minus €350, plus €80 per gram above 155 g/km. Verified against bmf.gv.at, rates in force from 1 Jan 2026 |
-| DE BG LU RO SE LV | duty + national VAT; registration tax declared a real €0 — **only DE, RO and BG re-checked; LU, SE and LV are inherited and unverified** |
-| the other 18 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority, because it needs an official table we have not built |
+| Netherlands | duty, VAT 21%, **BPM**: the 2026 CO₂ table for the same car new, less the official depreciation table for its age, plus the diesel surcharge. The purchase price never enters it |
+| Portugal | duty, VAT 23%, **ISV**: the cylinder component plus the environmental one, each of them rate × value − deduction, less the table-D reduction for years of use, never below €100 |
+| Czechia | duty, VAT 21%, the one-off **emission fee**: 3 000 CZK for EURO 2, 5 000 for EURO 1, 10 000 for no standard, nothing from EURO 3 up — read off the model year |
+| DE BG RO LU SE LV | duty + national VAT; registration tax a real €0, all six checked against their own authority on 9 Sep 2026 |
+| the other 15 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value or a table we cannot reproduce |
 
 Market estimates, labelled as such in their “?”: certificate of conformity, homologación, ITV,
 DGT fee, plates, mandatory lighting conversion.
@@ -78,16 +81,57 @@ DGT fee, plates, mandatory lighting conversion.
 ## Facts worth not re-deriving
 
 - **EU VAT rates**: Taxes in Europe Database, as of 1 July 2025; Romania went to 21% on 1 Aug 2025.
-- **Estonia has charged a registration fee since 1 Jan 2025** — a base part plus CO₂ and mass parts,
-  administered by Transpordiamet, rising again in 2028 and 2031. The config called it €0 until
-  9 Sep 2026, which was simply wrong; it is `national` now.
 - **Czechia charges an emission fee once**, on the first registration of an import: 3 000 CZK for
-  EURO 2, 5 000 for EURO 1, 10 000 for no standard, nothing from EURO 3 up (Act 542/2020 Sb.). It is
-  derivable from the model year — EURO 3 from January 2001 — so it could be computed rather than
-  merely linked, and that is worth doing.
-- **Registration taxes are the weak spot.** Four are computed from official tables (UA ES PL AT).
-  The rest is either a declared zero or a link, and only some of the zeros have been re-checked.
-  Estonia proved the risk: a country's answer can change under a config that nobody revisits.
+  EURO 2, 5 000 for EURO 1, 10 000 for no standard, nothing from EURO 3 up (Act 542/2020 Sb., SFŽP).
+  It is computed now, from the model year — EURO 3 from January 2001, EURO 2 from 1997, EURO 1 from
+  1993 — and converted from koruna at the ECB rate of the day.
+- **Dutch BPM is a CO₂ tax, not a price tax** (checked 9 Sep 2026). The 2026 brackets are a fixed
+  amount plus a per-gram rate — €687 + €2/g to 77 g/km, then 841 + 82, 2 727 + 181, 9 786 + 297 and
+  14 538 + 594 above 155 — plus €114.83 for every diesel gram above 69. A used import is then written
+  down by the *forfaitaire afschrijvingstabel*, by months since first registration: 33% at 9 months,
+  62% at 5½ years, 81% at 9½ and 0.19% a month after. It is due on the first Dutch plate whatever the
+  origin, EU included. Where a car has no certified CO₂ the Belastingdienst applies a punitive forfait
+  (550 g/km for petrol), which is real but so far above any actual car that we ask for the CO₂ instead.
+- **Portuguese ISV is fully derivable from what we already know** (Código do ISV, arts. 7.º, 8.º and
+  11.º, consolidated text on diariodarepublica.pt, checked 9 Sep 2026): a cylinder component and an
+  environmental one, each `rate × value − deduction`, a negative environmental result netted against
+  the cylinder one, the table-D reduction for years of use — 10% in the first year to 80% after ten —
+  and never less than €100. Pure electric cars are outside the tax; a plug-in below 50 g/km pays a
+  quarter, if it also runs 50 km on the battery, which the car's data does not tell us, so the note
+  says so. A diesel pays €500 more unless its particulates are below 0.001 g/km — that figure is on
+  the certificate of conformity and in none of our inputs, so it is a note, not a number.
+- **The three inherited zeros are real** (checked 9 Sep 2026). Luxembourg charges a €50 chancellery
+  fee and an annual road tax, no registration tax; Sweden's malus is an elevated *annual* fordonsskatt
+  for three years, never a lump sum; Latvia's CO₂ levy is the annual ekspluatācijas nodoklis, merely
+  pro-rated for the remaining months when the car is registered. All three now cite their own
+  authority rather than the generic Your Europe page.
+- **Where the base is the country's own valuation, we cannot compute and should not pretend.**
+  Denmark values the car on the Danish market, Finland at its Finnish retail value, Ireland at
+  Revenue's OMSP (and adds a NOx levy in mg/km), Malta at Transport Malta's own registration value.
+  None of that is derivable from a foreign purchase price, and in those countries the domestic price
+  already contains the tax, so a price proxy would not be a rough answer but a wrong one.
+- **Italy has no registration tax in the CO₂ sense.** The IPT is a provincial transcription fee on
+  engine power: €150.81 up to 53 kW, €3.5119/kW above it (D.M. 435/1998), which each province may
+  raise by up to 30%. Belgium's is three regional taxes, not one; Cyprus abolished its excise duty on
+  1 Jan 2019 and replaced it with an age-and-euro-standard surcharge.
+- **France is one table away from being computed.** The 2026 WLTP barème reads off Légifrance
+  (art. L.421-62): nothing below 108 g/km, €75 at 109, €2 205 at 140, €8 770 at 160, €45 990 at 180,
+  and a flat €80 000 above 191. Art. L.421-60 zeroes the malus for a car first registered before
+  1 January 2015. What blocked it is the décote for a used import — the age-in-months coefficients
+  live in arts. L.421-7-1 to L.421-7-3, which the fetch could not read; without them an imported 2017
+  car would be charged as if new. The malus au poids (€10/kg from 1 500 kg, rising to €30 from 2 000)
+  needs a kerb mass we do not have, and the carte grise needs the region and the fiscal CV.
+- **Estonia has charged a registration fee since 1 Jan 2025** — a base part plus CO₂ and mass parts,
+  times an age coefficient, collected by Transpordiamet at first registration and separate from the
+  annual motor vehicle tax the tax office bills. The config called it €0 until 9 Sep 2026, which was
+  simply wrong. But **its numbers are not on Estonia's own site**: transpordiamet.ee and emta.ee
+  publish the fee's field names, not its rates; the CO₂ bands and the mass part live in the law on
+  riigiteataja.ee, which did not render. The fee is real and one-off — a base part, a CO₂ part and a
+  until those figures come from the law itself it stays linked, not computed. Its own calculation API
+  also wants a kerb mass, which we do not have.
+- **Registration taxes were the weak spot.** Seven are now computed from official tables
+  (UA ES PL AT CZ NL PT), six are a zero each country's own authority confirms, and fifteen are a
+  link. Estonia proved the risk: a country's answer can change under a config that nobody revisits.
 - **Bulgaria joined the euro on 1 Jan 2026.** The ECB's last lev observation is 2025-12-31, so there
   is no BGN in the app and `BG` maps to the euro. AE, GE, MD and RS map to the euro too: no bank
   reachable from a browser publishes their currencies.
@@ -202,23 +246,25 @@ Live, tested and pushed. HEAD `af02709`.
 3. **IndexNow** in CI: a key file at the root and a ping on every deploy.
 4. **Route pages** — `/uk/import/us-ua/`, about thirty of them, not the 1204 the grid allows. The
    country pages are the pattern to follow.
-5. **Verify every registration tax** — the biggest hole in the data, and the one thing that can make
-   a number wrong rather than merely absent. It has a section of its own below.
+5. **Finish the registration taxes** — all 28 have been checked once (9 Sep 2026) and seven are
+   computed; what is left, and in what order, has a section of its own below.
 6. **Before real traffic**: Sentry, UptimeRobot, and a redirect rule so `www.mytno.app` goes to the
    apex instead of serving a second copy (the canonical tag covers it for now).
 
 ## The next job: verify every registration tax
 
-The calculation is only as honest as this table, and it is the one part that is not yet checked
-country by country. Whoever picks this up: **one country at a time, an official source or nothing.**
+The calculation is only as honest as this table. All 28 were gone through on 9 Sep 2026 — every
+country now either computes its tax, or declares a zero its own authority confirms, or links to the
+authority that levies it. Whoever carries it further: **one country at a time, an official source or
+nothing.** A page that reproduces a law is not the law.
 
-**Where each of the 28 stands today**
+**Where each of the 28 stands today** (every one of them looked at on 9 Sep 2026)
 
 | State | Countries | What it means |
 | --- | --- | --- |
-| `computed` | UA ES PL AT | the full formula, from an official table, cited in the breakdown |
-| `none` | DE BG RO · **LU SE LV** | declared a real €0. DE, BG and RO were re-checked on 9 Sep 2026; the three in bold are inherited from the first draft and **nobody has verified them** |
-| `national` | BE HR CY DK EE CZ FI FR GR HU IE IT LT MT NL PT SK SI | a tax exists but we do not compute it: the line is shown, marked “not in total”, linked to the authority |
+| `computed` | UA ES PL AT CZ NL PT | the full formula, from an official table, cited in the breakdown |
+| `none` | DE BG RO LU SE LV | a real €0, each confirmed against the authority that would charge it |
+| `national` | BE HR CY DK EE FI FR GR HU IE IT LT MT SK SI | a tax exists but we do not compute it: the line is shown, marked “not in total”, linked to the authority that levies it |
 
 **How to do one country**
 
@@ -240,10 +286,17 @@ country by country. Whoever picks this up: **one country at a time, an official 
 6. Check it in the browser before pushing (see **Working rules**), and record the date and the source
    in this file under **Facts worth not re-deriving**.
 
-**Worth the most, in order.** These are the countries where the registration tax can exceed the car,
-which is exactly what people search for: **Netherlands BPM**, **Denmark registreringsafgift**,
-**Finland autovero**, **Ireland VRT**, **Portugal ISV**, **France malus**. Then the unverified zeros
-— Luxembourg, Sweden, Latvia — because a wrong €0 is worse than an honest “not in total”.
+**What is left, in order.** The Netherlands and Portugal are done, and the three doubtful zeros hold.
+1. **France** — one fetch away: the décote coefficients of arts. L.421-7-1 to L.421-7-3 on Légifrance.
+   The 2026 barème is already written down above; add the décote and the CO₂ malus can be computed,
+   with the weight malus and the carte grise named as extras we do not have the inputs for.
+2. **Estonia** — the CO₂ bands and the mass part, from riigiteataja.ee rather than from a summary.
+3. **Slovenia, Lithuania, Croatia** — a CO₂ percentage of the price, a CO₂ threshold, a CO₂-and-price
+   table: all three are shaped like something we could compute if the official table can be read.
+4. **Hungary and Slovakia** need engine power in kW, which the catalogue sometimes gives as `powerHp`;
+   Italy's IPT needs kW too, and would be a range because the province adds up to 30%.
+5. **Denmark, Finland, Ireland, Malta** are not worth attempting: their base is the country's own
+   valuation of the car, and a foreign purchase price is not a proxy for it.
 
 ## History
 
@@ -266,3 +319,7 @@ which is exactly what people search for: **Netherlands BPM**, **Denmark registre
     the front of every heading, and redrew the favicon for 16 pixels.
   - **667 pages**: the calculator in 23 languages and a page per destination country in each, with
     rates, sources, FAQ schema and a country index for crawlers.
+  - **Went through the registration tax of all 28 destinations**, one country at a time, against the
+    authority that levies it. Three moved into the computed column — the Dutch BPM, the Portuguese
+    ISV and the Czech emission fee — the three unverified zeros were confirmed, and every country
+    that stays “not in total” now links to its own tax office instead of to its customs service.

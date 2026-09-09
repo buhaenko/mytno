@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, estimateEu, polandExcise } from '../eu'
+import { austriaNova, czechiaEmissionFee, estimateEu, netherlandsBpm, polandExcise, portugalIsv } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { fallbackRates } from '../../fx'
 
@@ -137,10 +137,50 @@ describe('Other EU countries', () => {
   })
 
   it('keeps a national registration tax out of the total but on the page', () => {
-    const e = estimateEu(audi, { ...trip, destination: 'NL' }, fx, now)
+    const e = estimateEu(audi, { ...trip, destination: 'IT' }, fx, now)
     expect(lineOf(e, 'regTax').unknown).toBe(true)
-    expect(lineOf(e, 'vat').amount.likely).toBeCloseTo(e.customsValue * 1.1 * 0.21, 2)
+    expect(lineOf(e, 'vat').amount.likely).toBeCloseTo(e.customsValue * 1.1 * 0.22, 2)
     expect(e.total.likely).toBeCloseTo(e.lines.filter((l) => !l.unknown).reduce((a, l) => a + l.amount.likely, 0), 6)
+  })
+
+  it('computes the Dutch BPM from CO₂ and age, never from the price', () => {
+    const bpm = netherlandsBpm(audi, now)!
+    expect(bpm.asNew).toBeCloseTo(14538 + 594 * (168 - 155), 6)
+    expect(bpm.written).toBeCloseTo(80, 6)
+    expect(bpm.total).toBeCloseTo(bpm.asNew * 0.2, 6)
+    // A diesel of the same year pays €114.83 for every gram above 69 g/km.
+    expect(netherlandsBpm({ ...audi, fuel: 'diesel' }, now)!.diesel).toBeCloseTo((168 - 69) * 114.83, 6)
+    // An electric car owes the fixed part of the first bracket and nothing per gram.
+    expect(netherlandsBpm({ ...audi, fuel: 'electric', co2Wltp: 0 }, now)!.asNew).toBe(687)
+    expect(netherlandsBpm({ ...audi, co2Wltp: undefined }, now)).toBeNull()
+
+    const nl = (price: number) =>
+      estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'NL', currency: 'EUR', price }, fx, now)
+    expect(lineOf(nl(20000), 'regTax').amount.likely).toBeCloseTo(lineOf(nl(10000), 'regTax').amount.likely, 6)
+  })
+
+  it('computes the Portuguese ISV from engine size, CO₂ and age', () => {
+    const isv = portugalIsv(audi, now)!
+    expect(isv.cylinder).toBeCloseTo(5.61 * 1984 - 6194.88, 6)
+    expect(isv.environmental).toBeCloseTo(41.54 * 168 - 5819.56, 6)
+    expect(isv.written).toBe(75)
+    expect(isv.total).toBeCloseTo((isv.cylinder + isv.environmental) * 0.25, 6)
+    // A diesel of the same size reads the diesel table, which is far heavier at this CO₂.
+    expect(portugalIsv({ ...audi, fuel: 'diesel' }, now)!.environmental).toBeCloseTo(221.69 * 168 - 29227.38, 6)
+    // Electric cars are outside the tax; an old small car still pays the €100 minimum.
+    expect(portugalIsv({ ...audi, fuel: 'electric' }, now)!.total).toBe(0)
+    expect(portugalIsv({ ...audi, year: 2005, engineCc: 999, co2Wltp: 100 }, now)!.total).toBe(100)
+    expect(portugalIsv({ ...audi, co2Wltp: undefined }, now)).toBeNull()
+  })
+
+  it('reads the Czech emission fee off the model year', () => {
+    expect(czechiaEmissionFee(audi).czk).toBe(0)
+    expect(czechiaEmissionFee({ ...audi, year: 1999 }).czk).toBe(3000)
+    expect(czechiaEmissionFee({ ...audi, year: 1995 }).czk).toBe(5000)
+    expect(czechiaEmissionFee({ ...audi, year: 1990 }).czk).toBe(10000)
+    const e = estimateEu({ ...audi, year: 1995, market: 'EU' }, { ...trip, origin: 'EU', destination: 'CZ', currency: 'EUR' }, fx, now)
+    expect(lineOf(e, 'regTax').unknown).toBeUndefined()
+    expect(lineOf(e, 'regTax').amount.likely).toBeCloseTo(5000 / fx.CZK.rate, 6)
   })
 
   it('computes the Austrian NoVA and lets the price move the total', () => {

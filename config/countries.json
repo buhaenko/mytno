@@ -75,7 +75,11 @@
       "eu": true,
       "vat": 0.21,
       "customs": "https://finances.belgium.be/fr/douanes_accises",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Vlaamse Belastingdienst — belasting op de inverkeerstelling (vlaanderen.be)",
+        "url": "https://www.vlaanderen.be/en/authorities/flemish-taxes/road-taxes/vehicle-registration-tax"
+      }
     },
     "BG": {
       "eu": true,
@@ -87,93 +91,171 @@
       "eu": true,
       "vat": 0.25,
       "customs": "https://carina.gov.hr/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Porezna uprava — posebni porez na motorna vozila (porezna-uprava.gov.hr)",
+        "url": "https://porezna-uprava.gov.hr/hr/porezni-sustav--posebni-porezi-na-osobne-automobile-ostala-motorna-vozila-plovila-i-zrakoplove/4416"
+      }
     },
     "CY": {
       "eu": true,
       "vat": 0.19,
       "customs": "https://www.mof.gov.cy/ce",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Customs & Excise Department — motor vehicles (mof.gov.cy)",
+        "url": "https://www.mof.gov.cy/mof/customs/customs.nsf/ced07_en/ced07_en"
+      }
     },
-    "CZ": {"eu": true, "vat": 0.21, "customs": "https://www.celnisprava.gov.cz/", "regTax": "national", "regTaxSource": {"title": "gov.cz — emission fee on registration, Act 542/2020 Sb. (portal.gov.cz)", "url": "https://portal.gov.cz/sluzby-vs/platba-emisniho-poplatku-ekologicka-dan-S20943"}},
+    "CZ": {
+      "eu": true,
+      "vat": 0.21,
+      "customs": "https://www.celnisprava.gov.cz/",
+      "regTax": "computed",
+      "regTaxSource": {
+        "title": "SFŽP ČR — emisní poplatek vozidel, zákon 542/2020 Sb. (sfzp.gov.cz)",
+        "url": "https://sfzp.gov.cz/legislativa/poplatkova-agenda/odpady/emisni-poplatek-vozidel/"
+      }
+    },
     "DK": {
       "eu": true,
       "vat": 0.25,
       "customs": "https://www.toldst.dk/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Motorstyrelsen — registreringsafgift, satser (motorst.dk)",
+        "url": "https://motorst.dk/erhverv/motorafgifter/registreringsafgift/betaling-af-og-satser-for-registreringsafgift"
+      }
     },
-    "EE": {"eu": true, "vat": 0.24, "customs": "https://www.emta.ee", "regTax": "national", "regTaxSource": {"title": "Transpordiamet — motor vehicle tax and registration fee (transpordiamet.ee)", "url": "https://www.transpordiamet.ee/en/motor-vehicle-tax"}},
+    "EE": {
+      "eu": true,
+      "vat": 0.24,
+      "customs": "https://www.emta.ee",
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Transpordiamet — motor vehicle tax and registration fee (transpordiamet.ee)",
+        "url": "https://www.transpordiamet.ee/en/motor-vehicle-tax"
+      }
+    },
     "FI": {
       "eu": true,
       "vat": 0.255,
       "customs": "https://tulli.fi/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Verohallinto — amount of car tax (vero.fi)",
+        "url": "https://www.vero.fi/en/individuals/property/car-tax/amount-of-car-tax/"
+      }
     },
     "FR": {
       "eu": true,
       "vat": 0.2,
       "customs": "https://www.douane.gouv.fr/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Légifrance — CIBS art. L.421-62, barème CO₂ (WLTP) et malus au poids",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048844462"
+      }
     },
     "GR": {
       "eu": true,
       "vat": 0.24,
       "customs": "https://www.aade.gr/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "ΑΑΔΕ — φορολογία αυτοκινήτων οχημάτων, τέλος ταξινόμησης (aade.gr)",
+        "url": "https://www.aade.gr/sites/default/files/2020-07/09.aftolikita_oximata_forologia.pdf"
+      }
     },
     "HU": {
       "eu": true,
       "vat": 0.27,
       "customs": "https://nav.gov.hu/en",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "NAV — regisztrációs adó (nav.gov.hu)",
+        "url": "https://nav.gov.hu/ado/regisztracios_ado"
+      }
     },
     "IE": {
       "eu": true,
       "vat": 0.23,
       "customs": "https://www.revenue.ie/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Revenue — calculating Vehicle Registration Tax (revenue.ie)",
+        "url": "https://www.revenue.ie/en/vrt/calculating-vrt/applying-tax.aspx"
+      }
     },
     "IT": {
       "eu": true,
       "vat": 0.22,
       "customs": "https://www.adm.gov.it/portale/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "ACI — imposta provinciale di trascrizione, D.M. 435/1998 (aci.gov.it)",
+        "url": "https://aci.gov.it/pratica-auto/normativa-ipt-ministero-delle-finanze-decreto-27-novembre-1998-n-435/"
+      }
     },
     "LV": {
       "eu": true,
       "vat": 0.21,
       "customs": "https://www.vid.gov.lv/",
-      "regTax": "none"
+      "regTax": "none",
+      "regTaxSource": {
+        "title": "CSDD — payments on first registration in Latvia (csdd.lv)",
+        "url": "https://www.csdd.lv/pirmreizeja-transportlidzekla-registracija-latvija/pirmreiz-tl-reg-lv-maksaj-19"
+      }
     },
     "LT": {
       "eu": true,
       "vat": 0.21,
       "customs": "https://www.lrmuitine.lt/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Regitra — vehicle registration tax fee (regitra.lt)",
+        "url": "https://www.regitra.lt/en/services/vehicle-registration/registration-tax-fee/"
+      }
     },
     "LU": {
       "eu": true,
       "vat": 0.17,
       "customs": "https://douanes.public.lu/fr.html",
-      "regTax": "none"
+      "regTax": "none",
+      "regTaxSource": {
+        "title": "guichet.lu — registering a vehicle last registered abroad (guichet.public.lu)",
+        "url": "https://guichet.public.lu/fr/citoyens/transport/transports-individuels/vehicule-motorise/immatriculer-vehicule/acheter-vehicule-etranger.html"
+      }
     },
     "MT": {
       "eu": true,
       "vat": 0.18,
       "customs": "https://customs.gov.mt/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Transport Malta — registering a vehicle imported from an EU state (transport.gov.mt)",
+        "url": "https://www.transport.gov.mt/land/vehicles/registering-and-licensing-a-motor-vehicle/registering-and-licensing-a-motor-vehicle-imported-from-an-eu-state-804"
+      }
     },
     "NL": {
       "eu": true,
       "vat": 0.21,
       "customs": "https://www.douane.nl/",
-      "regTax": "national"
+      "regTax": "computed",
+      "regTaxSource": {
+        "title": "Belastingdienst — bpm berekenen voor een personenauto (belastingdienst.nl)",
+        "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/bpm/content/personenauto-bpm-tarief-berekenen"
+      }
     },
     "PT": {
       "eu": true,
       "vat": 0.23,
       "customs": "https://www.portaldasfinancas.gov.pt/",
-      "regTax": "national"
+      "regTax": "computed",
+      "regTaxSource": {
+        "title": "Código do ISV, Lei 22-A/2007 — texto consolidado (diariodarepublica.pt)",
+        "url": "https://diariodarepublica.pt/dr/legislacao-consolidada/lei/2007-34445975-114488809"
+      }
     },
     "RO": {
       "eu": true,
@@ -185,19 +267,31 @@
       "eu": true,
       "vat": 0.23,
       "customs": "https://www.financnasprava.sk/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "Slov-Lex — zákon 145/1995 Z. z. o správnych poplatkoch, položka za zápis vozidla",
+        "url": "https://static.slov-lex.sk/static/SK/ZZ/1995/145/20240601.html"
+      }
     },
     "SI": {
       "eu": true,
       "vat": 0.22,
       "customs": "https://www.fu.gov.si/",
-      "regTax": "national"
+      "regTax": "national",
+      "regTaxSource": {
+        "title": "FURS — davek na motorna vozila (fu.gov.si)",
+        "url": "https://www.fu.gov.si/davki_in_druge_dajatve/podrocja/davek_na_motorna_vozila_dmv/"
+      }
     },
     "SE": {
       "eu": true,
       "vat": 0.25,
       "customs": "https://www.tullverket.se/",
-      "regTax": "none"
+      "regTax": "none",
+      "regTaxSource": {
+        "title": "Transportstyrelsen — fordonsskatt and malus, an annual tax (transportstyrelsen.se)",
+        "url": "https://www.transportstyrelsen.se/sv/vagtrafik/fordon/skatter-och-avgifter/malus/"
+      }
     }
   },
   "poland": {
@@ -244,5 +338,39 @@
   "regTaxNoneSource": {
     "title": "Your Europe — Car taxes in another EU country (europa.eu)",
     "url": "https://europa.eu/youreurope/citizens/vehicles/registration/taxes-abroad/index_en.htm"
+  },
+  "czechia": {
+    "_note": "A one-off emission fee, paid on the first registration of an imported car and on a change of owner. The EURO class is read off the technical certificate; we derive it from the model year, which is what the type-approval milestones say: EURO 3 from January 2001, EURO 2 from 1997, EURO 1 from 1993.",
+    "source": {
+      "title": "SFŽP ČR — emisní poplatek vozidel, zákon 542/2020 Sb. (sfzp.gov.cz)",
+      "url": "https://sfzp.gov.cz/legislativa/poplatkova-agenda/odpady/emisni-poplatek-vozidel/"
+    },
+    "payment": {
+      "title": "portal.gov.cz — platba emisního poplatku",
+      "url": "https://portal.gov.cz/sluzby-vs/platba-emisniho-poplatku-ekologicka-dan-S20943"
+    },
+    "currency": "CZK",
+    "fees": [
+      {
+        "fromYear": 2001,
+        "euro": 3,
+        "czk": 0
+      },
+      {
+        "fromYear": 1997,
+        "euro": 2,
+        "czk": 3000
+      },
+      {
+        "fromYear": 1993,
+        "euro": 1,
+        "czk": 5000
+      },
+      {
+        "fromYear": 0,
+        "euro": 0,
+        "czk": 10000
+      }
+    ]
   }
 }

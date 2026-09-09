@@ -4,6 +4,7 @@ import type { Currency, Estimate, Foreign, FxRates, Msg, Trip, Vehicle } from '.
 import ukraine from '@config/rules.ukraine.json'
 import spain from '@config/rules.spain.json'
 import countries from '@config/countries.json'
+import netherlands from '@config/rules.netherlands.json'
 import { format as formatMoney } from '../../lib/money'
 import { useI18n } from '../../i18n'
 import TotalPanel from './TotalPanel.vue'
@@ -28,6 +29,8 @@ const sources = computed<Record<string, { title: string; url: string }>>(() => {
   }
   if (props.trip.destination === 'PL') list.excise = countries.poland.source
   if (props.trip.destination === 'AT') list.regTax = countries.austria.source
+  if (props.trip.destination === 'NL') list.regTax = netherlands.source
+  if (props.trip.destination === 'CZ') list.regTax = countries.czechia.source
   return list
 })
 const { _note, ...rates } = countries.fxSources
