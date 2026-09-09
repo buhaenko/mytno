@@ -1,0 +1,47 @@
+{
+  "_note": "Regisztrációs adó since 1 March 2025: a multiplier read off engine power and the car's environmental class, times a base amount, less a reduction for the months since first registration. The base is valorised every January — 45 000 Ft became 47 000 Ft for 2026. The first column applies to a car first put into circulation, in Hungary or abroad, after 31 December 2020, and to any hybrid whatever its age; for older cars the Hungarian environmental class is needed, and it is neither CO2 nor a EURO norm, so the line stays out of the total.",
+  "effective": "2026-01-01",
+  "currency": "HUF",
+  "baseFt": 47000,
+  "source": {
+    "title": "2003. évi CX. törvény a regisztrációs adóról, melléklet (net.jogtar.hu)",
+    "url": "https://net.jogtar.hu/jogszabaly?docid=a0300110.tv"
+  },
+  "valorisation": {
+    "title": "NAV — valorizált adómértékek, regisztrációs adó 2026 (nav.gov.hu)",
+    "url": "https://nav.gov.hu/ugyfeliranytu/adokulcsok_jarulekmertekek/valorizalt-adomertekek/regisztracios-ado/regisztracios-ado"
+  },
+  "firstColumnFromYear": 2021,
+  "multipliers": [
+    { "maxKw": 80, "multiplier": 1 },
+    { "maxKw": 100, "multiplier": 1.5 },
+    { "maxKw": 120, "multiplier": 2 },
+    { "maxKw": 140, "multiplier": 3 },
+    { "maxKw": 180, "multiplier": 4 },
+    { "maxKw": 250, "multiplier": 6 },
+    { "maxKw": null, "multiplier": 9 }
+  ],
+  "depreciation": [
+    { "maxMonths": 2, "pct": 3 },
+    { "maxMonths": 4, "pct": 8 },
+    { "maxMonths": 6, "pct": 13 },
+    { "maxMonths": 12, "pct": 18 },
+    { "maxMonths": 18, "pct": 23 },
+    { "maxMonths": 24, "pct": 28 },
+    { "maxMonths": 30, "pct": 33 },
+    { "maxMonths": 36, "pct": 38 },
+    { "maxMonths": 48, "pct": 45 },
+    { "maxMonths": 60, "pct": 53 },
+    { "maxMonths": 72, "pct": 59 },
+    { "maxMonths": 84, "pct": 65 },
+    { "maxMonths": 96, "pct": 70 },
+    { "maxMonths": 108, "pct": 74 },
+    { "maxMonths": 120, "pct": 78 },
+    { "maxMonths": 132, "pct": 81 },
+    { "maxMonths": 144, "pct": 84 },
+    { "maxMonths": 156, "pct": 86 },
+    { "maxMonths": 168, "pct": 88 },
+    { "maxMonths": null, "pct": 90 }
+  ],
+  "hpToKw": 0.7355
+}

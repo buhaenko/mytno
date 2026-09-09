@@ -1,0 +1,17 @@
+{
+  "_note": "Italy has no registration tax on value or CO2. What is paid at registration is the IPT, a provincial transcription tax on engine power, set nationally by D.M. 435/1998 and raised by each province by up to 30%. Since the province is the buyer's own and we do not ask for it, the line is a range: the national rate at the bottom, the highest permitted increase at the top.",
+  "effective": "2026-01-01",
+  "source": {
+    "title": "ACI — normativa IPT, D.M. 27 novembre 1998 n. 435 (aci.gov.it)",
+    "url": "https://aci.gov.it/pratica-auto/normativa-ipt-ministero-delle-finanze-decreto-27-novembre-1998-n-435/"
+  },
+  "increaseSource": {
+    "title": "ACI — calcolo IPT, percentuali di maggiorazione (aci.gov.it)",
+    "url": "https://aci.gov.it/pratica-auto/calcolo-ipt-percentuali-di-maggiorazione/"
+  },
+  "flatUpToKw": 53,
+  "flatEur": 150.81,
+  "perKwEur": 3.5119,
+  "maxProvincialIncrease": 0.3,
+  "hpToKw": 0.7355
+}

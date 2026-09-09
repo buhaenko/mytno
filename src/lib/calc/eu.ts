@@ -4,6 +4,10 @@ import netherlands from '@config/rules.netherlands.json'
 import portugal from '@config/rules.portugal.json'
 import lithuania from '@config/rules.lithuania.json'
 import slovakia from '@config/rules.slovakia.json'
+import italy from '@config/rules.italy.json'
+import slovenia from '@config/rules.slovenia.json'
+import hungary from '@config/rules.hungary.json'
+import france from '@config/rules.france.json'
 import { toEur } from '../fx'
 import { exact, money, nothing, percent, plus, times } from '../money'
 import { age, builtInEu, conversion, line, msg, newForVat, totalOf } from './common'
@@ -123,6 +127,90 @@ export function slovakiaFee(v: Vehicle, now: Date) {
   return { eur: Math.min(slovakia.maxEur, Math.max(slovakia.flatEur, rate * coef)), kw, coef, flat: false }
 }
 
+/**
+ * Italy: the IPT, a provincial transcription tax on engine power. The national rate is fixed;
+ * the province adds up to 30% of it, and since we never learn which province, the answer is a range.
+ */
+export function italyIpt(v: Vehicle) {
+  if (!v.powerHp) return null
+  const kw = v.powerHp * italy.hpToKw
+  const base = kw <= italy.flatUpToKw ? italy.flatEur : italy.perKwEur * kw
+  return { base, kw, max: base * (1 + italy.maxProvincialIncrease) }
+}
+
+/**
+ * Slovenia: three amounts added together — one for CO₂ and fuel, one for engine power, one for
+ * the emission standard — and then reduced for the age of the car. The price never enters it.
+ * Returns null without a CO₂ figure: the law's own substitute is €2 247, far above any real car.
+ */
+export function sloveniaDmv(v: Vehicle, now: Date) {
+  if (v.fuel === 'electric') return { total: 0, ev: true, co2Part: 0, powerPart: 0, euroPart: 0, euro: '', written: 0 }
+  if (!v.powerHp || v.co2Wltp === undefined) return null
+
+  const diesel = v.fuel === 'diesel'
+  const co2 = Math.round(v.co2Wltp)
+  const co2Band = [...(diesel ? slovenia.co2.diesel : slovenia.co2.petrol)].reverse().find((b) => co2 >= b.from)!
+  const co2Part = co2Band.base + co2Band.perGram * (co2 - co2Band.from)
+
+  const kw = v.powerHp * slovakia.hpToKw
+  const powerBand = [...slovenia.power].reverse().find((b) => kw >= b.from)!
+  const powerPart = powerBand.base + powerBand.perKw * (kw - powerBand.from)
+
+  const euro = slovenia.euro.find((e) => v.year >= e.fromYear)!
+  const euroPart = diesel ? euro.diesel : euro.petrol
+
+  const written = slovenia.age.find((a) => a.maxYears === null || age(v, now) <= a.maxYears)!.pct
+  return { total: (co2Part + powerPart + euroPart) * (written / 100), ev: false, co2Part, powerPart, euroPart, euro: euro.euro, written }
+}
+
+/**
+ * Hungary: a multiplier from engine power and the environmental class, times a base amount that is
+ * valorised every January, less a reduction for the months since first registration. We can read the
+ * class off the year only for a car first registered from 2021, and for a hybrid of any age.
+ */
+export function hungaryTax(v: Vehicle, fx: FxRates, now: Date) {
+  if (v.fuel === 'electric') return { ft: 0, eur: 0, ev: true, kw: 0, multiplier: 0, written: 0 }
+  if (!v.powerHp) return null
+
+  const kw = v.powerHp * hungary.hpToKw
+  const multiplier = hungary.multipliers.find((m) => m.maxKw === null || kw <= m.maxKw)!.multiplier
+  const months = Math.round(age(v, now) * 12)
+  const written = hungary.depreciation.find((d) => d.maxMonths === null || months <= d.maxMonths)!.pct
+  const ft = multiplier * hungary.baseFt * (1 - written / 100)
+  return { ft, eur: toEur(ft, 'HUF', fx), ev: false, kw, multiplier, written }
+}
+
+/**
+ * The French CO₂ malus. Three things decide it: the car is charged on the scale of the year it was
+ * FIRST registered anywhere, not the year it reaches France; a car first registered before 2015 owes
+ * nothing; and only a European type approval is read off CO₂ at all — anything else goes by fiscal
+ * horsepower, which we cannot know. The weight malus is a separate tax and needs a mass we do not have.
+ */
+export function franceMalus(v: Vehicle, now: Date) {
+  if (v.year < france.zeroBeforeYear) return { total: 0, gross: 0, written: 0, before2015: true }
+  const co2 = v.fuel === 'electric' ? 0 : v.co2Wltp === undefined ? undefined : Math.round(v.co2Wltp)
+  if (co2 === undefined) return null
+
+  const year = Math.min(v.year, france.latestWltpYear)
+  const scales = france as unknown as { wltp: Record<string, Scale>; nedc: Record<string, Scale> }
+  const scale = year >= 2020 ? scales.wltp[String(year)] : scales.nedc[String(year)]
+
+  let gross: number
+  if (scale) {
+    const step = co2 - scale.firstGram
+    gross = step < 0 ? 0 : step < scale.amounts.length ? scale.amounts[step]! : scale.cap
+  } else {
+    // 2015 and 2016 share one table of bands rather than a row per gram.
+    gross = france.nedcBands20152016.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!.eur
+  }
+
+  const months = Math.round(age(v, now) * 12)
+  const written = france.decote.find((d) => d.maxMonths === null || months <= d.maxMonths)!.pct
+  return { total: gross * (1 - written / 100), gross, written, before2015: false }
+}
+
+interface Scale { firstGram: number; amounts: number[]; cap: number }
+
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
 function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
@@ -140,6 +228,10 @@ function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: nu
   if (trip.destination === 'PT') return portugueseIsv(v, exempt, now)
   if (trip.destination === 'LT') return lithuanianTax(v, exempt)
   if (trip.destination === 'SK') return slovakFee(v, exempt, now)
+  if (trip.destination === 'IT') return italianIpt(v, exempt)
+  if (trip.destination === 'SI') return slovenianDmv(v, exempt, now)
+  if (trip.destination === 'HU') return hungarianTax(v, exempt, fx, now)
+  if (trip.destination === 'FR') return frenchMalus(v, exempt, now)
   if (trip.destination === 'CZ') return czechFee(v, fx)
 
   // Austria is the third country in this module with a formula of its own.
@@ -249,6 +341,102 @@ function slovakFee(v: Vehicle, exempt: boolean, now: Date): { line: Line; warnin
       notes: [msg(fee.flat ? 'note.skFlat' : 'note.skFee', { kw: Math.round(fee.kw), coef: fee.coef })],
       source,
     }),
+  }
+}
+
+/** Italy: the IPT, from the national rate up to the highest provincial increase. */
+function italianIpt(v: Vehicle, exempt: boolean): { line: Line; warning?: ReturnType<typeof msg> } {
+  const source = italy.source
+  const label = msg('line.regTaxNamed', { name: 'IPT' })
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  const ipt = italyIpt(v)
+  if (!ipt) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.itIptNoPower')], source }),
+      warning: msg('warn.itNeedPower'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', money(ipt.base, (ipt.base + ipt.max) / 2, ipt.max), {
+      formula: '150,81 € ≤ 53 kW, altrimenti 3,5119 €/kW',
+      notes: [msg('note.itIpt', { kw: Math.round(ipt.kw), base: Math.round(ipt.base) })],
+      source,
+    }),
+  }
+}
+
+/** Slovenia: CO₂, power and emission standard, less the reduction for the car's age. */
+function slovenianDmv(v: Vehicle, exempt: boolean, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+  const source = slovenia.source
+  const label = msg('line.regTaxNamed', { name: 'DMV' })
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  const dmv = sloveniaDmv(v, now)
+  if (!dmv) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg(v.powerHp ? 'note.siNoCo2' : 'note.siNoPower')], source }),
+      warning: msg(v.powerHp ? 'warn.siNeedCo2' : 'warn.siNeedPower'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(dmv.total), {
+      formula: 'CO₂ + kW + EURO − starost',
+      notes: [msg(dmv.ev ? 'note.siEv' : 'note.siDmv', {
+        co2: Math.round(dmv.co2Part), power: Math.round(dmv.powerPart), euro: dmv.euro, euroPart: Math.round(dmv.euroPart), written: dmv.written,
+      })],
+      source,
+    }),
+  }
+}
+
+/** Hungary: the power multiplier on the year's base amount, less the monthly depreciation. */
+function hungarianTax(v: Vehicle, exempt: boolean, fx: FxRates, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+  const source = hungary.source
+  const label = msg('line.regTaxNamed', { name: 'regisztrációs adó' })
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  // Before 2021 the column depends on a Hungarian environmental class, which is neither CO₂ nor a EURO norm.
+  const hybrid = v.fuel === 'hybrid' || v.fuel === 'phev'
+  const readableClass = hybrid || v.year >= hungary.firstColumnFromYear
+  const tax = readableClass ? hungaryTax(v, fx, now) : null
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg(readableClass ? 'note.huNoPower' : 'note.huOldClass')], source }),
+      warning: readableClass ? msg('warn.huNeedPower') : undefined,
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      formula: `${tax.multiplier} × ${hungary.baseFt} Ft − ${tax.written}%`,
+      notes: [msg(tax.ev ? 'note.huEv' : 'note.huTax', { kw: Math.round(tax.kw), ft: Math.round(tax.ft), written: tax.written })],
+      source,
+    }),
+  }
+}
+
+/** France: the CO₂ malus of the year the car was first registered, less the décote for its age. */
+function frenchMalus(v: Vehicle, exempt: boolean, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+  const source = france.source
+  const label = msg('line.regTaxNamed', { name: 'malus CO₂' })
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  // Only a European type approval carries a CO₂ figure the scales can read; the rest go by fiscal horsepower.
+  if (v.market !== 'EU' && v.year >= france.zeroBeforeYear) {
+    return { line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.frNoApproval')], source }) }
+  }
+
+  const malus = franceMalus(v, now)
+  if (!malus) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.frNoCo2')], source }),
+      warning: msg('warn.frNeedCo2'),
+    }
+  }
+  const notes = malus.before2015 ? [msg('note.frBefore2015')]
+    : [msg('note.frMalus', { year: v.year, gross: Math.round(malus.gross), written: malus.written }), msg('note.frWeight')]
+  return {
+    line: line('regTax', label, 'tax', exact(malus.total), { formula: 'barème de l’année − décote', notes, source }),
   }
 }
 

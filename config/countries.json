@@ -151,10 +151,10 @@
       "eu": true,
       "vat": 0.2,
       "customs": "https://www.douane.gouv.fr/",
-      "regTax": "national",
+      "regTax": "computed",
       "regTaxSource": {
-        "title": "Légifrance — CIBS art. L.421-62, barème CO₂ (WLTP) et malus au poids",
-        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000048844462"
+        "title": "CIBS art. L.421-62 — barèmes CO₂ par année (legifrance.gouv.fr)",
+        "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051214838"
       }
     },
     "GR": {
@@ -171,10 +171,10 @@
       "eu": true,
       "vat": 0.27,
       "customs": "https://nav.gov.hu/en",
-      "regTax": "national",
+      "regTax": "computed",
       "regTaxSource": {
-        "title": "NAV — regisztrációs adó (nav.gov.hu)",
-        "url": "https://nav.gov.hu/ado/regisztracios_ado"
+        "title": "2003. évi CX. törvény a regisztrációs adóról (net.jogtar.hu)",
+        "url": "https://net.jogtar.hu/jogszabaly?docid=a0300110.tv"
       }
     },
     "IE": {
@@ -191,9 +191,9 @@
       "eu": true,
       "vat": 0.22,
       "customs": "https://www.adm.gov.it/portale/",
-      "regTax": "national",
+      "regTax": "computed",
       "regTaxSource": {
-        "title": "ACI — imposta provinciale di trascrizione, D.M. 435/1998 (aci.gov.it)",
+        "title": "ACI — normativa IPT, D.M. 435/1998 (aci.gov.it)",
         "url": "https://aci.gov.it/pratica-auto/normativa-ipt-ministero-delle-finanze-decreto-27-novembre-1998-n-435/"
       }
     },
@@ -277,10 +277,10 @@
       "eu": true,
       "vat": 0.22,
       "customs": "https://www.fu.gov.si/",
-      "regTax": "national",
+      "regTax": "computed",
       "regTaxSource": {
-        "title": "FURS — davek na motorna vozila (fu.gov.si)",
-        "url": "https://www.fu.gov.si/davki_in_druge_dajatve/podrocja/davek_na_motorna_vozila_dmv/"
+        "title": "ZDMV-1, Uradni list RS 200/2020 — davek na motorna vozila",
+        "url": "https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2020-01-3606"
       }
     },
     "SE": {

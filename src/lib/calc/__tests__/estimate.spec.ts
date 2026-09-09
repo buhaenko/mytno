@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, czechiaEmissionFee, estimateEu, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee } from '../eu'
+import { austriaNova, czechiaEmissionFee, estimateEu, franceMalus, hungaryTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { fallbackRates } from '../../fx'
 
@@ -137,9 +137,9 @@ describe('Other EU countries', () => {
   })
 
   it('keeps a national registration tax out of the total but on the page', () => {
-    const e = estimateEu(audi, { ...trip, destination: 'IT' }, fx, now)
+    const e = estimateEu(audi, { ...trip, destination: 'DK' }, fx, now)
     expect(lineOf(e, 'regTax').unknown).toBe(true)
-    expect(lineOf(e, 'vat').amount.likely).toBeCloseTo(e.customsValue * 1.1 * 0.22, 2)
+    expect(lineOf(e, 'vat').amount.likely).toBeCloseTo(e.customsValue * 1.1 * 0.25, 2)
     expect(e.total.likely).toBeCloseTo(e.lines.filter((l) => !l.unknown).reduce((a, l) => a + l.amount.likely, 0), 6)
   })
 
@@ -192,6 +192,65 @@ describe('Other EU countries', () => {
     expect(slovakiaFee({ ...audi, year: 1980 }, now)!.coef).toBe(0.1)
     expect(slovakiaFee({ ...audi, fuel: 'electric', powerHp: undefined }, now)!.eur).toBe(33)
     expect(slovakiaFee({ ...audi, powerHp: undefined }, now)).toBeNull()
+  })
+
+  it('gives the Italian IPT as a range, because the province adds up to 30%', () => {
+    const ipt = italyIpt(audi)!
+    expect(ipt.base).toBeCloseTo(3.5119 * 252 * 0.7355, 6)
+    expect(ipt.max).toBeCloseTo(ipt.base * 1.3, 6)
+    // A small engine pays the flat rate instead of the per-kilowatt one.
+    expect(italyIpt({ ...audi, powerHp: 70 })!.base).toBe(150.81)
+    expect(italyIpt({ ...audi, powerHp: undefined })).toBeNull()
+
+    const e = estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'IT', currency: 'EUR' }, fx, now)
+    const regTax = lineOf(e, 'regTax')
+    expect(regTax.unknown).toBeUndefined()
+    expect(regTax.amount.max).toBeGreaterThan(regTax.amount.min)
+  })
+
+  it('adds up the three Slovenian components and takes the age off the sum', () => {
+    const dmv = sloveniaDmv(audi, now)!
+    expect(dmv.co2Part).toBeCloseTo(48 + 5 * (168 - 140), 6)
+    expect(dmv.powerPart).toBeCloseTo(160 + 7 * (252 * 0.7355 - 60), 6)
+    expect(dmv.euroPart).toBe(75)
+    expect(dmv.written).toBe(38)
+    expect(dmv.total).toBeCloseTo((dmv.co2Part + dmv.powerPart + dmv.euroPart) * 0.38, 6)
+    // A diesel of the same car reads the heavier column throughout.
+    expect(sloveniaDmv({ ...audi, fuel: 'diesel' }, now)!.euroPart).toBe(112)
+    expect(sloveniaDmv({ ...audi, fuel: 'electric' }, now)!.total).toBe(0)
+    expect(sloveniaDmv({ ...audi, co2Wltp: undefined }, now)).toBeNull()
+  })
+
+  it('reads the Hungarian multiplier off the power and takes the months off the tax', () => {
+    const hu = hungaryTax({ ...audi, year: 2022 }, fx, now)!
+    expect(hu.multiplier).toBe(6)
+    expect(hu.written).toBe(53)
+    expect(hu.ft).toBeCloseTo(6 * 47000 * 0.47, 6)
+    expect(hu.eur).toBeCloseTo(hu.ft / fx.HUF.rate, 6)
+    // A car from before 2021 needs the Hungarian environmental class, so it stays out of the total.
+    const old = estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'HU', currency: 'EUR' }, fx, now)
+    expect(lineOf(old, 'regTax').unknown).toBe(true)
+    // A hybrid is computed whatever its age.
+    const hybrid = estimateEu({ ...audi, fuel: 'hybrid', market: 'EU' }, { ...trip, origin: 'EU', destination: 'HU', currency: 'EUR' }, fx, now)
+    expect(lineOf(hybrid, 'regTax').unknown).toBeUndefined()
+  })
+
+  it('charges the French malus on the scale of the year the car was first registered', () => {
+    const eu = { ...audi, market: 'EU' as const }
+    const malus = franceMalus(eu, now)!
+    // A 2017 car reads the NEDC scale of 2017, where 168 g/km is €4 253, less the 64% décote at nine years.
+    expect(malus.gross).toBe(4253)
+    expect(malus.written).toBe(64)
+    expect(malus.total).toBeCloseTo(4253 * 0.36, 6)
+    // Nothing at all before 2015, and the first taxed gram of 2026 is 108.
+    expect(franceMalus({ ...eu, year: 2014 }, now)!.total).toBe(0)
+    expect(franceMalus({ ...eu, year: 2026, co2Wltp: 108 }, now)!.gross).toBe(50)
+    expect(franceMalus({ ...eu, year: 2026, co2Wltp: 107 }, now)!.gross).toBe(0)
+    expect(franceMalus({ ...eu, year: 2026, co2Wltp: 400 }, now)!.gross).toBe(80000)
+    expect(franceMalus({ ...eu, co2Wltp: undefined }, now)).toBeNull()
+    // A car without European type approval is charged on fiscal horsepower, which we cannot read.
+    const us = estimateEu(audi, { ...trip, destination: 'FR' }, fx, now)
+    expect(lineOf(us, 'regTax').unknown).toBe(true)
   })
 
   it('reads the Czech emission fee off the model year', () => {

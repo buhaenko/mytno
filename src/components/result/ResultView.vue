@@ -8,6 +8,10 @@ import netherlands from '@config/rules.netherlands.json'
 import portugal from '@config/rules.portugal.json'
 import lithuania from '@config/rules.lithuania.json'
 import slovakia from '@config/rules.slovakia.json'
+import italy from '@config/rules.italy.json'
+import slovenia from '@config/rules.slovenia.json'
+import hungary from '@config/rules.hungary.json'
+import france from '@config/rules.france.json'
 import { format as formatMoney } from '../../lib/money'
 import { useI18n } from '../../i18n'
 import TotalPanel from './TotalPanel.vue'
@@ -37,6 +41,10 @@ const sources = computed<Record<string, { title: string; url: string }>>(() => {
   if (props.trip.destination === 'PT') list.regTax = portugal.source
   if (props.trip.destination === 'LT') list.regTax = lithuania.source
   if (props.trip.destination === 'SK') list.regTax = slovakia.source
+  if (props.trip.destination === 'IT') list.regTax = italy.source
+  if (props.trip.destination === 'SI') list.regTax = slovenia.source
+  if (props.trip.destination === 'HU') list.regTax = hungary.source
+  if (props.trip.destination === 'FR') list.regTax = france.source
   return list
 })
 const { _note, ...rates } = countries.fxSources

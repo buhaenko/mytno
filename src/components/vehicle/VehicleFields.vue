@@ -15,10 +15,11 @@ const MARKETS: Market[] = ['US', 'EU', 'JP', 'KR', 'OTHER']
 
 const electrified = computed(() => vehicle.value.fuel === 'electric' || vehicle.value.fuel === 'phev')
 /** CO₂ sets the registration tax in six countries; the new price only in Spain, the power only in Slovakia. */
-const CO2_COUNTRIES: Destination[] = ['ES', 'AT', 'NL', 'PT', 'LT']
+const CO2_COUNTRIES: Destination[] = ['ES', 'AT', 'NL', 'PT', 'LT', 'SI', 'FR']
 const needsCo2 = computed(() => CO2_COUNTRIES.includes(props.destination))
 const needsListPrice = computed(() => props.destination === 'ES')
-const needsPower = computed(() => props.destination === 'SK')
+const POWER_COUNTRIES: Destination[] = ['SK', 'IT', 'SI', 'HU']
+const needsPower = computed(() => POWER_COUNTRIES.includes(props.destination))
 const spainCo2Source = { title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }
 const displacementHelp = computed(() =>
   props.destination === 'UA' ? 'car.help.ccUa' : props.destination === 'PL' ? 'car.help.ccPl' : 'car.help.ccOther')

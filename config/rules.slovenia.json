@@ -1,0 +1,60 @@
+{
+  "_note": "DMV under ZDMV-1, in force since 1 January 2021: three separate amounts — one for CO2 and fuel, one for engine power, one for the emission standard — added together and then reduced for the age of the car. Since 2021 it is not a percentage of the price, and the price does not enter it at all. Every figure here is from the enacted text in Uradni list RS 200/2020, cross-checked against the FURS guidance of 5 September 2025; the numbers in the 2020 bill were different and wrong. The emission standard is on the car's papers; we derive it from the year of first registration and take the older side of each boundary, so the tax is never understated.",
+  "effective": "2021-01-01",
+  "source": {
+    "title": "ZDMV-1, Uradni list RS 200/2020 (uradni-list.si)",
+    "url": "https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2020-01-3606"
+  },
+  "guidance": {
+    "title": "FURS — davek na motorna vozila (fu.gov.si)",
+    "url": "https://www.fu.gov.si/davki_in_druge_dajatve/podrocja/davek_na_motorna_vozila_dmv/"
+  },
+  "co2": {
+    "petrol": [
+      { "from": 0, "base": 0, "perGram": 0 },
+      { "from": 50, "base": 0, "perGram": 0.4 },
+      { "from": 100, "base": 20, "perGram": 0.7 },
+      { "from": 140, "base": 48, "perGram": 5 },
+      { "from": 190, "base": 298, "perGram": 30 },
+      { "from": 230, "base": 1498, "perGram": 50 }
+    ],
+    "diesel": [
+      { "from": 0, "base": 0, "perGram": 0 },
+      { "from": 50, "base": 0, "perGram": 0.5 },
+      { "from": 100, "base": 25, "perGram": 0.8 },
+      { "from": 140, "base": 57, "perGram": 6 },
+      { "from": 190, "base": 357, "perGram": 36 },
+      { "from": 230, "base": 1797, "perGram": 60 }
+    ],
+    "unknownCo2": { "petrol": 2247, "diesel": 2695.5 }
+  },
+  "power": [
+    { "from": 0, "base": 0, "perKw": 1 },
+    { "from": 20, "base": 20, "perKw": 2 },
+    { "from": 40, "base": 60, "perKw": 5 },
+    { "from": 60, "base": 160, "perKw": 7 }
+  ],
+  "euro": [
+    { "fromYear": 2021, "euro": "6d", "petrol": 30, "diesel": 45 },
+    { "fromYear": 2019, "euro": "6c", "petrol": 50, "diesel": 75 },
+    { "fromYear": 2016, "euro": "6b", "petrol": 75, "diesel": 112 },
+    { "fromYear": 2011, "euro": "5", "petrol": 150, "diesel": 225 },
+    { "fromYear": 2006, "euro": "4", "petrol": 400, "diesel": 800 },
+    { "fromYear": 0, "euro": "0–3", "petrol": 500, "diesel": 1000 }
+  ],
+  "age": [
+    { "maxYears": 1, "pct": 91 },
+    { "maxYears": 2, "pct": 83 },
+    { "maxYears": 3, "pct": 76 },
+    { "maxYears": 4, "pct": 70 },
+    { "maxYears": 5, "pct": 64 },
+    { "maxYears": 6, "pct": 58 },
+    { "maxYears": 7, "pct": 53 },
+    { "maxYears": 8, "pct": 48 },
+    { "maxYears": 9, "pct": 43 },
+    { "maxYears": 10, "pct": 38 },
+    { "maxYears": null, "pct": 33 }
+  ],
+  "nedcToWltp": { "petrol": 1.22, "diesel": 1.2 },
+  "sevenSeatReduction": 0.3
+}
