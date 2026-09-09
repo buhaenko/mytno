@@ -1,28 +1,22 @@
-import type { Currency, FxRates, Range } from '../types'
+import type { Currency, FxRates, Money } from '../types'
 import { fromEur } from './fx'
 
 const SYMBOL: Record<Currency, string> = { EUR: '€', USD: '$', UAH: '₴' }
 
-export function fmt(amountEur: number, cur: Currency, fx: FxRates, opts: { decimals?: number } = {}): string {
-  const v = fromEur(amountEur, cur, fx)
-  const decimals = opts.decimals ?? 0
-  const s = new Intl.NumberFormat('uk-UA', { maximumFractionDigits: decimals, minimumFractionDigits: decimals }).format(v)
-  return cur === 'UAH' ? `${s} ${SYMBOL[cur]}` : `${SYMBOL[cur]}${s}`
-}
+export const money = (min: number, likely = min, max = likely): Money => ({ min, likely, max })
+export const exact = (value: number): Money => money(value, value, value)
+export const between = ([min, max]: readonly number[]): Money => money(min!, (min! + max!) / 2, max!)
+export const nothing: Money = money(0)
 
-export function fmtRange(r: Range, cur: Currency, fx: FxRates): string {
-  if (Math.abs(r.max - r.min) < 1) return fmt(r.likely, cur, fx)
-  return `${fmt(r.min, cur, fx)} – ${fmt(r.max, cur, fx)}`
-}
+export const plus = (a: Money, b: Money): Money => money(a.min + b.min, a.likely + b.likely, a.max + b.max)
+export const times = (a: Money, k: number): Money => money(a.min * k, a.likely * k, a.max * k)
+export const sum = (all: Money[]): Money => all.reduce(plus, nothing)
+export const isRange = (m: Money): boolean => Math.abs(m.max - m.min) >= 1
 
-export const r = (min: number, likely: number, max: number): Range => ({ min, likely, max })
-export const fixed = (v: number): Range => ({ min: v, likely: v, max: v })
-export const span = ([min, max]: [number, number] | number[], likely?: number): Range => ({
-  min: min!,
-  likely: likely ?? (min! + max!) / 2,
-  max: max!,
-})
-export const addR = (a: Range, b: Range): Range => ({ min: a.min + b.min, likely: a.likely + b.likely, max: a.max + b.max })
-export const scaleR = (a: Range, k: number): Range => ({ min: a.min * k, likely: a.likely * k, max: a.max * k })
-export const zero: Range = { min: 0, likely: 0, max: 0 }
-export const pct = (v: number) => `${(v * 100).toLocaleString('uk-UA', { maximumFractionDigits: 2 })}%`
+export const percent = (rate: number) => `${(rate * 100).toLocaleString('en', { maximumFractionDigits: 2 })}%`
+
+export function format(amountEur: number, currency: Currency, fx: FxRates, locale = 'en'): string {
+  const value = fromEur(amountEur, currency, fx)
+  const shown = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value)
+  return currency === 'UAH' ? `${shown} ${SYMBOL[currency]}` : `${SYMBOL[currency]}${shown}`
+}

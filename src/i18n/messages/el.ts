@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Αποδοχή',
   'consent.decline': 'Απόρριψη',
   'footer.legal': 'Νομικά και πηγές',
+  'car.note.epaMatch': 'Κατάλογος EPA: {model}.',
 } as Record<string, string>

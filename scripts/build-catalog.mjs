@@ -1,85 +1,129 @@
-// Builds the static vehicle catalogue from the EPA database (fueleconomy.gov): every model 1984–2026 with engine, fuel and CO₂.
-// Usage: node scripts/build-catalog.mjs [path to vehicles.csv]  (without an argument the zip is downloaded from fueleconomy.gov)
-import { createWriteStream, existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+/**
+ * Builds public/catalog/ from the EPA dataset: every model sold in the US
+ * from 1984 to 2026, one small JSON file per year.
+ *
+ *   npm run catalog                    downloads the dataset
+ *   npm run catalog -- path/to.csv     uses a local copy
+ */
 import { execSync } from 'node:child_process'
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
-const SRC = 'https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip'
-let csvPath = process.argv[2]
-if (!csvPath) {
+const SOURCE = 'https://www.fueleconomy.gov/feg/epadata/vehicles.csv.zip'
+const OUT = 'public/catalog'
+const MILES_TO_KM = 0.621371
+
+const FUEL_BY_EPA = {
+  'Regular Gasoline': 'petrol',
+  'Premium Gasoline': 'petrol',
+  'Midgrade Gasoline': 'petrol',
+  Diesel: 'diesel',
+  Electricity: 'electric',
+  'Natural Gas': 'cng',
+  Hydrogen: 'hydrogen',
+}
+const FUEL_BY_DRIVETRAIN = { 'Plug-in Hybrid': 'phev', Hybrid: 'hybrid', EV: 'electric' }
+
+async function datasetPath() {
+  const given = process.argv[2]
+  if (given) return given
+
   const dir = join(tmpdir(), 'epa-catalog')
-  mkdirSync(dir, { recursive: true })
   const zip = join(dir, 'vehicles.csv.zip')
+  mkdirSync(dir, { recursive: true })
   if (!existsSync(zip)) {
-    console.log('downloading', SRC)
-    const res = await fetch(SRC)
-    const buf = Buffer.from(await res.arrayBuffer())
-    writeFileSync(zip, buf)
+    console.log(`downloading ${SOURCE}`)
+    writeFileSync(zip, Buffer.from(await (await fetch(SOURCE)).arrayBuffer()))
   }
   execSync(`unzip -o -q "${zip}" -d "${dir}"`)
-  csvPath = join(dir, 'vehicles.csv')
+  return join(dir, 'vehicles.csv')
 }
 
+/** A CSV reader small enough to read: quotes, doubled quotes, newlines. */
 function parseCsv(text) {
   const rows = []
-  let row = [], field = '', q = false
+  let row = []
+  let field = ''
+  let quoted = false
+
   for (let i = 0; i < text.length; i++) {
-    const c = text[i]
-    if (q) {
-      if (c === '"') { if (text[i + 1] === '"') { field += '"'; i++ } else q = false }
-      else field += c
-    } else if (c === '"') q = true
-    else if (c === ',') { row.push(field); field = '' }
-    else if (c === '\n') { row.push(field); rows.push(row); row = []; field = '' }
-    else if (c !== '\r') field += c
+    const ch = text[i]
+    if (quoted) {
+      if (ch !== '"') field += ch
+      else if (text[i + 1] === '"') { field += '"'; i++ }
+      else quoted = false
+    } else if (ch === '"') quoted = true
+    else if (ch === ',') { row.push(field); field = '' }
+    else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = '' }
+    else if (ch !== '\r') field += ch
   }
   if (field || row.length) { row.push(field); rows.push(row) }
   return rows
 }
 
-const rows = parseCsv(readFileSync(csvPath, 'utf8'))
-const head = rows[0]
-const col = (n) => head.indexOf(n)
-const C = { year: col('year'), make: col('make'), model: col('model'), displ: col('displ'), cyl: col('cylinders'), fuel: col('fuelType1'), atv: col('atvType'), co2: col('co2TailpipeGpm'), trany: col('trany'), drive: col('drive'), ev: col('evMotor'), id: col('id') }
+const csv = parseCsv(readFileSync(await datasetPath(), 'utf8'))
+const header = csv[0]
+const at = (row, column) => row[header.indexOf(column)] ?? ''
 
-const FUEL = { 'Regular Gasoline': 'petrol', 'Premium Gasoline': 'petrol', 'Midgrade Gasoline': 'petrol', 'Diesel': 'diesel', 'Electricity': 'electric', 'Natural Gas': 'cng', 'Hydrogen': 'hydrogen' }
+/** year → make → model → the distinct engine versions offered that year. */
 const byYear = new Map()
-for (const r of rows.slice(1)) {
-  if (r.length < head.length - 5) continue
-  const year = Number(r[C.year]); if (!year) continue
-  const make = r[C.make].trim(), model = r[C.model].trim()
-  const atv = r[C.atv].trim()
-  let fuel = FUEL[r[C.fuel].trim()] ?? 'petrol'
-  if (atv === 'Plug-in Hybrid') fuel = 'phev'
-  else if (atv === 'Hybrid') fuel = 'hybrid'
-  else if (atv === 'EV') fuel = 'electric'
-  const displ = Number(r[C.displ]) || 0
-  const cc = displ ? Math.round(displ * 1000) : 0
-  const cyl = Number(r[C.cyl]) || 0
-  const co2gpm = Number(r[C.co2]) || 0
-  const co2 = co2gpm > 0 ? Math.round(co2gpm * 0.621371) : 0 // g/km (EPA combined)
-  const trany = r[C.trany].trim().replace('Automatic', 'AT').replace('Manual', 'MT')
-  const drive = r[C.drive].trim()
-  const ev = r[C.ev].trim()
-  const y = byYear.get(year) ?? new Map()
-  const m = y.get(make) ?? new Map()
-  const versions = m.get(model) ?? []
-  const key = `${cc}|${cyl}|${fuel}|${trany}|${drive}|${ev}`
-  if (!versions.some((v) => v.key === key)) versions.push({ key, v: [cc, cyl, fuel, co2, trany, drive, ev, Number(r[C.id])] })
-  m.set(model, versions); y.set(make, m); byYear.set(year, y)
+let versions = 0
+
+for (const row of csv.slice(1)) {
+  if (row.length < header.length - 5) continue
+  const year = Number(at(row, 'year'))
+  if (!year) continue
+
+  const drivetrain = at(row, 'atvType').trim()
+  const fuel = FUEL_BY_DRIVETRAIN[drivetrain] ?? FUEL_BY_EPA[at(row, 'fuelType1').trim()] ?? 'petrol'
+  const litres = Number(at(row, 'displ')) || 0
+  const co2PerMile = Number(at(row, 'co2TailpipeGpm')) || 0
+
+  const version = [
+    litres ? Math.round(litres * 1000) : 0,
+    Number(at(row, 'cylinders')) || 0,
+    fuel,
+    co2PerMile > 0 ? Math.round(co2PerMile * MILES_TO_KM) : 0,
+    at(row, 'trany').trim().replace('Automatic', 'AT').replace('Manual', 'MT'),
+    at(row, 'drive').trim(),
+    at(row, 'evMotor').trim(),
+    Number(at(row, 'id')),
+  ]
+
+  const makes = byYear.get(year) ?? new Map()
+  const models = makes.get(at(row, 'make').trim()) ?? new Map()
+  const list = models.get(at(row, 'model').trim()) ?? []
+
+  // Trims differ by a gram or two of CO₂; the same engine should appear once.
+  const [cc, cylinders, , , gearbox, drive, motor] = version
+  const signature = [cc, cylinders, fuel, gearbox, drive, motor].join('|')
+  if (!list.some((v) => v.signature === signature)) {
+    list.push({ signature, version })
+    versions++
+  }
+  models.set(at(row, 'model').trim(), list)
+  makes.set(at(row, 'make').trim(), models)
+  byYear.set(year, makes)
 }
 
-const index = {}
-let total = 0
-for (const [year, makes] of [...byYear.entries()].sort((a, b) => b[0] - a[0])) {
+mkdirSync(OUT, { recursive: true })
+const makesByYear = {}
+
+for (const [year, makes] of [...byYear].sort((a, b) => b[0] - a[0])) {
   const out = {}
-  for (const [make, models] of [...makes.entries()].sort()) {
-    out[make] = {}
-    for (const [model, versions] of [...models.entries()].sort()) { out[make][model] = versions.map((x) => x.v); total += versions.length }
+  for (const [make, models] of [...makes].sort()) {
+    out[make] = Object.fromEntries([...models].sort().map(([model, list]) => [model, list.map((v) => v.version)]))
   }
-  writeFileSync(`public/catalog/${year}.json`, JSON.stringify(out))
-  index[year] = Object.keys(out)
+  writeFileSync(join(OUT, `${year}.json`), JSON.stringify(out))
+  makesByYear[year] = Object.keys(out)
 }
-writeFileSync('public/catalog/index.json', JSON.stringify({ years: Object.keys(index).map(Number).sort((a, b) => b - a), makesByYear: index, source: SRC, built: new Date().toISOString().slice(0, 10) }))
-console.log('years', byYear.size, 'versions', total)
+
+writeFileSync(join(OUT, 'index.json'), JSON.stringify({
+  years: Object.keys(makesByYear).map(Number).sort((a, b) => b - a),
+  makesByYear,
+  source: SOURCE,
+  built: new Date().toISOString().slice(0, 10),
+}))
+
+console.log(`catalogue: ${byYear.size} years, ${versions} versions → ${OUT}`)

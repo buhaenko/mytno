@@ -24,17 +24,22 @@ docker compose up    # MongoDB + API + nginx, the shape of a production deploy
 ## How it is put together
 
 ```
-config/        the single source of truth — rules, rates, sources, reference data (plain JSON)
-server/        Node + Express + MongoDB API
-  src/config.js          every setting and every upstream URL, in one file
-  src/routes/            config, fx, vin, share, geo, health
-  src/services/          codes (share links), fx (National Bank), vin (NHTSA)
-  src/store/mongo.js     database connection, indexes and TTLs
-src/           the Vue app
-  lib/calc/              one module per calculation: ukraine, spain, eu (generic + Austria, Poland)
-  lib/                   vin decoding, catalogue, money, share links, analytics
-  i18n/messages/         23 locales, one file each
-scripts/       prerender (SEO) and the catalogue builder
+config/                    the single source of truth — rules, rates, sources (plain JSON)
+server/src/
+  config.js                every setting and every upstream URL, in one file
+  routes/                  config · fx · vin · share · geo · health
+  services/                codes (share links) · fx (National Bank) · vin (NHTSA)
+  store/mongo.js           connection, indexes, TTLs
+src/
+  types.ts                 the vocabulary: Vehicle, Trip, Money, Line, Estimate
+  state/                   calculator (the seven values everything derives from) · snapshot · share
+  lib/calc/                ukraine · spain · eu (generic, plus Austria and Poland)
+  lib/vehicle/             vin · decode · catalog · reference · identify
+  lib/                     money · fx · api · shareLink · analytics · origins
+  components/              layout · controls · vehicle · result · icons
+  styles/                  tokens · base · layout · controls · result · footer · motion
+  i18n/                    locales.ts and one message file per language
+scripts/                   prerender (SEO) and the catalogue builder
 ```
 
 **`config/` is the point.** Every rate, threshold, source link and reference table lives there as JSON,

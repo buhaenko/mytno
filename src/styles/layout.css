@@ -1,0 +1,51 @@
+.page { max-width: 700px; margin: 0 auto; padding: 18px 24px 100px; }
+
+/* Header: the mark on one side, the language on the other. */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 4px 0 12px; margin-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); }
+.brand-name { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
+
+/* Hero: a question that folds away into a route bar. */
+.hero { padding-top: 14vh; text-align: center; transition: padding .5s var(--ease); }
+.hero.compact { padding-top: 4px; }
+.hero-text {
+  max-height: 340px; margin: 14px 0 30px; overflow: hidden; opacity: 1;
+  transition: max-height .45s var(--ease), opacity .25s ease, margin .45s var(--ease);
+}
+.hero.compact .hero-text { max-height: 0; margin: 0; opacity: 0; }
+.hero-text h1 {
+  max-width: 20ch; margin: 0 auto;
+  font-size: clamp(1.9rem, 4.6vw, 2.6rem); line-height: 1.12; letter-spacing: -.025em;
+}
+.hero-text h1 .accent { color: var(--accent-deep); }
+.hero-text p { max-width: 46ch; margin: 14px auto 0; font-size: 15.5px; color: var(--ink-faint); }
+
+.route { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.route-arrow { flex: 0 0 auto; display: grid; place-items: center; color: var(--line-strong); }
+.route-arrow svg { width: 20px; height: 10px; }
+
+/* Steps */
+.step { margin-top: 30px; }
+.step-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+.step-rule { flex: 1; height: 1px; background: var(--line); }
+.card { padding: 20px 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-lg); }
+
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.page-note { margin-top: 48px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
+
+@media (max-width: 560px) {
+  .page { padding: 14px 16px 80px; }
+  .card { padding: 16px 14px; }
+  .grid, .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .route { flex-direction: column; align-items: stretch; }
+  .route-arrow { align-self: center; transform: rotate(90deg); }
+  .hero.compact .route { flex-direction: row; }
+  .hero.compact .route-arrow { transform: none; }
+}

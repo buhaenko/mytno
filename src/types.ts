@@ -1,61 +1,77 @@
+/** The vocabulary the whole app speaks: the car, the trip, and the estimate it produces. */
+
 export type Fuel = 'petrol' | 'diesel' | 'hybrid' | 'phev' | 'electric' | 'lpg'
-export type MarketSpec = 'US' | 'EU' | 'JP' | 'KR' | 'OTHER'
+export type Market = 'US' | 'EU' | 'JP' | 'KR' | 'OTHER'
 export type BrandTier = 'mass' | 'premium' | 'luxury'
 export type Origin = 'US' | 'EU' | 'UA' | 'JP' | 'KR' | 'OTHER'
-export type Destination = 'UA' | 'ES' | 'PL' | 'DE' | 'AT' | 'BE' | 'BG' | 'HR' | 'CY' | 'CZ' | 'DK' | 'EE' | 'FI' | 'FR' | 'GR' | 'HU' | 'IE' | 'IT' | 'LV' | 'LT' | 'LU' | 'MT' | 'NL' | 'PT' | 'RO' | 'SK' | 'SI' | 'SE'
+export type Destination =
+  | 'UA' | 'ES' | 'PL' | 'DE' | 'AT' | 'BE' | 'BG' | 'HR' | 'CY' | 'CZ' | 'DK' | 'EE' | 'FI' | 'FR'
+  | 'GR' | 'HU' | 'IE' | 'IT' | 'LV' | 'LT' | 'LU' | 'MT' | 'NL' | 'PT' | 'RO' | 'SK' | 'SI' | 'SE'
 export type Currency = 'EUR' | 'USD' | 'UAH'
+
+/** A translatable sentence: the key plus whatever the sentence needs filled in. */
+export interface Msg {
+  key: string
+  params?: Record<string, string | number>
+}
 
 export interface Vehicle {
   vin?: string
   make: string
   model: string
   year: number
-  engineCc?: number
   fuel: Fuel
-  powerHp?: number
-  batteryKwh?: number
-  co2Wltp?: number
-  marketSpec: MarketSpec
-  plantCountry?: string
-  body?: string
-  drive?: string
-  /** New list price in Spain (base for impuesto de matriculación) */
-  listPriceNewEur?: number
+  /** Which market the car was built for — it decides whether EU type approval is needed. */
+  market: Market
   brandTier: BrandTier
+  engineCc?: number
+  batteryKwh?: number
+  powerHp?: number
+  co2Wltp?: number
+  /** List price when new, in the destination country: the base of the Spanish registration tax. */
+  listPriceEur?: number
   mileageKm?: number
-  decodeNotes: string[]
+  plantCountry?: string
+  drive?: string
+  /** What the VIN decode and the catalogue had to say, shown behind the “?” next to the car. */
+  notes: Msg[]
 }
 
-export interface RouteInput {
+export interface Trip {
   origin: Origin
   destination: Destination
-  purchasePrice: number
-  purchaseCurrency: Currency
-  /** EUR.1 / origin declaration available (car built in the EU and bought in the EU) */
+  price: number
+  currency: Currency
+  /** EUR.1 or an origin declaration: the difference between 0% and 10% duty. */
   hasOriginProof: boolean
-  /** Relief on transfer of normal residence (traslado de residencia) */
+  /** Relief on transfer of normal residence. */
   residenceTransfer: boolean
 }
 
-export type Range = { min: number; likely: number; max: number }
-export type Category = 'tax' | 'fees'
+/** An amount that is not one number: best case, expected, worst case. All in euro. */
+export interface Money {
+  min: number
+  likely: number
+  max: number
+}
 
-/** Translatable message: key + params */
-export interface Msg { key: string; params?: Record<string, string | number> }
+export interface Source {
+  title: string
+  url: string
+}
 
-export interface LineItem {
-  key: string
+export interface Line {
+  id: string
   label: Msg
-  category: Category
-  /** amounts in EUR */
-  range: Range
-  note?: Msg
+  kind: 'tax' | 'fee'
+  amount: Money
+  notes?: Msg[]
   formula?: string
-  /** market estimate rather than an official rate */
+  /** A market price rather than a statutory rate. */
   estimate?: boolean
-  /** the charge exists but its amount is set by a national formula we do not replicate: shown as — and left out of the total */
+  /** The charge exists but its amount follows a national formula we do not replicate. */
   unknown?: boolean
-  source?: { title: string; url: string }
+  source?: Source
 }
 
 export interface Nuance {
@@ -63,23 +79,16 @@ export interface Nuance {
   required: 'always' | 'likely' | 'sometimes'
   cost: Record<BrandTier, [number, number]>
 }
-export interface CountryInfo { eu: boolean; vat: number; regTax: 'computed' | 'none' | 'national'; customs: string }
 
-export interface NotComputed { key: string; source: { title: string; url: string } }
-
-export interface CalcResult {
-  items: LineItem[]
-  /** charges that exist in the country but are not computed here (link to the official source) */
-  notComputed: NotComputed[]
+export interface Estimate {
+  lines: Line[]
   nuances: Nuance[]
-  warnings: Msg[]
-  checklist: Msg[]
-  /** mandatory conversion (included in the total) */
-  conversionTotal: Range
-  /** prominent one-line explanation shown under the total (e.g. why the price does not matter) */
+  /** One sentence above the breakdown when the result needs explaining. */
   notice?: Msg
-  total: Range
-  taxesTotal: Range
+  warnings: Msg[]
+  steps: Msg[]
+  total: Money
+  taxes: Money
   customsValue: number
   meta: Record<string, string | number>
 }
@@ -89,4 +98,11 @@ export interface FxRates {
   eurUah: number
   date: string
   source: 'nbu' | 'fallback'
+}
+
+export interface CountryInfo {
+  eu: boolean
+  vat: number
+  regTax: 'computed' | 'none' | 'national'
+  customs: string
 }

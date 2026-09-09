@@ -1,0 +1,12 @@
+/* Two transitions for the whole app: things rise into place, menus drop open. */
+.rise-enter-active { transition: opacity .45s var(--ease), transform .45s var(--ease); }
+.rise-leave-active { transition: opacity .18s ease; }
+.rise-enter-from { opacity: 0; transform: translateY(12px); }
+.rise-leave-to { opacity: 0; }
+
+.drop-enter-active, .drop-leave-active { transition: opacity .16s var(--ease), transform .16s var(--ease); }
+.drop-enter-from, .drop-leave-to { opacity: 0; transform: translateY(-4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

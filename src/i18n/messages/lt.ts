@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Sutinku',
   'consent.decline': 'Atsisakau',
   'footer.legal': 'Teisinė informacija ir šaltiniai',
+  'car.note.epaMatch': 'EPA katalogas: {model}.',
 } as Record<string, string>

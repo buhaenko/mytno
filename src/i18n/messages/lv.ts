@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Piekrītu',
   'consent.decline': 'Noraidu',
   'footer.legal': 'Juridiskā informācija un avoti',
+  'car.note.epaMatch': 'EPA katalogs: {model}.',
 } as Record<string, string>

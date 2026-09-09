@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Accepteren',
   'consent.decline': 'Weigeren',
   'footer.legal': 'Juridisch en bronnen',
+  'car.note.epaMatch': 'EPA-catalogus: {model}.',
 } as Record<string, string>

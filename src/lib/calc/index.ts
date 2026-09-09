@@ -1,10 +1,11 @@
-import type { CalcResult, FxRates, RouteInput, Vehicle } from '../../types'
-import { calcSpain } from './spain'
-import { calcUkraine } from './ukraine'
-import { calcEu } from './eu'
+import type { Estimate, FxRates, Trip, Vehicle } from '../../types'
+import { estimateEu } from './eu'
+import { estimateSpain } from './spain'
+import { estimateUkraine } from './ukraine'
 
-export function calculate(v: Vehicle, i: RouteInput, fx: FxRates): CalcResult {
-  if (i.destination === 'UA') return calcUkraine(v, i, fx)
-  if (i.destination === 'ES') return calcSpain(v, i, fx)
-  return calcEu(v, i, fx)
+/** One entry point: the destination decides which set of rules applies. */
+export function estimate(vehicle: Vehicle, trip: Trip, fx: FxRates): Estimate {
+  if (trip.destination === 'UA') return estimateUkraine(vehicle, trip, fx)
+  if (trip.destination === 'ES') return estimateSpain(vehicle, trip, fx)
+  return estimateEu(vehicle, trip, fx)
 }

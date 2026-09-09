@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Прийняти',
   'consent.decline': 'Відхилити',
   'footer.legal': 'Правова інформація та джерела',
+  'car.note.epaMatch': 'Каталог EPA: {model}.',
 } as Record<string, string>

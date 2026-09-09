@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Elfogadom',
   'consent.decline': 'Elutasítom',
   'footer.legal': 'Jogi információk és források',
+  'car.note.epaMatch': 'EPA-katalógus: {model}.',
 } as Record<string, string>

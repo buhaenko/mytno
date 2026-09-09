@@ -1,0 +1,32 @@
+/* The whole visual language: five greys, one accent, one scale of motion. */
+:root {
+  --bg: #F4F4F6;
+  --surface: #FBFBFC;
+  --surface-sunken: #EDEDF0;
+  --field: #FDFDFE;
+
+  --ink: #1C1C20;
+  --ink-soft: #55565D;
+  --ink-faint: #7A7B83;
+
+  --line: #E3E3E7;
+  --line-strong: #D3D4D9;
+
+  --accent: #E2662A;
+  --accent-deep: #C4551F;
+  --accent-wash: #FDF0E8;
+
+  --due: #DC2626;
+  --likely: #D97706;
+  --maybe: #A1A1AA;
+  --ok: #15803D;
+
+  --radius: 12px;
+  --radius-lg: 14px;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  color-scheme: light;
+}

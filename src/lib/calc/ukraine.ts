@@ -1,72 +1,120 @@
-import type { CalcResult, FxRates, LineItem, RouteInput, Vehicle } from '../../types'
+import type { Estimate, FxRates, Line, Trip, Vehicle } from '../../types'
 import rules from '@config/rules.ukraine.json'
 import { toEur } from '../fx'
-import { addR, fixed, r, scaleR, span, zero } from '../money'
-import { isEuMade, item, m, nuancesFor, sumItems } from './common'
+import { between, exact, money, plus, times } from '../money'
+import { builtInEu, conversion, line, msg, totalOf } from './common'
 
-export function ageCoefUa(year: number, now = new Date()): number {
+/** Full years since the year after production, as the excise law counts them. */
+export function ageFactor(year: number, now = new Date()): number {
   const raw = now.getFullYear() - year - 1
   return Math.min(rules.excise.ageCoefMax, Math.max(rules.excise.ageCoefMin, raw))
 }
 
-export function exciseUa(v: Vehicle, now = new Date()): { eur: number; formula: string } {
-  const ex = rules.excise
-  const coef = ageCoefUa(v.year, now)
+/** Excise: a euro rate per litre times the age factor, or a flat amount for electrified cars. */
+export function excise(v: Vehicle, now = new Date()): { eur: number; formula: string } {
+  const rate = rules.excise
   const litres = (v.engineCc ?? 0) / 1000
-  switch (v.fuel) {
-    case 'electric': { const kwh = v.batteryKwh ?? 0; return { eur: kwh * ex.electricPerKwh, formula: `${ex.electricPerKwh} € × ${kwh} kWh` } }
-    case 'hybrid':
-    case 'phev': return { eur: ex.hybridFlat, formula: `${ex.hybridFlat} €` }
-    case 'diesel': { const base = (v.engineCc ?? 0) > 3500 ? ex.dieselPerLitreOver3500 : ex.dieselPerLitreUpTo3500; return { eur: base * litres * coef, formula: `${base} € × ${litres.toFixed(3)} L × ${coef}` } }
-    default: { const base = (v.engineCc ?? 0) > 3000 ? ex.petrolPerLitreOver3000 : ex.petrolPerLitreUpTo3000; return { eur: base * litres * coef, formula: `${base} € × ${litres.toFixed(3)} L × ${coef}` } }
+  const factor = ageFactor(v.year, now)
+
+  if (v.fuel === 'electric') {
+    const kwh = v.batteryKwh ?? 0
+    return { eur: kwh * rate.electricPerKwh, formula: `${rate.electricPerKwh} € × ${kwh} kWh` }
   }
+  if (v.fuel === 'hybrid' || v.fuel === 'phev') {
+    return { eur: rate.hybridFlat, formula: `${rate.hybridFlat} €` }
+  }
+  const perLitre = v.fuel === 'diesel'
+    ? (v.engineCc ?? 0) > 3500 ? rate.dieselPerLitreOver3500 : rate.dieselPerLitreUpTo3500
+    : (v.engineCc ?? 0) > 3000 ? rate.petrolPerLitreOver3000 : rate.petrolPerLitreUpTo3000
+  return { eur: perLitre * litres * factor, formula: `${perLitre} € × ${litres.toFixed(3)} L × ${factor}` }
 }
 
+/** The pension levy on first registration: 3, 4 or 5% of the value. */
 export function pensionRate(valueUah: number): number {
-  const pm = rules.pension.subsistenceMinimumUah
-  for (const t of rules.pension.tiers) if (t.uptoMultiples === null || valueUah <= t.uptoMultiples * pm) return t.rate
+  const minimum = rules.pension.subsistenceMinimumUah
+  for (const tier of rules.pension.tiers) {
+    if (tier.uptoMultiples === null || valueUah <= tier.uptoMultiples * minimum) return tier.rate
+  }
   return 0.05
 }
 
-export function calcUkraine(v: Vehicle, i: RouteInput, fx: FxRates, now = new Date()): CalcResult {
+/** Duty is 10%, unless the car is electric or was built in the EU and has proof of origin. */
+function duty(v: Vehicle, trip: Trip) {
+  if (v.fuel === 'electric') return { rate: rules.duty.electric, note: msg('note.dutyEv'), warning: undefined }
+  if (trip.origin !== 'EU') return { rate: rules.duty.default, note: msg('note.dutyNonEu'), warning: undefined }
+  if (!builtInEu(v)) {
+    return { rate: rules.duty.default, note: msg('note.dutyNotEuMade', { plant: v.plantCountry ?? '—' }), warning: msg('warn.dutyNotEuMade') }
+  }
+  if (!trip.hasOriginProof) return { rate: rules.duty.default, note: msg('note.dutyNonEu'), warning: msg('warn.noOriginProof') }
+  return { rate: rules.duty.euOriginWithProof, note: msg('note.dutyEuOrigin'), warning: undefined }
+}
+
+export function estimateUkraine(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()): Estimate {
   const usd = (x: number) => toEur(x, 'USD', fx)
   const uah = (x: number) => toEur(x, 'UAH', fx)
-  const price = toEur(i.purchasePrice, i.purchaseCurrency, fx)
-  const items: LineItem[] = []
-  const warnings = [] as CalcResult['warnings']
-  const customsValue = r(price, price, price * 1.15)
-  if (i.origin === 'US') warnings.push(m('warn.uaFreight'))
+  const price = toEur(trip.price, trip.currency, fx)
+  // Customs may value the car above the invoice, which is the top of every range.
+  const customsValue = money(price, price, price * 1.15)
 
-  let dutyRate = rules.duty.default
-  let dutyNote = m('note.dutyNonEu')
-  if (v.fuel === 'electric') { dutyRate = rules.duty.electric; dutyNote = m('note.dutyEv') }
-  else if (i.origin === 'EU') {
-    if (isEuMade(v) && i.hasOriginProof) { dutyRate = rules.duty.euOriginWithProof; dutyNote = m('note.dutyEuOrigin') }
-    else if (!isEuMade(v)) { dutyNote = m('note.dutyNotEuMade', { plant: v.plantCountry ?? '—' }); warnings.push(m('warn.dutyNotEuMade')) }
-    else warnings.push(m('warn.noOriginProof'))
+  const lines: Line[] = []
+  const warnings = []
+  if (trip.origin === 'US') warnings.push(msg('warn.uaFreight'))
+
+  const { rate: dutyRate, note: dutyNote, warning: dutyWarning } = duty(v, trip)
+  if (dutyWarning) warnings.push(dutyWarning)
+  const dutyDue = times(customsValue, dutyRate)
+  lines.push(line('duty', msg('line.duty', { rate: dutyRate * 100 }), 'tax', dutyDue, {
+    notes: [dutyNote], formula: `${dutyRate * 100}% × CV`, source: rules.refs.duty,
+  }))
+
+  const { eur: exciseDue, formula } = excise(v, now)
+  const exciseNote = v.fuel === 'electric' ? 'note.uaExciseEv'
+    : v.fuel === 'hybrid' || v.fuel === 'phev' ? 'note.uaExciseHybrid'
+    : 'note.uaExcise'
+  lines.push(line('excise', msg('line.excise'), 'tax', exact(exciseDue), {
+    notes: [msg(exciseNote, { coef: ageFactor(v.year, now) })], formula, source: rules.refs.excise,
+  }))
+
+  const vat = times(plus(plus(customsValue, dutyDue), exact(exciseDue)), rules.vat)
+  lines.push(line('vat', msg('line.vat', { rate: rules.vat * 100 }), 'tax', vat, {
+    formula: '20% × (CV + duty + excise)', source: rules.refs.vat,
+  }))
+
+  const rateAt = (eur: number) => pensionRate(eur * fx.eurUah)
+  const pension = money(
+    customsValue.min * rateAt(customsValue.min),
+    customsValue.likely * rateAt(customsValue.likely),
+    customsValue.max * rateAt(customsValue.max),
+  )
+  const minimum = rules.pension.subsistenceMinimumUah
+  lines.push(line('pension', msg('line.pension', { rate: rateAt(customsValue.likely) * 100 }), 'tax', pension, {
+    notes: [msg('note.uaPension', { t1: (165 * minimum).toLocaleString('uk-UA'), t2: (290 * minimum).toLocaleString('uk-UA'), pm: minimum })],
+    source: rules.refs.pension,
+  }))
+
+  lines.push(line('coc', msg('line.uaCoc'), 'fee', times(between(rules.fees.certificateOfConformityUsd), usd(1)), {
+    estimate: true, notes: [msg('note.uaCoc')], source: rules.refs.customs,
+  }))
+  lines.push(line('registration', msg('line.uaRegistration'), 'fee', times(between(rules.fees.registrationUah), uah(1)), {
+    estimate: true, notes: [msg('note.uaRegistration')],
+  }))
+
+  const route = trip.origin === 'US' ? 'US_to_UA' : trip.origin === 'EU' ? 'EU_to_UA' : ''
+  const { list: nuances } = route ? conversion(route, v.brandTier) : { list: [] }
+
+  return {
+    lines,
+    nuances,
+    warnings,
+    steps: [
+      msg('chk.uaInvoice'),
+      msg(trip.origin === 'US' ? 'chk.uaTitle' : 'chk.uaDocs'),
+      msg('chk.uaDeclaration'),
+      msg('chk.uaRegister'),
+    ],
+    total: totalOf(lines),
+    taxes: totalOf(lines.filter((l) => l.kind === 'tax')),
+    customsValue: customsValue.likely,
+    meta: { ageFactor: ageFactor(v.year, now), dutyRate, pensionRate: rateAt(customsValue.likely) },
   }
-  const duty = scaleR(customsValue, dutyRate)
-  items.push(item('duty', m('line.duty', { rate: dutyRate * 100 }), 'tax', duty, { note: dutyNote, formula: `${dutyRate * 100}% × CV`, source: rules.refs.duty }))
-
-  const ex = exciseUa(v, now)
-  const coef = ageCoefUa(v.year, now)
-  items.push(item('excise', m('line.excise'), 'tax', fixed(ex.eur), { formula: ex.formula, note: v.fuel === 'electric' ? m('note.uaExciseEv') : v.fuel === 'hybrid' || v.fuel === 'phev' ? m('note.uaExciseHybrid') : m('note.uaExcise', { coef }), source: rules.refs.excise }))
-
-  const vat = scaleR(addR(addR(customsValue, duty), fixed(ex.eur)), rules.vat)
-  items.push(item('vat', m('line.vat', { rate: rules.vat * 100 }), 'tax', vat, { formula: '20% × (CV + duty + excise)', source: rules.refs.vat }))
-
-  const pr = pensionRate(customsValue.likely * fx.eurUah)
-  const pension = { min: customsValue.min * pensionRate(customsValue.min * fx.eurUah), likely: customsValue.likely * pr, max: customsValue.max * pensionRate(customsValue.max * fx.eurUah) }
-  const pm = rules.pension.subsistenceMinimumUah
-  items.push(item('pension', m('line.pension', { rate: pr * 100 }), 'tax', pension, { note: m('note.uaPension', { t1: (165 * pm).toLocaleString('uk-UA'), t2: (290 * pm).toLocaleString('uk-UA'), pm }), source: rules.refs.pension }))
-
-  const F = rules.fees
-  items.push(item('coc', m('line.uaCoc'), 'fees', scaleR(span(F.certificateOfConformityUsd), usd(1)), { estimate: true, note: m('note.uaCoc'), source: rules.refs.customs }))
-  items.push(item('registration', m('line.uaRegistration'), 'fees', scaleR(span(F.registrationUah), uah(1)), { estimate: true, note: m('note.uaRegistration') }))
-
-  const key = i.origin === 'US' ? 'US_to_UA' : i.origin === 'EU' ? 'EU_to_UA' : ''
-  const nu = key ? nuancesFor(key, v.brandTier) : { list: [], mandatory: zero }
-  const checklist = [m('chk.uaInvoice'), m(i.origin === 'US' ? 'chk.uaTitle' : 'chk.uaDocs'), m('chk.uaDeclaration'), m('chk.uaRegister')]
-  const taxes = sumItems(items.filter((x) => x.category === 'tax'))
-  return { items, notComputed: [], nuances: nu.list, conversionTotal: zero, warnings, checklist, total: sumItems(items), taxesTotal: taxes, customsValue: customsValue.likely, meta: { ageCoef: coef, dutyRate, pensionRate: pr } }
 }

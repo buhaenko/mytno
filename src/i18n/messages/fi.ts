@@ -231,4 +231,5 @@ export default {
   'consent.accept': 'Hyväksy',
   'consent.decline': 'Hylkää',
   'footer.legal': 'Oikeudelliset tiedot ja lähteet',
+  'car.note.epaMatch': 'EPA-luettelo: {model}.',
 } as Record<string, string>

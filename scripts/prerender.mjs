@@ -1,40 +1,81 @@
-// Runs after `vite build`: writes dist/<lang>/index.html with localized meta, hreflang, JSON-LD, plus sitemap.xml and robots.txt.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+/**
+ * After `vite build`: one HTML file per language with its own title, description,
+ * canonical URL and hreflang set, plus sitemap.xml and robots.txt.
+ * Search engines get a real page per language; the app still boots the same way.
+ */
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { LOCALES } from '../src/i18n/locales.ts'
 
 const SITE = (process.env.SITE_URL ?? 'https://serhiibuhaenko.github.io/vin-import-calc').replace(/\/$/, '')
-const LOCALES = ['uk', 'en', 'es', 'de', 'pl', 'fr', 'it', 'pt', 'nl', 'ro', 'cs', 'sk', 'hu', 'bg', 'hr', 'sl', 'lt', 'lv', 'et', 'fi', 'sv', 'da', 'el']
-const dist = 'dist'
-const html = readFileSync(join(dist, 'index.html'), 'utf8')
+const DIST = 'dist'
+const shell = readFileSync(join(DIST, 'index.html'), 'utf8')
 
-import { existsSync } from 'node:fs'
-async function messages(l) {
-  const file = `src/i18n/messages/${l}.ts`
-  const src = readFileSync(existsSync(file) ? file : 'src/i18n/messages/en.ts', 'utf8')
-  const get = (k) => (src.match(new RegExp(`'${k.replace('.', '\\.')}': '((?:[^'\\\\]|\\\\.)*)'`)) ?? [])[1] ?? ''
-  return { title: get('seo.title'), description: get('seo.description'), h1: get('app.title'), tagline: get('app.tagline') }
-}
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
-const urlFor = (l) => (l === 'en' ? `${SITE}/` : `${SITE}/${l}/`)
-const hreflang = LOCALES.map((l) => `<link rel="alternate" hreflang="${l}" href="${urlFor(l)}" />`).join('\n    ') + `\n    <link rel="alternate" hreflang="x-default" href="${urlFor('en')}" />`
+const urlFor = (locale) => (locale === 'en' ? `${SITE}/` : `${SITE}/${locale}/`)
+const escape = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;')
 
-for (const l of LOCALES) {
-  const m = await messages(l)
-  const ld = JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Vinta', alternateName: m.title, description: m.description, url: urlFor(l), inLanguage: l, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' } })
-  let out = html
-    .replace('<html lang="en">', `<html lang="${l}">`)
-    .replace(/<title>.*?<\/title>/, `<title>${esc(m.title)}</title>`)
-    .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${esc(m.description)}" />`)
-    .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${esc(m.title)}" />`)
-    .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${esc(m.description)}" />`)
-    .replace('<!--seo-->', `<meta property="og:site_name" content="Vinta" />\n    <link rel="canonical" href="${urlFor(l)}" />\n    <meta property="og:url" content="${urlFor(l)}" />\n    <meta property="og:locale" content="${l}" />\n    ${hreflang}\n    <script type="application/ld+json">${ld}</script>`)
-    .replace('<div id="app"></div>', `<div id="app"><noscript><h1>${esc(m.h1)}</h1><p>${esc(m.tagline)}</p></noscript></div>`)
-  if (l === 'en') writeFileSync(join(dist, 'index.html'), out)
-  mkdirSync(join(dist, l), { recursive: true })
-  writeFileSync(join(dist, l, 'index.html'), out)
+/** Read the few strings we need straight out of the locale file, without a bundler. */
+function seoStrings(locale) {
+  const file = `src/i18n/messages/${locale}.ts`
+  const source = readFileSync(existsSync(file) ? file : 'src/i18n/messages/en.ts', 'utf8')
+  const read = (key) => source.match(new RegExp(`'${key.replace('.', '\\.')}': '((?:[^'\\\\]|\\\\.)*)'`))?.[1] ?? ''
+  return { title: read('seo.title'), description: read('seo.description'), h1: read('app.title'), tagline: read('app.tagline') }
 }
+
+const hreflang = [
+  ...LOCALES.map((l) => `<link rel="alternate" hreflang="${l}" href="${urlFor(l)}" />`),
+  `<link rel="alternate" hreflang="x-default" href="${urlFor('en')}" />`,
+].join('\n    ')
+
+function pageFor(locale) {
+  const { title, description, h1, tagline } = seoStrings(locale)
+  const jsonLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: 'Vinta',
+    alternateName: title,
+    description,
+    url: urlFor(locale),
+    inLanguage: locale,
+    applicationCategory: 'FinanceApplication',
+    operatingSystem: 'Web',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+  })
+
+  return shell
+    .replace('<html lang="en">', `<html lang="${locale}">`)
+    .replace(/<title>.*?<\/title>/, `<title>${escape(title)}</title>`)
+    .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${escape(description)}" />`)
+    .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${escape(title)}" />`)
+    .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escape(description)}" />`)
+    .replace('<!--seo-->', [
+      `<link rel="canonical" href="${urlFor(locale)}" />`,
+      `<meta property="og:url" content="${urlFor(locale)}" />`,
+      `<meta property="og:locale" content="${locale}" />`,
+      `<meta property="og:site_name" content="Vinta" />`,
+      hreflang,
+      `<script type="application/ld+json">${jsonLd}</script>`,
+    ].join('\n    '))
+    .replace('<div id="app"></div>', `<div id="app"><noscript><h1>${escape(h1)}</h1><p>${escape(tagline)}</p></noscript></div>`)
+}
+
+for (const locale of LOCALES) {
+  const html = pageFor(locale)
+  if (locale === 'en') writeFileSync(join(DIST, 'index.html'), html)
+  mkdirSync(join(DIST, locale), { recursive: true })
+  writeFileSync(join(DIST, locale, 'index.html'), html)
+}
+
 const today = new Date().toISOString().slice(0, 10)
-writeFileSync(join(dist, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${LOCALES.map((l) => `  <url><loc>${urlFor(l)}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq>${LOCALES.map((x) => `<xhtml:link rel="alternate" hreflang="${x}" href="${urlFor(x)}"/>`).join('')}</url>`).join('\n')}\n</urlset>\n`)
-writeFileSync(join(dist, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`)
-writeFileSync(join(dist, '404.html'), html.replace('<!--seo-->', '<meta name="robots" content="noindex" />'))
-console.log('prerendered', LOCALES.length, 'locales →', SITE)
+const alternates = LOCALES.map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${urlFor(l)}"/>`).join('')
+writeFileSync(join(DIST, 'sitemap.xml'), [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
+  ...LOCALES.map((l) => `  <url><loc>${urlFor(l)}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq>${alternates}</url>`),
+  '</urlset>',
+  '',
+].join('\n'))
+writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`)
+writeFileSync(join(DIST, '404.html'), shell.replace('<!--seo-->', '<meta name="robots" content="noindex" />'))
+
+console.log(`prerendered ${LOCALES.length} locales → ${SITE}`)
