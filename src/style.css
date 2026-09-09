@@ -33,9 +33,11 @@ p { margin: 0; }
 .wrap { max-width: 700px; margin: 0 auto; padding: 18px 24px 100px; }
 /* header: brand mark left, language right, hairline under */
 .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 12px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
-.mark { display: inline-flex; align-items: center; gap: 8px; color: var(--fg); }
+.mark { display: inline-flex; align-items: center; gap: 9px; color: var(--fg); }
 .mark .word { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
-.hero-wheel { color: var(--fg-2); margin-bottom: 16px; }
+.hero-art { color: var(--fg); margin-bottom: 18px; height: auto; }
+.hero-art .border-line { stroke: var(--accent); opacity: .7; }
+@media (max-width: 560px) { .hero-art { width: 168px; } }
 .langsel { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid transparent; border-radius: 8px; color: var(--muted); font-size: 12.5px; transition: all .18s var(--ease); cursor: pointer; }
 .langsel:hover { border-color: var(--line-2); background: var(--surface); color: var(--fg); }
 .langsel:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); color: var(--fg); }
@@ -57,7 +59,7 @@ p { margin: 0; }
 .hero-text h1 .grad { color: var(--accent); }
 .hero-text p { color: var(--muted); font-size: 15.5px; margin: 14px auto 0; max-width: 46ch; }
 .compact .hero-text { max-height: 0; opacity: 0; margin: 0; }
-.hero .pill-row { display: flex; justify-content: center; transition: opacity .25s ease, max-height .35s var(--ease); max-height: 40px; overflow: hidden; }
+.hero .pill-row { display: flex; justify-content: center; transition: opacity .25s ease, max-height .4s var(--ease); max-height: 110px; overflow: hidden; }
 .compact .pill-row { max-height: 0; opacity: 0; }
 
 /* route */
