@@ -7,12 +7,13 @@ import { appUrl, createShareUrl, readShared } from './lib/share'
 import countries from './data/countries.json'
 import { ORIGIN_COUNTRIES, ORIGIN_GROUP } from './data/origins'
 import fxFallback from './data/fx.fallback.json'
-import { LOCALES, LOCALE_NAMES, useI18n, type Locale } from './i18n'
+import { useI18n, type Locale } from './i18n'
 import { tierForMake } from './lib/models'
 import CarStep from './components/CarStep.vue'
 import ResultView from './components/ResultView.vue'
 import CountrySelect from './components/CountrySelect.vue'
 import Help from './components/Help.vue'
+import LangSelect from './components/LangSelect.vue'
 
 const { t, locale, region, setLocale } = useI18n()
 // Last word of the headline gets the gradient treatment
@@ -175,11 +176,10 @@ onMounted(async () => {
 
 <template>
   <div class="wrap">
-    <div class="topline">
-      <label class="lang"><span class="sr">{{ t('app.lang') }}</span>
-        <select :value="locale" @change="changeLocale(($event.target as HTMLSelectElement).value as Locale)"><option v-for="l in LOCALES" :key="l" :value="l">{{ LOCALE_NAMES[l] }}</option></select>
-      </label>
-    </div>
+    <header class="topbar">
+      <span class="mark" aria-hidden="true"><i></i></span>
+      <LangSelect :model-value="locale" :label="t('app.lang')" @update:model-value="changeLocale" />
+    </header>
     <div class="hero" :class="{ compact: started }">
       <div class="glow"></div>
       <div class="ring"></div>

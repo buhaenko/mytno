@@ -31,9 +31,18 @@ p { margin: 0; }
 ::selection { background: var(--accent-soft); }
 
 .wrap { max-width: 700px; margin: 0 auto; padding: 18px 24px 100px; }
-.topline { display: flex; justify-content: flex-end; min-height: 26px; }
-.lang select { font: inherit; font-size: 12.5px; color: var(--muted); border: 1px solid transparent; border-radius: 8px; background: transparent; padding: 5px 8px; cursor: pointer; transition: all .18s var(--ease); }
-.lang select:hover { border-color: var(--line); color: var(--fg); }
+/* header: brand mark left, language right, hairline under */
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0 12px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.mark { display: inline-flex; align-items: center; gap: 7px; }
+.mark i { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); display: block; }
+.mark::after { content: ''; width: 22px; height: 1px; background: var(--line-2); }
+.langsel { position: relative; display: inline-flex; align-items: center; gap: 7px; padding: 5px 9px; border: 1px solid transparent; border-radius: 8px; color: var(--muted); font-size: 12.5px; transition: all .18s var(--ease); cursor: pointer; }
+.langsel:hover { border-color: var(--line-2); background: var(--surface); color: var(--fg); }
+.langsel:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); color: var(--fg); }
+.langsel .globe { flex: 0 0 auto; }
+.langsel .name { white-space: nowrap; }
+.langsel .chev { flex: 0 0 auto; opacity: .7; }
+.langsel select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font: inherit; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
 /* label */
