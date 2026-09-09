@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'pakollinen',
   'result.legend.likely': 'todennäköisesti',
   'result.legend.sometimes': 'joskus',
-  'result.fx.ecb': 'EKP, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Näyttövaluutta',
 
   'line.duty': 'Tulli {rate} %',
   'line.excise': 'Valmistevero',

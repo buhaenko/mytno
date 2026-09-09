@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'obvezno',
   'result.legend.likely': 'najverjetneje',
   'result.legend.sometimes': 'včasih',
-  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Prikazana valuta',
 
   'line.duty': 'Carina {rate}%',
   'line.excise': 'Trošarina',

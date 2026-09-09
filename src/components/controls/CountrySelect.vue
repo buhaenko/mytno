@@ -1,7 +1,8 @@
 <script setup lang="ts" generic="T extends string">
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
-interface Country { value: T; label: string; flag: string; disabled?: boolean }
+/** `note` is the quiet tag on the right: which customs group the country belongs to. */
+interface Country { value: T; label: string; flag: string; note?: string; disabled?: boolean }
 
 const props = defineProps<{ options: Country[]; placeholder: string }>()
 const model = defineModel<T | null>({ required: true })
@@ -26,6 +27,7 @@ function choose(value: T) {
     <button type="button" class="picker-button" :class="{ empty: !model }" @click="open = !open">
       <span v-if="selected" :class="flagClass(selected)"></span>
       <span class="picker-label">{{ selected?.label ?? placeholder }}</span>
+      <span v-if="selected?.note" class="picker-note">{{ selected.note }}</span>
       <svg class="picker-chevron" viewBox="0 0 12 8" width="12" height="8"><path d="M1 1l5 5 5-5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
     </button>
     <Transition name="drop">
@@ -39,7 +41,9 @@ function choose(value: T) {
             :class="{ on: option.value === model }"
             @click="choose(option.value)"
           >
-            <span :class="flagClass(option)"></span>{{ option.label }}
+            <span :class="flagClass(option)"></span>
+            <span class="picker-label">{{ option.label }}</span>
+            <span v-if="option.note" class="picker-note">{{ option.note }}</span>
           </button>
         </li>
       </ul>

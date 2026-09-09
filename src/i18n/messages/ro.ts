@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'obligatoriu',
   'result.legend.likely': 'cel mai probabil',
   'result.legend.sometimes': 'uneori',
-  'result.fx.ecb': 'BCE, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'BNU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Moneda afișată',
 
   'line.duty': 'Taxă vamală {rate} %',
   'line.excise': 'Acciză',

@@ -1,42 +1,69 @@
-import type { Currency, FxRates, Quote } from '../types'
+import type { Currency, Foreign, FxRates, Quote } from '../types'
 import fallback from '@config/fx.fallback.json'
 
 /**
- * Every amount is held in euro, so each rate says what one euro buys. The dollar
- * comes from the European Central Bank and the hryvnia from the National Bank of
- * Ukraine — each currency from the institution that publishes it, never derived
- * through a third one. Both answer the browser directly; either can fall back to
+ * Every amount is held in euro, so each rate says how much of a currency one euro
+ * buys — and each comes from the bank that publishes it: the zloty from Narodowy
+ * Bank Polski, the krone from Norges Bank, the hryvnia from the National Bank of
+ * Ukraine. The Swiss National Bank and the Bank of England serve nothing
+ * cross-origin, so the pound and the franc come from the ECB reference rate,
+ * which also gives the dollar. Every bank is asked in parallel and falls back to
  * the bundled snapshot on its own.
  */
-const ECB = 'https://data-api.ecb.europa.eu/service/data/EXR/D.USD.EUR.SP00.A?lastNObservations=1&format=csvdata'
+const ECB = 'https://data-api.ecb.europa.eu/service/data/EXR/D.USD+GBP+CHF.EUR.SP00.A?lastNObservations=1&format=csvdata'
+const NBP = 'https://api.nbp.pl/api/exchangerates/rates/a/eur/?format=json'
+const NORGES = 'https://data.norges-bank.no/api/data/EXR/B.EUR.NOK.SP?lastNObservations=1&format=csv'
 const NBU = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json'
 
-const held = (quote: { rate: number; date: string }): Quote => ({ ...quote, source: 'fallback' })
+const { _note, ...snapshot } = fallback
+const held = (code: Foreign): Quote => ({ ...snapshot[code], source: 'fallback' })
 
-export const fallbackRates = (): FxRates => ({ usd: held(fallback.usd), uah: held(fallback.uah) })
+export const fallbackRates = (): FxRates =>
+  Object.fromEntries((Object.keys(snapshot) as Foreign[]).map((c) => [c, held(c)])) as FxRates
 
-async function json<T>(url: string): Promise<T> {
+async function text(url: string): Promise<string> {
   const res = await fetch(url, { signal: AbortSignal.timeout(6000) })
   if (!res.ok) throw new Error(`${url} → ${res.status}`)
-  return (await res.json()) as T
+  return res.text()
 }
 
-/** SDMX-CSV: one header line, one observation. The columns we read all precede the quoted ones. */
-async function ecbUsd(): Promise<Quote> {
-  const res = await fetch(ECB, { signal: AbortSignal.timeout(6000) })
-  if (!res.ok) throw new Error(`ECB ${res.status}`)
-  const [header, row] = (await res.text()).trim().split('\n')
+/** SDMX-CSV: a header line and one observation per currency. */
+async function ecb(): Promise<Partial<Record<Foreign, Quote>>> {
+  const [header, ...rows] = (await text(ECB)).trim().split('\n')
   const columns = header!.split(',')
-  const field = (name: string) => row!.split(',')[columns.indexOf(name)]
-  const rate = Number(field('OBS_VALUE'))
-  const date = field('TIME_PERIOD')
-  if (!rate || !date) throw new Error('ECB: no observation')
-  return { rate, date, source: 'ecb' }
+  const at = (row: string, name: string) => row.split(',')[columns.indexOf(name)]!
+  const quotes: Partial<Record<Foreign, Quote>> = {}
+  for (const row of rows) {
+    const code = at(row, 'CURRENCY') as Foreign
+    const rate = Number(at(row, 'OBS_VALUE'))
+    const date = at(row, 'TIME_PERIOD')
+    if (rate && date) quotes[code] = { rate, date, source: 'ecb' }
+  }
+  if (!quotes.USD) throw new Error('ECB: no observation')
+  return quotes
 }
 
-/** The National Bank dates its rates day.month.year. */
-async function nbuUah(): Promise<Quote> {
-  const list = await json<{ cc: string; rate: number; exchangedate: string }[]>(NBU)
+/** Narodowy Bank Polski publishes the zloty per euro in table A. */
+async function nbp(): Promise<Quote> {
+  const data = JSON.parse(await text(NBP)) as { rates: { mid: number; effectiveDate: string }[] }
+  const day = data.rates?.[0]
+  if (!day?.mid) throw new Error('NBP: no rate')
+  return { rate: day.mid, date: day.effectiveDate, source: 'nbp' }
+}
+
+/** Norges Bank answers in semicolon-separated CSV, the observation last. */
+async function norges(): Promise<Quote> {
+  const [, row] = (await text(NORGES)).trim().split('\n')
+  const fields = row!.split(';')
+  const rate = Number(fields.at(-1))
+  const date = fields.at(-2)
+  if (!rate || !date) throw new Error('Norges Bank: no observation')
+  return { rate, date, source: 'norges' }
+}
+
+/** The National Bank of Ukraine dates its rates day.month.year. */
+async function nbu(): Promise<Quote> {
+  const list = JSON.parse(await text(NBU)) as { cc: string; rate: number; exchangedate: string }[]
   const eur = list.find((x) => x.cc === 'EUR')
   if (!eur?.rate) throw new Error('NBU: no euro rate')
   const [day, month, year] = eur.exchangedate.split('.')
@@ -44,14 +71,22 @@ async function nbuUah(): Promise<Quote> {
 }
 
 export async function loadFx(): Promise<FxRates> {
-  const [usd, uah] = await Promise.all([
-    ecbUsd().catch(() => held(fallback.usd)),
-    nbuUah().catch(() => held(fallback.uah)),
+  const [reference, zloty, krone, hryvnia] = await Promise.all([
+    ecb().catch(() => ({}) as Partial<Record<Foreign, Quote>>),
+    nbp().catch(() => held('PLN')),
+    norges().catch(() => held('NOK')),
+    nbu().catch(() => held('UAH')),
   ])
-  return { usd, uah }
+  return {
+    ...fallbackRates(),
+    ...reference,
+    PLN: zloty,
+    NOK: krone,
+    UAH: hryvnia,
+  }
 }
 
-const per = (cur: Currency, fx: FxRates) => (cur === 'USD' ? fx.usd.rate : fx.uah.rate)
+const per = (cur: Foreign, fx: FxRates) => fx[cur].rate
 
 export const toEur = (amount: number, cur: Currency, fx: FxRates): number =>
   cur === 'EUR' ? amount : amount / per(cur, fx)

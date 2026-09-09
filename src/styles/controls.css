@@ -63,7 +63,14 @@ select.input {
 .picker-button:focus-visible { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-wash); }
 .picker-button.empty { font-weight: 400; color: var(--ink-faint); }
 .picker-label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.picker-chevron { margin-left: auto; flex: 0 0 auto; color: var(--ink-faint); transition: transform .2s var(--ease); }
+.picker-note {
+  margin-left: auto; flex: 0 0 auto; padding-left: 10px;
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-faint); white-space: nowrap;
+}
+.picker-button .picker-note { margin-right: 8px; }
+.picker-chevron { flex: 0 0 auto; color: var(--ink-faint); transition: transform .2s var(--ease); }
+.picker-button:not(:has(.picker-note)) .picker-chevron { margin-left: auto; }
 .picker.open .picker-chevron { transform: rotate(180deg); }
 .picker-list {
   position: absolute; z-index: 30; top: calc(100% + 6px); left: 0; right: 0;
@@ -82,7 +89,7 @@ select.input {
 .picker-list button:disabled { opacity: .35; cursor: not-allowed; }
 .picker .fi, .picker-list .fi { width: 20px; height: 14px; flex: 0 0 auto; border-radius: 2px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .08); }
 
-.hero.compact .picker { max-width: 210px; }
+.hero.compact .picker { max-width: 252px; }
 .hero.compact .picker-button { padding: 8px 11px; font-size: 13.5px; }
 @media (max-width: 560px) { .picker, .hero.compact .picker { max-width: none; } }
 

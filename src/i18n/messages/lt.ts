@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'privaloma',
   'result.legend.likely': 'greičiausiai',
   'result.legend.sometimes': 'kartais',
-  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Rodoma valiuta',
 
   'line.duty': 'Muitas {rate}%',
   'line.excise': 'Akcizas',

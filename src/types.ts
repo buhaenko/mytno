@@ -7,7 +7,11 @@ export type Origin = 'US' | 'EU' | 'UA' | 'JP' | 'KR' | 'OTHER'
 export type Destination =
   | 'UA' | 'ES' | 'PL' | 'DE' | 'AT' | 'BE' | 'BG' | 'HR' | 'CY' | 'CZ' | 'DK' | 'EE' | 'FI' | 'FR'
   | 'GR' | 'HU' | 'IE' | 'IT' | 'LV' | 'LT' | 'LU' | 'MT' | 'NL' | 'PT' | 'RO' | 'SK' | 'SI' | 'SE'
-export type Currency = 'EUR' | 'USD' | 'UAH'
+export type Currency = 'EUR' | 'USD' | 'GBP' | 'CHF' | 'PLN' | 'NOK' | 'UAH'
+/** Everything is held in euro, so every other currency is a rate away from it. */
+export type Foreign = Exclude<Currency, 'EUR'>
+/** The order they are offered in: the euro first, then by how often a car is paid in them. */
+export const CURRENCIES: readonly Currency[] = ['EUR', 'USD', 'GBP', 'CHF', 'PLN', 'NOK', 'UAH']
 
 /** A translatable sentence: the key plus whatever the sentence needs filled in. */
 export interface Msg {
@@ -97,14 +101,12 @@ export interface Estimate {
 export interface Quote {
   rate: number
   date: string
-  source: 'ecb' | 'nbu' | 'fallback'
+  /** The bank that published it — a key in `countries.json` → `fxSources`. */
+  source: 'ecb' | 'nbu' | 'nbp' | 'norges' | 'fallback'
 }
 
-/** Each currency from the institution that publishes it, never through a cross rate. */
-export interface FxRates {
-  usd: Quote
-  uah: Quote
-}
+/** Each currency from the bank that publishes it, never through a cross rate. */
+export type FxRates = Record<Foreign, Quote>
 
 export interface CountryInfo {
   eu: boolean

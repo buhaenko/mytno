@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'obligatoriskt',
   'result.legend.likely': 'sannolikt',
   'result.legend.sometimes': 'ibland',
-  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Visningsvaluta',
 
   'line.duty': 'Tull {rate} %',
   'line.excise': 'Punktskatt',

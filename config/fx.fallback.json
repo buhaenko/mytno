@@ -1,5 +1,27 @@
 {
-  "_note": "Last resort when neither the ECB nor the National Bank answers. Dollars and hryvnia for one euro.",
-  "usd": { "rate": 1.1652, "date": "2026-09-09" },
-  "uah": { "rate": 51.9905, "date": "2026-09-10" }
+  "_note": "Last resort when a bank does not answer. How much of each currency one euro buys.",
+  "USD": {
+    "rate": 1.1652,
+    "date": "2026-09-09"
+  },
+  "GBP": {
+    "rate": 0.85898,
+    "date": "2026-09-09"
+  },
+  "CHF": {
+    "rate": 0.9404,
+    "date": "2026-09-09"
+  },
+  "PLN": {
+    "rate": 4.3171,
+    "date": "2026-09-09"
+  },
+  "NOK": {
+    "rate": 10.6975,
+    "date": "2026-09-09"
+  },
+  "UAH": {
+    "rate": 51.9905,
+    "date": "2026-09-10"
+  }
 }

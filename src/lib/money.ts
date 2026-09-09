@@ -1,7 +1,9 @@
 import type { Currency, FxRates, Money } from '../types'
 import { fromEur } from './fx'
 
-const SYMBOL: Record<Currency, string> = { EUR: '€', USD: '$', UAH: '₴' }
+const SYMBOL: Record<Currency, string> = { EUR: '€', USD: '$', GBP: '£', CHF: 'CHF', PLN: 'zł', NOK: 'kr', UAH: '₴' }
+/** Some currencies are written after the number in every language that uses them. */
+const AFTER = new Set<Currency>(['CHF', 'PLN', 'NOK', 'UAH'])
 
 export const money = (min: number, likely = min, max = likely): Money => ({ min, likely, max })
 export const exact = (value: number): Money => money(value, value, value)
@@ -18,5 +20,5 @@ export const percent = (rate: number) => `${(rate * 100).toLocaleString('en', { 
 export function format(amountEur: number, currency: Currency, fx: FxRates, locale = 'en'): string {
   const value = fromEur(amountEur, currency, fx)
   const shown = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value)
-  return currency === 'UAH' ? `${shown} ${SYMBOL[currency]}` : `${SYMBOL[currency]}${shown}`
+  return AFTER.has(currency) ? `${shown} ${SYMBOL[currency]}` : `${SYMBOL[currency]}${shown}`
 }

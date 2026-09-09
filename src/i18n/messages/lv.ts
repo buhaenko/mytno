@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'obligāti',
   'result.legend.likely': 'visticamāk',
   'result.legend.sometimes': 'dažkārt',
-  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Attēlojuma valūta',
 
   'line.duty': 'Muitas nodoklis {rate} %',
   'line.excise': 'Akcīzes nodoklis',

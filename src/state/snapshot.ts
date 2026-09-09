@@ -1,4 +1,5 @@
 import type { Currency, Destination, Trip, Vehicle } from '../types'
+import { CURRENCIES } from '../types'
 import type { Locale } from '../i18n'
 import { ORIGIN_GROUP } from '../lib/origins'
 import { tierForMake } from '../lib/vehicle/reference'
@@ -62,8 +63,8 @@ export function fromQuery(q: URLSearchParams, destinations: readonly string[]): 
     return Number.isFinite(n) && n > 0 ? n : undefined
   }
   const currency = (key: string, fallback: Currency): Currency => {
-    const value = q.get(key)
-    return value === 'USD' || value === 'EUR' || value === 'UAH' ? value : fallback
+    const value = q.get(key) as Currency | null
+    return value && CURRENCIES.includes(value) ? value : fallback
   }
   const from = q.get('from')
   const to = q.get('to')

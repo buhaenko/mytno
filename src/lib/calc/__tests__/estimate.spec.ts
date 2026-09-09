@@ -6,8 +6,12 @@ import { austriaNova, estimateEu, polandExcise } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 
 const fx: FxRates = {
-  usd: { rate: 1.1612, date: '2026-09-08', source: 'ecb' },
-  uah: { rate: 51.6383, date: '2026-09-08', source: 'nbu' },
+  USD: { rate: 1.1612, date: '2026-09-08', source: 'ecb' },
+  GBP: { rate: 0.8590, date: '2026-09-08', source: 'ecb' },
+  CHF: { rate: 0.9404, date: '2026-09-08', source: 'ecb' },
+  PLN: { rate: 4.3171, date: '2026-09-08', source: 'nbp' },
+  NOK: { rate: 10.6975, date: '2026-09-08', source: 'norges' },
+  UAH: { rate: 51.6383, date: '2026-09-08', source: 'nbu' },
 }
 const now = new Date('2026-09-08')
 
@@ -49,7 +53,7 @@ describe('Ukraine', () => {
 
   it('taxes a US import: 10% duty, then VAT on value plus duty plus excise', () => {
     const e = estimateUkraine(audi, trip, fx, now)
-    expect(e.customsValue).toBeCloseTo(10000 / fx.usd.rate, 2)
+    expect(e.customsValue).toBeCloseTo(10000 / fx.USD.rate, 2)
     expect(lineOf(e, 'duty').amount.likely).toBeCloseTo(e.customsValue * 0.1, 2)
     expect(lineOf(e, 'vat').amount.likely).toBeCloseTo((e.customsValue + lineOf(e, 'duty').amount.likely + 50 * 1.984 * 8) * 0.2, 2)
     expect(e.total.likely).toBeGreaterThan(e.taxes.likely)

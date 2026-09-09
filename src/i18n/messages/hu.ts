@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'kötelező',
   'result.legend.likely': 'nagy valószínűséggel',
   'result.legend.sometimes': 'esetenként',
-  'result.fx.ecb': 'EKB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Megjelenítési pénznem',
 
   'line.duty': 'Vám {rate}%',
   'line.excise': 'Jövedéki adó',

@@ -113,7 +113,10 @@ DGT fee, plates, mandatory lighting conversion.
 - **Design**: soft off-white canvas `#F4F4F6`, near-white surfaces, hairline borders, no shadows on
   cards, Inter only (no display serif), JetBrains Mono for the small labels, one warm orange accent
   `#E2662A` used sparingly. Everything explanatory hides behind a “?”. The steps are labels, not
-  numbers — an accent dot, the mono label, a rule. **The footer is one line**: `© year mytno.app ·
+  numbers — an accent dot, the mono label, a rule. Each country of purchase carries its customs
+  group on the right in quiet mono — USA, EUROPE, UKRAINE, JAPAN, KOREA, OTHER — in the list and on
+  the closed button, because that group, not the country, is what decides the rules. The label is
+  the same `car.market.*` string the vehicle step uses; Ukraine borrows the country name. **The footer is one line**: `© year mytno.app ·
   Legal and data ? · feedback@mytno.app · updated`. Everything legal lives in that single tip — the
   disclaimer, what “official source” means, the data, privacy and liability notes, and three
   official sources as examples. It was four stacked paragraphs of small print before, which is
@@ -124,11 +127,17 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
-- **Every amount is held in euro**, and each rate says what one euro buys: the dollar from the ECB
-  (`data-api.ecb.europa.eu`, SDMX-CSV, one observation), the hryvnia from the National Bank of
-  Ukraine. Neither is derived through the other — the old code crossed USD and EUR through the
-  hryvnia, which put a Ukrainian rate inside a Spain→Germany calculation. The two quotes carry their
-  own date and source and are fetched in parallel, so one failing does not cost the other.
+- **Every amount is held in euro**, and each rate says what one euro buys — from the bank that
+  publishes it: **zloty** from Narodowy Bank Polski, **krone** from Norges Bank, **hryvnia** from the
+  National Bank of Ukraine, **dollar, pound and franc** from the ECB reference rate in one request
+  (`D.USD+GBP+CHF.EUR.SP00.A`, SDMX-CSV). The Swiss National Bank and the Bank of England serve
+  nothing cross-origin — that is why their currencies come from the ECB and not from home. No rate
+  is derived through another: the old code crossed USD and EUR through the hryvnia, which put a
+  Ukrainian rate inside a Spain→Germany calculation. Every quote carries its own date and source
+  and every bank is asked in parallel, so one failing costs only its own currency.
+- **The result names only the rates it used** — the currency the price was paid in and the one the
+  total is read in — one line each, linked to the bank that published it. `config/countries.json` →
+  `fxSources` holds their names; adding a currency is a loader, a fallback line and an entry there.
 - **Analytics** stays off until an id is set: Plausible (cookieless, no banner) or GA4 behind the
   consent bar. Both configured in `config/site.json` or via env.
 - **Cloudflare, done over the API.** Zone `mytno.app`: two proxied `CNAME`s, apex and `www`, both to

@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'verplicht',
   'result.legend.likely': 'zeer waarschijnlijk',
   'result.legend.sometimes': 'soms',
-  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Weergavevaluta',
 
   'line.duty': 'Invoerrechten {rate} %',
   'line.excise': 'Accijns',

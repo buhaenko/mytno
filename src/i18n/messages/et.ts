@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'kohustuslik',
   'result.legend.likely': 'tõenäoliselt',
   'result.legend.sometimes': 'mõnikord',
-  'result.fx.ecb': 'EKP, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Kuvatav valuuta',
 
   'line.duty': 'Tollimaks {rate} %',
   'line.excise': 'Aktsiis',

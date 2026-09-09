@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'povinné',
   'result.legend.likely': 'velmi pravděpodobné',
   'result.legend.sometimes': 'někdy',
-  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Zobrazovaná měna',
 
   'line.duty': 'Clo {rate} %',
   'line.excise': 'Spotřební daň',

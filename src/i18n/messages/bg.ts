@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'задължително',
   'result.legend.likely': 'най-вероятно',
   'result.legend.sometimes': 'понякога',
-  'result.fx.ecb': 'ЕЦБ, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'НБУ, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Валута на показване',
 
   'line.duty': 'Мито {rate}%',
   'line.excise': 'Акциз',

@@ -98,8 +98,8 @@ export default {
   'result.legend.always': 'υποχρεωτικό',
   'result.legend.likely': 'πιθανότατα',
   'result.legend.sometimes': 'ενίοτε',
-  'result.fx.ecb': 'ΕΚΤ, {date}: €1 = ${usd}',
-  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
+  'result.fx': '{bank}, {date}: €1 = {rate} {code}',
+  'result.currency': 'Νόμισμα εμφάνισης',
 
   'line.duty': 'Δασμός {rate} %',
   'line.excise': 'Ειδικός φόρος κατανάλωσης',

@@ -1,14 +1,31 @@
 {
   "_note": "VAT rates: Taxes in Europe Database (European Commission) as of 1 July 2025; Romania 21% from 1 August 2025. Customs sites: European Commission list 'National customs administrations'. Duty on passenger cars from outside the EU: TARIC 8703 - 10%.",
   "fxSources": {
-    "_note": "Exchange rates: the dollar from the ECB, the hryvnia from the National Bank of Ukraine.",
+    "_note": "Exchange rates: each currency from the central bank that publishes it. SNB and the Bank of England serve no cross-origin data, so their currencies come from the ECB reference rate.",
     "ecb": {
+      "short": "ECB",
       "title": "ECB — euro foreign exchange reference rates (ecb.europa.eu)",
       "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"
     },
+    "nbp": {
+      "short": "NBP",
+      "title": "Narodowy Bank Polski — table A (nbp.pl)",
+      "url": "https://nbp.pl/en/statistic-and-financial-reporting/rates/table-a/"
+    },
+    "norges": {
+      "short": "Norges Bank",
+      "title": "Norges Bank — exchange rates (norges-bank.no)",
+      "url": "https://www.norges-bank.no/en/topics/Statistics/exchange_rates/"
+    },
     "nbu": {
+      "short": "NBU",
       "title": "NBU — official exchange rates (bank.gov.ua)",
       "url": "https://bank.gov.ua/ua/markets/exchangerates"
+    },
+    "fallback": {
+      "short": "—",
+      "title": "Bundled snapshot (config/fx.fallback.json)",
+      "url": "https://github.com/buhaenko/mytno/blob/main/config/fx.fallback.json"
     }
   },
   "vatSource": {

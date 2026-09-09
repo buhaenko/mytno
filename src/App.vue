@@ -6,7 +6,7 @@ import { DESTINATIONS } from './state/calculator'
 import { fromQuery, toQuery, type Snapshot } from './state/snapshot'
 import { appPath } from './lib/url'
 import { ORIGIN_COUNTRIES } from './lib/origins'
-import type { Currency } from './types'
+import { CURRENCIES } from './types'
 
 import TopBar from './components/layout/TopBar.vue'
 import Hero from './components/layout/Hero.vue'
@@ -22,7 +22,6 @@ import ResultView from './components/result/ResultView.vue'
 const { t, locale, region, setLocale } = useI18n()
 const { vehicle, originCountry, destination, price, currency, hasOriginProof, residenceTransfer, fx } = calc
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'UAH']
 /** The routes people actually take come first; the rest are alphabetical in their own language. */
 const PINNED_ORIGINS = ['US', 'DE', 'PL', 'LT', 'UA', 'JP', 'KR']
 const PINNED_DESTINATIONS = ['UA', 'ES', 'PL', 'DE']
@@ -34,6 +33,9 @@ const started = ref(false)
 /** Held while the first state is restored, so nothing is written back over it. */
 const restoring = ref(true)
 
+/** Which customs rules a country falls under, said in the reader's language. */
+const groupLabel = (group: string) => (group === 'UA' ? region('UA') : t(`car.market.${group}`))
+
 function order<T extends { value: string; label: string }>(items: T[], pinned: string[]): T[] {
   const first = items.filter((i) => pinned.includes(i.value))
   const rest = items.filter((i) => !pinned.includes(i.value)).sort((a, b) => a.label.localeCompare(b.label, locale.value))
@@ -41,7 +43,10 @@ function order<T extends { value: string; label: string }>(items: T[], pinned: s
 }
 
 const origins = computed(() =>
-  order(ORIGIN_COUNTRIES.map((c) => ({ value: c.code, label: region(c.code), flag: c.code.toLowerCase() })), PINNED_ORIGINS))
+  order(
+    ORIGIN_COUNTRIES.map((c) => ({ value: c.code, label: region(c.code), flag: c.code.toLowerCase(), note: groupLabel(c.group) })),
+    PINNED_ORIGINS,
+  ))
 
 const destinations = computed(() =>
   order(DESTINATIONS.map((code) => ({

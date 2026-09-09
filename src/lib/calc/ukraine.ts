@@ -80,7 +80,7 @@ export function estimateUkraine(v: Vehicle, trip: Trip, fx: FxRates, now = new D
     formula: '20% × (CV + duty + excise)', source: rules.refs.vat,
   }))
 
-  const rateAt = (eur: number) => pensionRate(eur * fx.uah.rate)
+  const rateAt = (eur: number) => pensionRate(eur * fx.UAH.rate)
   const pension = money(
     customsValue.min * rateAt(customsValue.min),
     customsValue.likely * rateAt(customsValue.likely),

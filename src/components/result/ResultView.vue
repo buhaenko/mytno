@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Currency, Estimate, FxRates, Msg, Trip, Vehicle } from '../../types'
+import type { Currency, Estimate, Foreign, FxRates, Msg, Trip, Vehicle } from '../../types'
 import ukraine from '@config/rules.ukraine.json'
 import spain from '@config/rules.spain.json'
 import countries from '@config/countries.json'
@@ -30,7 +30,13 @@ const sources = computed<Record<string, { title: string; url: string }>>(() => {
   if (props.trip.destination === 'AT') list.regTax = countries.austria.source
   return list
 })
-const rates = countries.fxSources
+const { _note, ...rates } = countries.fxSources
+
+/** Only the rates this calculation leaned on: what the price was paid in, what the total is read in. */
+const used = computed(() =>
+  [...new Set<Currency>([props.trip.currency, currency.value])]
+    .filter((c): c is Foreign => c !== 'EUR')
+    .map((code) => ({ code, quote: props.fx[code] })))
 </script>
 
 <template>
@@ -64,14 +70,14 @@ const rates = countries.fxSources
         <summary>{{ t('result.sources') }}</summary>
         <ul class="disclosure">
           <li v-for="(source, key) in sources" :key="key"><a :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></li>
-          <li>
-            <a :href="rates.ecb.url" target="_blank" rel="noopener noreferrer">
-              {{ t('result.fx.ecb', { date: fx.usd.date, usd: fx.usd.rate.toFixed(4) }) }}
-            </a>
-          </li>
-          <li>
-            <a :href="rates.nbu.url" target="_blank" rel="noopener noreferrer">
-              {{ t('result.fx.nbu', { date: fx.uah.date, uah: fx.uah.rate.toFixed(2) }) }}
+          <li v-for="rate in used" :key="rate.code">
+            <a :href="rates[rate.quote.source].url" target="_blank" rel="noopener noreferrer">
+              {{ t('result.fx', {
+                bank: rates[rate.quote.source].short,
+                date: rate.quote.date,
+                rate: rate.quote.rate.toFixed(rate.quote.rate < 10 ? 4 : 2),
+                code: rate.code,
+              }) }}
             </a>
           </li>
         </ul>
