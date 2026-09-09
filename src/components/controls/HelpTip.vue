@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Source } from '../../types'
 
-/** The “?” next to a label: an explanation, the formula behind it and the official source. */
-defineProps<{ text?: string; notes?: string[]; formula?: string; source?: Source }>()
+/** The “?” next to a label: an explanation, the formula behind it and the official sources. */
+const props = defineProps<{ text?: string; notes?: string[]; formula?: string; source?: Source | Source[] }>()
+
+/** One source or a handful — the caller should not have to care which. */
+const sources = computed<Source[]>(() => (props.source ? (Array.isArray(props.source) ? props.source : [props.source]) : []))
 
 const open = ref(false)
 const root = ref<HTMLElement | null>(null)
@@ -22,7 +25,7 @@ onBeforeUnmount(() => { document.removeEventListener('click', closeOnOutsideClic
       <span v-if="text">{{ text }}</span>
       <span v-for="(n, i) in notes" :key="i">{{ n }}</span>
       <code v-if="formula">{{ formula }}</code>
-      <a v-if="source" :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.title }} ↗</a>
+      <a v-for="s in sources" :key="s.url" :href="s.url" target="_blank" rel="noopener noreferrer">{{ s.title }} ↗</a>
     </span>
   </span>
 </template>

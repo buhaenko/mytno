@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import site from '@config/site.json'
+import countries from '@config/countries.json'
+import ukraine from '@config/rules.ukraine.json'
 import { useI18n } from '../../i18n'
+import HelpTip from '../controls/HelpTip.vue'
 
 /** What the numbers are, what they are not, and where every one of them came from. */
 const { t } = useI18n()
@@ -9,11 +12,19 @@ const year = new Date().getFullYear()
 
 /** The disclaimer names the site; the name is set in type, so it is a slot, not a word. */
 const disclaimer = computed(() => t('footer.disclaimer').split('{brand}'))
+
+/** Three of the sources behind the numbers, as examples of what “official” means here. */
+const examples = [countries.euDutySource, countries.vatSource, ukraine.refs.excise]
 </script>
 
 <template>
   <footer class="footer">
     <p class="footer-lead">{{ disclaimer[0] }}<strong>{{ site.brand }}</strong>{{ disclaimer[1] }}</p>
+
+    <p v-if="site.legal.contactEmail" class="footer-contact">
+      <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>
+      <HelpTip :text="t('footer.contact')" />
+    </p>
 
     <details>
       <summary>{{ t('footer.legal') }}</summary>
@@ -30,13 +41,12 @@ const disclaimer = computed(() => t('footer.disclaimer').split('{brand}'))
       </div>
     </details>
 
-    <p v-if="site.legal.contactEmail" class="footer-contact">
-      {{ t('footer.contact') }}
-      <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>
-    </p>
-
     <p class="footer-rights">
-      © {{ year }} <strong>{{ site.legal.owner }}</strong> · {{ t('footer.rights') }} · {{ site.legal.updated }}
+      © {{ year }} <strong>{{ site.legal.owner }}</strong>
+      <span class="footer-dot">·</span>
+      {{ t('footer.rights') }} <HelpTip :text="t('footer.help.rights')" :source="examples" />
+      <span class="footer-dot">·</span>
+      {{ site.legal.updated }}
     </p>
   </footer>
 </template>
