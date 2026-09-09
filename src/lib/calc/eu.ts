@@ -1,5 +1,5 @@
 import type { CalcResult, CountryInfo, Destination, FxRates, LineItem, RouteInput, Vehicle } from '../../types'
-import countries from '../../data/countries.json'
+import countries from '@config/countries.json'
 import { toEur } from '../fx'
 import { addR, fixed, pct, r, scaleR, zero } from '../money'
 import { ageYears, isEuMade, item, m, nuancesFor, sumItems } from './common'

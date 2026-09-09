@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Austria calculates NoVA from CO₂. Without a WLTP value the registration tax stays out of the total.',
   'notice.intraEuNoTax': 'Used car from an EU country: no duty, no VAT and no registration tax here, so the price does not affect the total.',
   'result.notInTotal': 'not in total',
+  'footer.disclaimer': 'Vinta is an information tool, not tax or legal advice. The final amount is set by the customs and registration authorities.',
+  'footer.data': 'Rates and rules come from official public sources, linked next to every line. Vehicle data: NHTSA vPIC and EPA fueleconomy.gov (US public domain). Exchange rates: National Bank of Ukraine.',
+  'footer.privacy': 'No accounts and no tracking cookies. The calculation runs in your browser; a share link stores only the calculation you chose to share.',
+  'footer.liability': 'Provided as is, without warranty of any kind. Check the official sources before you buy or pay.',
+  'footer.rights': 'Open data, reused under the terms of each source.',
+  'consent.text': 'We would like to measure anonymous usage with Google Analytics.',
+  'consent.accept': 'Accept',
+  'consent.decline': 'Decline',
+  'footer.legal': 'Legal and data',
 } as Record<string, string>

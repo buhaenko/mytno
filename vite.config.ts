@@ -1,3 +1,4 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -5,4 +6,6 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   base: process.env.VITE_BASE ?? '/',
+  // The tax rules live in one shared folder: the API serves them, the app bundles them.
+  resolve: { alias: { '@config': fileURLToPath(new URL('./config', import.meta.url)) } },
 })

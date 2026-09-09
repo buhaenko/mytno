@@ -21,13 +21,23 @@ export interface NhtsaDecoded {
   clean: boolean
 }
 
-const API = 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/'
+import { api, hasApi } from './api'
 
-export async function decodeVin(vin: string, signal?: AbortSignal): Promise<NhtsaDecoded> {
-  const res = await fetch(`${API}${encodeURIComponent(vin)}?format=json`, { signal })
+const DIRECT = 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/'
+
+/** Our API caches decodes, so a VIN is fetched from NHTSA once; without the API we ask NHTSA directly. */
+async function fetchDecode(vin: string, signal?: AbortSignal): Promise<Record<string, string>> {
+  if (hasApi) {
+    try { return await api<Record<string, string>>(`/api/vin/${encodeURIComponent(vin)}`) } catch { /* fall through */ }
+  }
+  const res = await fetch(`${DIRECT}${encodeURIComponent(vin)}?format=json`, { signal })
   if (!res.ok) throw new Error(`NHTSA ${res.status}`)
   const json = (await res.json()) as { Results: Record<string, string>[] }
-  const r = json.Results?.[0] ?? {}
+  return json.Results?.[0] ?? {}
+}
+
+export async function decodeVin(vin: string, signal?: AbortSignal): Promise<NhtsaDecoded> {
+  const r = await fetchDecode(vin, signal)
   const num = (v?: string) => (v && v.trim() !== '' && !Number.isNaN(Number(v)) ? Number(v) : undefined)
   const str = (v?: string) => (v && v.trim() !== '' ? v.trim() : undefined)
   const errorCode = str(r.ErrorCode) ?? ''

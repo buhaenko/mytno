@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Rakúsko počíta NoVA z CO₂. Bez hodnoty WLTP zostáva registračná daň mimo celkovej sumy.',
   'notice.intraEuNoTax': 'Ojazdené auto z krajiny EÚ: nie je tu clo, DPH ani registračná daň, cena preto celkovú sumu neovplyvňuje.',
   'result.notInTotal': 'mimo sumu',
+  'footer.disclaimer': 'Vinta je informačný nástroj, nie daňové ani právne poradenstvo. Konečnú sumu určuje colný a registračný úrad.',
+  'footer.data': 'Sadzby a pravidlá pochádzajú z oficiálnych verejných zdrojov, odkazy sú pri každej položke. Údaje o vozidle: NHTSA vPIC a EPA fueleconomy.gov (verejné dielo USA). Kurzy: Národná banka Ukrajiny.',
+  'footer.privacy': 'Bez účtov a bez sledovacích cookies. Výpočet beží vo vašom prehliadači; zdieľaný odkaz uchová len ten výpočet, ktorý ste zdieľali.',
+  'footer.liability': 'Poskytované tak, ako je, bez akejkoľvek záruky. Pred nákupom alebo platbou overte oficiálne zdroje.',
+  'footer.rights': 'Otvorené dáta, použité za podmienok každého zdroja.',
+  'consent.text': 'Radi by sme merali anonymné používanie cez Google Analytics.',
+  'consent.accept': 'Prijať',
+  'consent.decline': 'Odmietnuť',
+  'footer.legal': 'Právne informácie a zdroje',
 } as Record<string, string>

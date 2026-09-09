@@ -214,4 +214,13 @@ export default {
   'warn.atNeedCo2': 'L’Austria calcola la NoVA dal CO₂. Senza un valore WLTP la tassa di immatricolazione resta fuori dal totale.',
   'notice.intraEuNoTax': 'Auto usata da un paese UE: qui non ci sono dazi, IVA né tassa di immatricolazione, quindi il prezzo non incide sul totale.',
   'result.notInTotal': 'non nel totale',
+  'footer.disclaimer': 'Vinta è uno strumento informativo, non una consulenza fiscale o legale. L’importo finale è stabilito dalla dogana e dall’autorità di immatricolazione.',
+  'footer.data': 'Aliquote e regole provengono da fonti pubbliche ufficiali, collegate accanto a ogni voce. Dati del veicolo: NHTSA vPIC ed EPA fueleconomy.gov (dominio pubblico USA). Cambi: Banca nazionale dell’Ucraina.',
+  'footer.privacy': 'Nessun account e nessun cookie di tracciamento. Il calcolo avviene nel tuo browser; il link condiviso conserva solo il calcolo che hai scelto di condividere.',
+  'footer.liability': 'Fornito così com’è, senza alcuna garanzia. Verifica le fonti ufficiali prima di acquistare o pagare.',
+  'footer.rights': 'Dati aperti, riutilizzati secondo le condizioni di ciascuna fonte.',
+  'consent.text': 'Vorremmo misurare l’uso anonimo con Google Analytics.',
+  'consent.accept': 'Accetta',
+  'consent.decline': 'Rifiuta',
+  'footer.legal': 'Note legali e fonti',
 } as Record<string, string>

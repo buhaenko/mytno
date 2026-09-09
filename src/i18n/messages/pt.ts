@@ -214,4 +214,13 @@ export default {
   'warn.atNeedCo2': 'A Áustria calcula o NoVA a partir do CO₂. Sem um valor WLTP o imposto de matrícula fica fora do total.',
   'notice.intraEuNoTax': 'Carro usado de um país da UE: aqui não há direitos, IVA nem imposto de matrícula, por isso o preço não afeta o total.',
   'result.notInTotal': 'fora do total',
+  'footer.disclaimer': 'A Vinta é uma ferramenta informativa, não aconselhamento fiscal ou jurídico. O valor final é definido pela alfândega e pela autoridade de matrícula.',
+  'footer.data': 'Taxas e regras vêm de fontes públicas oficiais, ligadas a cada linha. Dados do veículo: NHTSA vPIC e EPA fueleconomy.gov (domínio público dos EUA). Câmbios: Banco Nacional da Ucrânia.',
+  'footer.privacy': 'Sem contas e sem cookies de rastreio. O cálculo corre no teu navegador; a ligação partilhada guarda apenas o cálculo que escolheste partilhar.',
+  'footer.liability': 'Fornecido tal como está, sem qualquer garantia. Consulta as fontes oficiais antes de comprar ou pagar.',
+  'footer.rights': 'Dados abertos, reutilizados nos termos de cada fonte.',
+  'consent.text': 'Gostaríamos de medir a utilização anónima com o Google Analytics.',
+  'consent.accept': 'Aceitar',
+  'consent.decline': 'Recusar',
+  'footer.legal': 'Informação legal e fontes',
 } as Record<string, string>

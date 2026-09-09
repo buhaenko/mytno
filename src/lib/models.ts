@@ -1,5 +1,5 @@
 import type { BrandTier, Fuel, Vehicle } from '../types'
-import modelsData from '../data/models.json'
+import modelsData from '@config/models.json'
 
 export interface ModelEngine { label: string; cc: number; fuel: Fuel; hp: number; co2: number; listEur: number; kwh?: number }
 export interface ModelEntry { make: string; model: string; years: [number, number]; tier: BrandTier; engines: ModelEngine[] }

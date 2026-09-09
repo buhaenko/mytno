@@ -1,14 +1,19 @@
 import type { FxRates } from '../types'
-import fallback from '../data/fx.fallback.json'
+import fallback from '@config/fx.fallback.json'
+import { api, hasApi } from './api'
 
 const NBU = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json'
 
+/** Rates come from our API (cached there) or straight from the National Bank; the file is the last resort. */
 export async function loadFx(): Promise<FxRates> {
+  if (hasApi) {
+    try {
+      const r = await api<{ usdUah: number; eurUah: number; date: string }>('/api/fx')
+      return { ...r, source: 'nbu' }
+    } catch { /* fall through to the direct call */ }
+  }
   try {
-    const ctrl = new AbortController()
-    const t = setTimeout(() => ctrl.abort(), 6000)
-    const res = await fetch(NBU, { signal: ctrl.signal })
-    clearTimeout(t)
+    const res = await fetch(NBU, { signal: AbortSignal.timeout(6000) })
     if (!res.ok) throw new Error(String(res.status))
     const list = (await res.json()) as { cc: string; rate: number; exchangedate: string }[]
     const usd = list.find((x) => x.cc === 'USD')

@@ -1,7 +1,9 @@
 FROM node:24-alpine
 WORKDIR /app
-COPY index.mjs ./
-ENV PORT=8787 SHARE_DB=/data/links.sqlite
-VOLUME /data
+COPY package*.json ./
+RUN npm ci --omit=dev
+COPY server ./server
+COPY config ./config
+ENV PORT=8787
 EXPOSE 8787
-CMD ["node", "index.mjs"]
+CMD ["node", "server/src/index.js"]

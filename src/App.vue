@@ -4,9 +4,9 @@ import type { CalcResult, Currency, Destination, FxRates, Origin, RouteInput, Ve
 import { loadFx } from './lib/fx'
 import { calculate } from './lib/calc'
 import { appUrl, createShareUrl, readShared } from './lib/share'
-import countries from './data/countries.json'
-import { ORIGIN_COUNTRIES, ORIGIN_GROUP } from './data/origins'
-import fxFallback from './data/fx.fallback.json'
+import countries from '@config/countries.json'
+import { ORIGIN_COUNTRIES, ORIGIN_GROUP } from './lib/origins'
+import fxFallback from '@config/fx.fallback.json'
 import { useI18n, type Locale } from './i18n'
 import { tierForMake } from './lib/models'
 import CarStep from './components/CarStep.vue'
@@ -15,6 +15,8 @@ import CountrySelect from './components/CountrySelect.vue'
 import Help from './components/Help.vue'
 import LangSelect from './components/LangSelect.vue'
 import Wheel from './components/Wheel.vue'
+import SiteFooter from './components/SiteFooter.vue'
+import ConsentBar from './components/ConsentBar.vue'
 
 const { t, locale, region, setLocale } = useI18n()
 // Last word of the headline gets the gradient treatment
@@ -235,5 +237,7 @@ onMounted(async () => {
     </Transition>
 
     <p v-if="!started" class="foot center">{{ t('app.foot', { date: fx.date }) }}</p>
+    <SiteFooter />
+    <ConsentBar />
   </div>
 </template>

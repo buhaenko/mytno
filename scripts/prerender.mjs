@@ -20,7 +20,7 @@ const hreflang = LOCALES.map((l) => `<link rel="alternate" hreflang="${l}" href=
 
 for (const l of LOCALES) {
   const m = await messages(l)
-  const ld = JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebApplication', name: m.title, description: m.description, url: urlFor(l), inLanguage: l, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' } })
+  const ld = JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Vinta', alternateName: m.title, description: m.description, url: urlFor(l), inLanguage: l, applicationCategory: 'FinanceApplication', operatingSystem: 'Web', offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' } })
   let out = html
     .replace('<html lang="en">', `<html lang="${l}">`)
     .replace(/<title>.*?<\/title>/, `<title>${esc(m.title)}</title>`)

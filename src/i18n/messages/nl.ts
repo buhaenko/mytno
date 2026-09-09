@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Oostenrijk berekent NoVA op basis van CO₂. Zonder WLTP-waarde blijft de registratiebelasting buiten het totaal.',
   'notice.intraEuNoTax': 'Gebruikte auto uit een EU-land: hier zijn geen invoerrechten, btw of registratiebelasting, dus de prijs heeft geen invloed op het totaal.',
   'result.notInTotal': 'niet in totaal',
+  'footer.disclaimer': 'Vinta is een informatiehulpmiddel, geen fiscaal of juridisch advies. Het uiteindelijke bedrag wordt bepaald door de douane en de registratie-instantie.',
+  'footer.data': 'Tarieven en regels komen uit officiële openbare bronnen, gelinkt bij elke regel. Voertuiggegevens: NHTSA vPIC en EPA fueleconomy.gov (publiek domein VS). Wisselkoersen: Nationale Bank van Oekraïne.',
+  'footer.privacy': 'Geen accounts en geen tracking-cookies. De berekening draait in uw browser; een gedeelde link bewaart alleen de berekening die u wilde delen.',
+  'footer.liability': 'Geleverd zoals het is, zonder enige garantie. Controleer de officiële bronnen voordat u koopt of betaalt.',
+  'footer.rights': 'Open data, hergebruikt volgens de voorwaarden van elke bron.',
+  'consent.text': 'We willen anoniem gebruik meten met Google Analytics.',
+  'consent.accept': 'Accepteren',
+  'consent.decline': 'Weigeren',
+  'footer.legal': 'Juridisch en bronnen',
 } as Record<string, string>

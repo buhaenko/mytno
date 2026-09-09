@@ -214,4 +214,13 @@ export default {
   'warn.atNeedCo2': 'Österreich berechnet die NoVA aus dem CO₂-Wert. Ohne WLTP-Wert bleibt die Zulassungssteuer außerhalb der Summe.',
   'notice.intraEuNoTax': 'Gebrauchtwagen aus einem EU-Land: hier fallen weder Zoll noch Mehrwertsteuer noch Zulassungssteuer an, daher beeinflusst der Preis die Summe nicht.',
   'result.notInTotal': 'nicht in der Summe',
+  'footer.disclaimer': 'Vinta ist ein Informationswerkzeug, keine Steuer- oder Rechtsberatung. Den endgültigen Betrag legen Zoll und Zulassungsbehörde fest.',
+  'footer.data': 'Sätze und Regeln stammen aus amtlichen öffentlichen Quellen, verlinkt neben jeder Zeile. Fahrzeugdaten: NHTSA vPIC und EPA fueleconomy.gov (US Public Domain). Wechselkurse: Nationalbank der Ukraine.',
+  'footer.privacy': 'Keine Konten und keine Tracking-Cookies. Die Berechnung läuft in Ihrem Browser; ein geteilter Link speichert nur die Berechnung, die Sie teilen wollten.',
+  'footer.liability': 'Bereitstellung ohne jede Gewähr. Prüfen Sie die amtlichen Quellen, bevor Sie kaufen oder zahlen.',
+  'footer.rights': 'Offene Daten, genutzt zu den Bedingungen der jeweiligen Quelle.',
+  'consent.text': 'Wir möchten die anonyme Nutzung mit Google Analytics messen.',
+  'consent.accept': 'Akzeptieren',
+  'consent.decline': 'Ablehnen',
+  'footer.legal': 'Rechtliches und Quellen',
 } as Record<string, string>

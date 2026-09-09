@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Austria arvutab NoVA CO₂ alusel. Ilma WLTP väärtuseta jääb registreerimismaks summast välja.',
   'notice.intraEuNoTax': 'Kasutatud auto EL-i riigist: siin ei ole tollimaksu, käibemaksu ega registreerimismaksu, seega hind summat ei mõjuta.',
   'result.notInTotal': 'summast väljas',
+  'footer.disclaimer': 'Vinta on teabevahend, mitte maksu- või õigusnõu. Lõpliku summa määravad toll ja registreerimisasutus.',
+  'footer.data': 'Määrad ja reeglid pärinevad ametlikest avalikest allikatest, viited on iga rea juures. Sõiduki andmed: NHTSA vPIC ja EPA fueleconomy.gov (USA avalik omand). Kursid: Ukraina Rahvuspank.',
+  'footer.privacy': 'Ilma kontode ja jälgimisküpsisteta. Arvutus toimub teie brauseris; jagatud link hoiab ainult seda arvutust, mille jagamise valisite.',
+  'footer.liability': 'Pakutakse sellisena, nagu see on, ilma igasuguse garantiita. Kontrollige ametlikke allikaid enne ostmist või maksmist.',
+  'footer.rights': 'Avaandmed, kasutatud iga allika tingimustel.',
+  'consent.text': 'Sooviksime mõõta anonüümset kasutust Google Analyticsiga.',
+  'consent.accept': 'Nõustun',
+  'consent.decline': 'Keeldun',
+  'footer.legal': 'Õigusteave ja allikad',
 } as Record<string, string>

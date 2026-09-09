@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Østrig beregner NoVA ud fra CO₂. Uden en WLTP-værdi holdes registreringsafgiften uden for beløbet.',
   'notice.intraEuNoTax': 'Brugt bil fra et EU-land: her er hverken told, moms eller registreringsafgift, så prisen påvirker ikke beløbet.',
   'result.notInTotal': 'uden for beløbet',
+  'footer.disclaimer': 'Vinta er et informationsværktøj, ikke skatte- eller juridisk rådgivning. Det endelige beløb fastsættes af told- og registreringsmyndigheden.',
+  'footer.data': 'Satser og regler stammer fra officielle offentlige kilder, linket ved hver linje. Køretøjsdata: NHTSA vPIC og EPA fueleconomy.gov (amerikansk public domain). Valutakurser: Ukraines Nationalbank.',
+  'footer.privacy': 'Ingen konti og ingen sporingscookies. Beregningen kører i din browser; et delt link gemmer kun den beregning, du valgte at dele.',
+  'footer.liability': 'Leveres som den er, uden nogen form for garanti. Tjek de officielle kilder, før du køber eller betaler.',
+  'footer.rights': 'Åbne data, genbrugt på hver kildes vilkår.',
+  'consent.text': 'Vi vil gerne måle anonym brug med Google Analytics.',
+  'consent.accept': 'Accepter',
+  'consent.decline': 'Afvis',
+  'footer.legal': 'Juridisk og kilder',
 } as Record<string, string>

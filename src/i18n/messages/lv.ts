@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Austrija NoVA aprēķina pēc CO₂. Bez WLTP vērtības reģistrācijas nodoklis paliek ārpus summas.',
   'notice.intraEuNoTax': 'Lietots auto no ES valsts: šeit nav ne muitas nodokļa, ne PVN, ne reģistrācijas nodokļa, tāpēc cena summu neietekmē.',
   'result.notInTotal': 'ārpus summas',
+  'footer.disclaimer': 'Vinta ir informatīvs rīks, nevis nodokļu vai juridiska konsultācija. Galīgo summu nosaka muita un reģistrācijas iestāde.',
+  'footer.data': 'Likmes un noteikumi ņemti no oficiāliem publiskiem avotiem, saites ir pie katras rindas. Auto dati: NHTSA vPIC un EPA fueleconomy.gov (ASV sabiedriskais īpašums). Kursi: Ukrainas Nacionālā banka.',
+  'footer.privacy': 'Bez kontiem un bez izsekošanas sīkdatnēm. Aprēķins notiek jūsu pārlūkā; koplietotā saite glabā tikai to aprēķinu, kuru izvēlējāties koplietot.',
+  'footer.liability': 'Tiek sniegts tāds, kāds ir, bez jebkādas garantijas. Pirms pirkuma vai maksājuma pārbaudiet oficiālos avotus.',
+  'footer.rights': 'Atvērtie dati, izmantoti saskaņā ar katra avota nosacījumiem.',
+  'consent.text': 'Vēlamies mērīt anonīmu lietojumu ar Google Analytics.',
+  'consent.accept': 'Piekrītu',
+  'consent.decline': 'Noraidu',
+  'footer.legal': 'Juridiskā informācija un avoti',
 } as Record<string, string>

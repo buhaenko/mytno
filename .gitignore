@@ -27,3 +27,5 @@ dist-ssr
 worker/.wrangler
 
 server/data
+
+server/.data

@@ -1,6 +1,6 @@
 import type { BrandTier, LineItem, Msg, Nuance, Range, Vehicle } from '../../types'
 import { r, span } from '../money'
-import nuancesData from '../../data/nuances.json'
+import nuancesData from '@config/nuances.json'
 
 export const EU_PLANTS = new Set([
   'AUSTRIA', 'BELGIUM', 'BULGARIA', 'CROATIA', 'CZECH REPUBLIC', 'CZECHIA', 'DENMARK', 'ESTONIA', 'FINLAND', 'FRANCE',

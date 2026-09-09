@@ -214,4 +214,13 @@ export default {
   'warn.atNeedCo2': 'L’Autriche calcule la NoVA à partir du CO₂. Sans valeur WLTP, la taxe d’immatriculation reste hors du total.',
   'notice.intraEuNoTax': 'Voiture d’occasion d’un pays de l’UE : ni droits, ni TVA, ni taxe d’immatriculation ici, le prix n’influe donc pas sur le total.',
   'result.notInTotal': 'hors total',
+  'footer.disclaimer': 'Vinta est un outil d’information, pas un conseil fiscal ou juridique. Le montant final est fixé par la douane et l’autorité d’immatriculation.',
+  'footer.data': 'Les taux et les règles proviennent de sources publiques officielles, liées à chaque ligne. Données véhicule : NHTSA vPIC et EPA fueleconomy.gov (domaine public américain). Taux de change : Banque nationale d’Ukraine.',
+  'footer.privacy': 'Pas de compte ni de cookies de suivi. Le calcul s’exécute dans votre navigateur ; un lien partagé ne conserve que le calcul que vous avez choisi de partager.',
+  'footer.liability': 'Fourni en l’état, sans aucune garantie. Vérifiez les sources officielles avant d’acheter ou de payer.',
+  'footer.rights': 'Données ouvertes, réutilisées selon les conditions de chaque source.',
+  'consent.text': 'Nous souhaitons mesurer l’usage anonyme avec Google Analytics.',
+  'consent.accept': 'Accepter',
+  'consent.decline': 'Refuser',
+  'footer.legal': 'Mentions légales et sources',
 } as Record<string, string>

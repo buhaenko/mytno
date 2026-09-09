@@ -1,30 +1,71 @@
 # Vinta — car import tax calculator
 
-Free, client-side calculator of what it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official rates, plus mandatory registration costs. Route: any of 43 purchase countries (USA, Canada, Mexico, EU-27, Ukraine, Japan, Korea, UK, Switzerland, Norway, Georgia, UAE, China, Turkey, Moldova, Serbia, Australia) → Ukraine or any of the 27 EU countries. 23 languages, auto-detected.
+What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official
+rates, plus the mandatory registration costs. Route: any of 43 purchase countries → Ukraine or any of the
+27 EU countries. 23 languages, picked automatically.
 
-## What is real and what is estimated
-- **Taxes** come from official sources only, linked in every “?” popover: Tax Code / Customs Tariff / Law 400/97 (zakon.rada.gov.ua), customs.gov.ua, Ley 38/1992 (boe.es), AEAT, DGT, Ustawa o podatku akcyzowym (isap.sejm.gov.pl), zoll.de, TARIC, Taxes in Europe Database (EU VAT rates), Regulation (EC) 1186/2009.
-- **Fully computed:** Ukraine (duty, excise, VAT, pension levy), Spain (arancel, IVA, IEDMT by CO₂ with the Hacienda depreciation table), Poland (duty, akcyza, VAT), Germany (duty, import VAT).
-- **Other EU countries:** duty 10% + national VAT are computed; the national registration tax is *not* invented — it is listed as “not included” with a link to the country’s customs authority.
-- **Registration costs** (certificate of conformity, homologación, ITV, DGT fee, plates, mandatory lighting conversion) are marked as market estimates in their “?”.
+## Run it locally
 
-## Data
-- VIN: NHTSA vPIC (free, CORS). Cross-checked with the EPA catalogue and a curated list of European equivalents (WLTP CO₂, list prices) in `src/data/models.json`.
-- Catalogue: `public/catalog/` — every model sold in the USA 1984–2026 (45k engine versions), built from fueleconomy.gov by `npm run catalog`.
-- FX: National Bank of Ukraine, live with a fallback.
-- Rules: `src/data/rules.ukraine.json`, `rules.spain.json`, `countries.json` (EU VAT rates, customs sites, Polish excise), `origins.ts` (purchase country → rule group).
-
-## Share links and the backend
-Share links look like `domain/uk/hr9m`. Codes are stored by a tiny backend in `server/` (Node 24, `node:sqlite`, zero dependencies): `POST /s` → `{code}`, `GET /s/:code`, `GET /geo`, `GET /health`, rate limiting, duplicate de-duplication, hit counter. Run it with `npm run server` (port 8787, database `server/data/links.sqlite`) or the Dockerfile in `server/`. `worker/` holds an equivalent Cloudflare Worker + KV implementation if you prefer serverless. Point the app at it with `VITE_SHARE_API` (`.env.development` already targets `http://localhost:8787`). Without a backend the app falls back to a self-contained `#s=…` link.
-
-State is never lost on reload and nothing is stored in the browser: before a result the whole selection is in the URL query (`?from=LT&to=ES&vin=…&price=…`), and as soon as a result exists the address becomes the short code (`/uk/b9q5`). The language is the path prefix.
-
-## Development
 ```sh
 npm install
-npm run server     # share backend on :8787
-npm run dev        # app on :5173 (uses .env.development)
-npm test
-npm run build      # vite build + per-language prerender (SEO), sitemap.xml, robots.txt
+npm run dev          # API on :8787 (embedded MongoDB) + site on :5173
 ```
-Deploy: GitHub Pages via `.github/workflows/deploy.yml` (set the repository variable `VITE_SHARE_API` to the backend URL). SEO: one `index.html` per language with localized title/description, canonical, hreflang, JSON-LD.
+
+One command is enough: with no `MONGO_URL` the API starts an embedded MongoDB and keeps its files in
+`server/.data/mongo`, so nothing has to be installed. Copy `.env.example` to `.env` to change anything.
+
+```sh
+npm test             # calculation tests
+npm run build        # site build + a prerendered page per language, sitemap.xml, robots.txt
+npm run catalog      # rebuild the vehicle catalogue from the EPA dataset
+docker compose up    # MongoDB + API + nginx, the shape of a production deploy
+```
+
+## How it is put together
+
+```
+config/        the single source of truth — rules, rates, sources, reference data (plain JSON)
+server/        Node + Express + MongoDB API
+  src/config.js          every setting and every upstream URL, in one file
+  src/routes/            config, fx, vin, share, geo, health
+  src/services/          codes (share links), fx (National Bank), vin (NHTSA)
+  src/store/mongo.js     database connection, indexes and TTLs
+src/           the Vue app
+  lib/calc/              one module per calculation: ukraine, spain, eu (generic + Austria, Poland)
+  lib/                   vin decoding, catalogue, money, share links, analytics
+  i18n/messages/         23 locales, one file each
+scripts/       prerender (SEO) and the catalogue builder
+```
+
+**`config/` is the point.** Every rate, threshold, source link and reference table lives there as JSON,
+not in code. The API serves the same files at `/api/config`, so what the site calculates with can be read
+and audited without a build. Editing a rate is editing one JSON file.
+
+**External services are optional.** The tax rules are local files. Only two things come from outside, both
+proxied and cached by our API so the site keeps working when they do not:
+
+| Service | Used for | If it is down |
+| --- | --- | --- |
+| NHTSA vPIC | VIN decoding | cached decodes are reused; the catalogue still works |
+| National Bank of Ukraine | exchange rates | last good rate, then `config/fx.fallback.json` |
+
+Without `VITE_API_URL` the site runs with no backend at all: it calls those services directly and makes
+self-contained share links. That is the static-hosting mode.
+
+## What is calculated and what is not
+- **Fully computed:** Ukraine (duty, excise, VAT, pension levy), Spain (arancel, IVA, IEDMT by CO₂ with
+  the Hacienda depreciation table), Poland (duty, akcyza, VAT), Austria (duty, VAT, NoVA by CO₂),
+  Germany and the other countries whose registration tax is a real zero.
+- **Listed but not computed:** the national registration tax in countries where it follows a national
+  formula and an official valuation. It appears as a row marked “not in total” with a link to that
+  country's authority, because inventing a number would be worse than showing none.
+- **Market estimates**, marked as such in their help popover: certification, individual type approval,
+  ITV, plates and the mandatory lighting conversion.
+
+## Deploying
+The API needs Node 24 and a MongoDB. The site is static output in `dist/`.
+`docker compose up` runs the whole thing; see the deployment notes in `docs` of the project chat for
+hosting options (Fly.io / Railway / Hetzner + Atlas, Cloudflare Pages or Netlify for the site).
+
+Analytics is off until configured: set `VITE_PLAUSIBLE_DOMAIN` (cookieless, no banner) or `VITE_GA_ID`
+(Google Analytics 4, loaded only after the visitor accepts in the consent bar).

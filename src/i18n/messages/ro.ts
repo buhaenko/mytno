@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Austria calculează NoVA din CO₂. Fără o valoare WLTP, taxa de înmatriculare rămâne în afara totalului.',
   'notice.intraEuNoTax': 'Mașină second-hand dintr-o țară UE: aici nu există taxe vamale, TVA sau taxă de înmatriculare, deci prețul nu influențează totalul.',
   'result.notInTotal': 'în afara totalului',
+  'footer.disclaimer': 'Vinta este un instrument informativ, nu consultanță fiscală sau juridică. Suma finală este stabilită de vamă și de autoritatea de înmatriculare.',
+  'footer.data': 'Cotele și regulile provin din surse publice oficiale, legate lângă fiecare rând. Date despre vehicul: NHTSA vPIC și EPA fueleconomy.gov (domeniu public SUA). Cursuri: Banca Națională a Ucrainei.',
+  'footer.privacy': 'Fără conturi și fără cookie-uri de urmărire. Calculul rulează în browserul dumneavoastră; linkul partajat păstrează doar calculul pe care l-ați ales.',
+  'footer.liability': 'Oferit ca atare, fără nicio garanție. Verificați sursele oficiale înainte de a cumpăra sau de a plăti.',
+  'footer.rights': 'Date deschise, reutilizate conform condițiilor fiecărei surse.',
+  'consent.text': 'Dorim să măsurăm utilizarea anonimă cu Google Analytics.',
+  'consent.accept': 'Accept',
+  'consent.decline': 'Refuz',
+  'footer.legal': 'Informații legale și surse',
 } as Record<string, string>

@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Ausztria a NoVA-t a CO₂ alapján számolja. WLTP-érték nélkül a regisztrációs adó kimarad a végösszegből.',
   'notice.intraEuNoTax': 'Használt autó EU-tagországból: itt nincs vám, áfa és regisztrációs adó, ezért az ár nem befolyásolja a végösszeget.',
   'result.notInTotal': 'nincs a végösszegben',
+  'footer.disclaimer': 'A Vinta tájékoztató eszköz, nem adó- vagy jogi tanácsadás. A végső összeget a vám- és a forgalomba helyezési hatóság állapítja meg.',
+  'footer.data': 'A kulcsok és szabályok hivatalos nyilvános forrásokból származnak, minden sor mellett hivatkozással. Járműadatok: NHTSA vPIC és EPA fueleconomy.gov (USA közkincs). Árfolyamok: Ukrán Nemzeti Bank.',
+  'footer.privacy': 'Nincs fiók és nincs nyomkövető süti. A számítás az Ön böngészőjében fut; a megosztott link csak azt a számítást őrzi meg, amelyet megosztott.',
+  'footer.liability': 'Adott állapotban, mindenféle garancia nélkül. Vásárlás vagy fizetés előtt ellenőrizze a hivatalos forrásokat.',
+  'footer.rights': 'Nyílt adatok, az egyes források feltételei szerint felhasználva.',
+  'consent.text': 'Szeretnénk anonim használatot mérni a Google Analytics segítségével.',
+  'consent.accept': 'Elfogadom',
+  'consent.decline': 'Elutasítom',
+  'footer.legal': 'Jogi információk és források',
 } as Record<string, string>

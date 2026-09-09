@@ -1,5 +1,5 @@
 import type { CalcResult, FxRates, LineItem, RouteInput, Vehicle } from '../../types'
-import rules from '../../data/rules.spain.json'
+import rules from '@config/rules.spain.json'
 import { toEur } from '../fx'
 import { addR, fixed, r, scaleR, span, zero } from '../money'
 import { ageYears, isEuMade, item, m, nuancesFor, sumItems } from './common'

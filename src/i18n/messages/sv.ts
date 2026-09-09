@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Österrike beräknar NoVA utifrån CO₂. Utan WLTP-värde hamnar registreringsskatten utanför summan.',
   'notice.intraEuNoTax': 'Begagnad bil från ett EU-land: här finns varken tull, moms eller registreringsskatt, så priset påverkar inte summan.',
   'result.notInTotal': 'utanför summan',
+  'footer.disclaimer': 'Vinta är ett informationsverktyg, inte skatte- eller juridisk rådgivning. Det slutliga beloppet fastställs av tullen och registreringsmyndigheten.',
+  'footer.data': 'Satser och regler kommer från officiella offentliga källor, länkade vid varje rad. Fordonsdata: NHTSA vPIC och EPA fueleconomy.gov (amerikansk public domain). Växelkurser: Ukrainas nationalbank.',
+  'footer.privacy': 'Inga konton och inga spårningskakor. Beräkningen sker i din webbläsare; en delad länk sparar bara den beräkning du valde att dela.',
+  'footer.liability': 'Tillhandahålls i befintligt skick, utan någon garanti. Kontrollera de officiella källorna innan du köper eller betalar.',
+  'footer.rights': 'Öppna data, återanvända enligt varje källas villkor.',
+  'consent.text': 'Vi vill mäta anonym användning med Google Analytics.',
+  'consent.accept': 'Acceptera',
+  'consent.decline': 'Avböj',
+  'footer.legal': 'Juridik och källor',
 } as Record<string, string>

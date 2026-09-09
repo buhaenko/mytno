@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Itävalta laskee NoVA-veron CO₂:n perusteella. Ilman WLTP-arvoa rekisteröintivero jää summan ulkopuolelle.',
   'notice.intraEuNoTax': 'Käytetty auto EU-maasta: täällä ei ole tullia, arvonlisäveroa eikä rekisteröintiveroa, joten hinta ei vaikuta summaan.',
   'result.notInTotal': 'ei summassa',
+  'footer.disclaimer': 'Vinta on tietotyökalu, ei vero- tai oikeudellinen neuvo. Lopullisen summan määrittävät tulli ja rekisteriviranomainen.',
+  'footer.data': 'Verokannat ja säännöt ovat virallisista julkisista lähteistä, linkit ovat jokaisen rivin vieressä. Ajoneuvotiedot: NHTSA vPIC ja EPA fueleconomy.gov (Yhdysvaltain public domain). Kurssit: Ukrainan keskuspankki.',
+  'footer.privacy': 'Ei tilejä eikä seurantaevästeitä. Laskenta tapahtuu selaimessasi; jaettu linkki tallentaa vain sen laskelman, jonka valitsit jakaa.',
+  'footer.liability': 'Tarjotaan sellaisenaan, ilman minkäänlaista takuuta. Tarkista viralliset lähteet ennen ostoa tai maksua.',
+  'footer.rights': 'Avointa dataa, käytetty kunkin lähteen ehdoilla.',
+  'consent.text': 'Haluaisimme mitata anonyymiä käyttöä Google Analyticsilla.',
+  'consent.accept': 'Hyväksy',
+  'consent.decline': 'Hylkää',
+  'footer.legal': 'Oikeudelliset tiedot ja lähteet',
 } as Record<string, string>

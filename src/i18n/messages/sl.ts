@@ -222,4 +222,13 @@ export default {
   'warn.atNeedCo2': 'Avstrija NoVA izračuna iz CO₂. Brez vrednosti WLTP davek na registracijo ostane zunaj zneska.',
   'notice.intraEuNoTax': 'Rabljen avtomobil iz države EU: tu ni carine, DDV in davka na registracijo, zato cena ne vpliva na znesek.',
   'result.notInTotal': 'zunaj zneska',
+  'footer.disclaimer': 'Vinta je informativno orodje, ne davčni ali pravni nasvet. Končni znesek določita carina in registracijski organ.',
+  'footer.data': 'Stopnje in pravila izhajajo iz uradnih javnih virov, povezanih ob vsaki postavki. Podatki o vozilu: NHTSA vPIC in EPA fueleconomy.gov (javna last ZDA). Tečaji: Narodna banka Ukrajine.',
+  'footer.privacy': 'Brez računov in brez sledilnih piškotkov. Izračun teče v vašem brskalniku; deljena povezava hrani le izračun, ki ste ga delili.',
+  'footer.liability': 'Na voljo takšno, kot je, brez kakršnega koli jamstva. Pred nakupom ali plačilom preverite uradne vire.',
+  'footer.rights': 'Odprti podatki, uporabljeni pod pogoji vsakega vira.',
+  'consent.text': 'Radi bi merili anonimno uporabo z Google Analytics.',
+  'consent.accept': 'Sprejmem',
+  'consent.decline': 'Zavrnem',
+  'footer.legal': 'Pravne informacije in viri',
 } as Record<string, string>
