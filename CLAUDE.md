@@ -117,31 +117,39 @@ DGT fee, plates, mandatory lighting conversion.
   own date and source and are fetched in parallel, so one failing does not cost the other.
 - **Analytics** stays off until an id is set: Plausible (cookieless, no banner) or GA4 behind the
   consent bar. Both configured in `config/site.json` or via env.
+- **Cloudflare, done over the API.** Zone `mytno.app`: two proxied `CNAME`s, apex and `www`, both to
+  `mytno.pages.dev`. Adding a custom domain through the API does **not** create the DNS record the
+  way the dashboard does — the domain sits in `pending` until the record exists. Note the shape of a
+  Cloudflare token: DNS records and Email Routing rules are **zone**-scoped permissions, so a token
+  with every account permission still cannot touch them.
 
 ## Where things stand
 
 Everything above is built, tested and pushed. HEAD `7b88821`.
 
 **Not done yet:**
-1. ~~Nothing is pushed.~~ Live at **https://buhaenko.github.io/mytno/** — pushed to
-   **`buhaenko/mytno`** (public), GitHub Pages built by the workflow. Note the two
-   accounts: `gh` is logged in as **buhaenko** — the personal one, the only one this project goes
-   to — while the machine's SSH key belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git
-   authenticates through the `gh` credential helper; do not switch it back to SSH.
-2. **No domain bought.** Buy `mytno.app` on Cloudflare Registrar ($14.20/year); then point
-   Cloudflare Pages at it and set `SITE_URL=https://mytno.app` so canonical links, hreflang and the
-   sitemap stop saying `github.io`.
-3. ~~No contact email.~~ `feedback@mytno.app` — in `config/site.json`, shown in the footer above the
-   copyright line with an invitation to report a wrong rate or a missing country, translated into
-   all 23 languages (`footer.contact`). **The mailbox does not exist yet**: it needs the domain,
-   then a Cloudflare Email Routing rule forwarding it to Serhii's inbox.
+1. ~~Nothing is pushed.~~ **Live at https://mytno.app** — repository `buhaenko/mytno` (public),
+   deployed by CI to Cloudflare Pages. Note the two GitHub accounts: `gh` is logged in as
+   **buhaenko** — the personal one, the only one this project goes to — while the machine's SSH key
+   belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git authenticates through the `gh`
+   credential helper; do not switch it back to SSH. GitHub Pages is switched off.
+2. ~~No domain bought.~~ `mytno.app` is bought and serving. `SITE_URL` needs no variable anywhere:
+   the prerender already defaults to `https://mytno.app`.
+3. ~~No contact email.~~ `feedback@mytno.app` works: Cloudflare Email Routing forwards it to
+   `buhaienko.serhii@gmail.com` (verified). The address is in `config/site.json` and the footer
+   invitation is translated into all 23 languages (`footer.contact`).
 4. **More registration taxes worth computing**, each needs its official table: Netherlands BPM,
    France malus, Ireland VRT, Portugal ISV, Finland autovero.
-5. **Cloudflare Pages: the repo is ready, the project is not connected yet.** Build `npm run build`,
-   output `dist`, Node from `.node-version`, one env var: `SITE_URL`. `public/_headers` carries the
-   caching and security headers; `VITE_BASE` stays unset — it exists only for GitHub Pages, which
-   serves from `/mytno/`. Unknown paths fall back to the prerendered `404.html`, which boots the
-   app. There is nothing else to host.
+5. ~~Cloudflare Pages is not connected.~~ Project **`mytno`** (direct upload, not git-connected —
+   connecting a repository is an OAuth flow in the dashboard, not an API call). `.github/workflows/
+   ci.yml` tests, builds and uploads `dist` with `wrangler-action` on every push to `main`; the
+   secrets `CLOUDFLARE_API_TOKEN` (Pages Write only) and `CLOUDFLARE_ACCOUNT_ID` live in the
+   repository. `public/_headers` carries the caching and security headers — verified in the
+   responses from the live domain. `VITE_BASE` stays unset, and can now go for good along with the
+   note in `vite.config.ts`: nothing serves the site from a subdirectory any more.
+6. **Still worth doing before launch**: Sentry and UptimeRobot; `www.mytno.app` serves the site
+   rather than redirecting to the apex (the canonical tag covers it, a redirect rule would be
+   tidier).
 
 ## History
 
@@ -155,7 +163,10 @@ Everything above is built, tested and pushed. HEAD `7b88821`.
   database stay plain `mytno`. It was `mytno.io` for a few hours until the price came up: `.io`
   costs $50 a year against $14.20 for `.app`, so only the TLD moved. Pushed to `buhaenko/mytno`, deployed to GitHub Pages, and the working directory
   moved to `~/homeprojects/mytno`. The deploy workflow was passing `VITE_SHARE_API`, a name nothing
-  reads; it was corrected, and then removed with the rest of the backend.
+  reads; it was corrected, and then removed with the rest of the backend. Bought `mytno.app`,
+  created the Cloudflare Pages project, pointed the domain at it and switched GitHub Pages off;
+  `feedback@mytno.app` forwards through Email Routing. Split the exchange rates: the dollar now
+  comes from the ECB and only the hryvnia from the National Bank.
   **Deleted the backend entirely.** `server/`, `docker-compose.yml`, `Dockerfile.web`, `nginx.conf`,
   `src/lib/api.ts`, `src/lib/shareLink.ts`, `src/state/share.ts` and `ShareField.vue` are gone, and
   with them Fastify, Mongoose and `mongodb-memory-server` — five runtime dependencies down to two.
