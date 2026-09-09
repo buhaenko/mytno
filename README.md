@@ -80,9 +80,8 @@ it needs are in the repository already:
 prerendered `404.html`, which boots the app.
 Leave `VITE_BASE` unset: it exists for GitHub Pages, which serves the site from a subdirectory.
 
-**The same build also deploys to GitHub Pages** on every push to `main`
-(`.github/workflows/deploy.yml`), which runs the tests first. It is the staging copy;
-Cloudflare is the one that gets the domain.
+GitHub only runs the checks: `.github/workflows/ci.yml` builds and tests every push to `main`.
+Deployment is Cloudflare's alone.
 
 Analytics is off until configured: set `VITE_PLAUSIBLE_DOMAIN` (cookieless, no banner) or `VITE_GA_ID`
 (Google Analytics 4, loaded only after the visitor accepts in the consent bar).
