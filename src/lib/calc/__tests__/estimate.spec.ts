@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, czechiaEmissionFee, estimateEu, franceMalus, hungaryTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv } from '../eu'
+import { austriaNova, czechiaEmissionFee, estimateEu, flandersBiv, franceMalus, hungaryTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { fallbackRates } from '../../fx'
 
@@ -262,6 +262,27 @@ describe('Other EU countries', () => {
     const answered = estimateEu({ ...car, grossMassKg: 2000 }, ee, fx, now, { total: 528.3, base: 150, co2: 378.3, mass: 0, ageCoef: 0.26 })
     expect(lineOf(answered, 'regTax').unknown).toBeUndefined()
     expect(lineOf(answered, 'regTax').amount.likely).toBe(528.3)
+  })
+
+  it('answers Belgium only once the region is named, and differently in each', () => {
+    const car = { ...audi, market: 'EU' as const, grossMassKg: 2000 }
+    const be = { ...trip, origin: 'EU' as const, destination: 'BE' as const, currency: 'EUR' as const }
+    // Without a region there are three possible taxes and no way to choose, so nothing is counted.
+    expect(lineOf(estimateEu(car, be, fx, now), 'regTax').unknown).toBe(true)
+
+    const flanders = flandersBiv(car, now)!
+    const wallonia = walloniaTmc(car, now)!
+    expect(flanders.total).toBeGreaterThan(41.99)
+    expect(flanders.total).toBeLessThan(10497.7)
+    expect(wallonia.total).toBeGreaterThanOrEqual(50)
+    expect(wallonia.total).toBeLessThanOrEqual(9000)
+    expect(Math.round(flanders.total)).not.toBe(Math.round(wallonia.total))
+    // An electric car pays the Flemish flat rate, and a car past thirty the veteran one.
+    expect(flandersBiv({ ...car, fuel: 'electric' }, now)!.total).toBe(61.5)
+    expect(flandersBiv({ ...car, year: 1990 }, now)!.total).toBe(41.99)
+    // Brussels is shown but never totalled: its published amounts are indexed and the index is not.
+    expect(lineOf(estimateEu(car, { ...be, region: 'BR' }, fx, now), 'regTax').unknown).toBe(true)
+    expect(lineOf(estimateEu(car, { ...be, region: 'FL' }, fx, now), 'regTax').amount.likely).toBeCloseTo(flanders.total, 6)
   })
 
   it('reads the Czech emission fee off the model year', () => {

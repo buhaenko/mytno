@@ -62,11 +62,15 @@ export interface Vehicle {
   notes: Msg[]
 }
 
+export type BelgianRegion = 'FL' | 'WA' | 'BR'
+
 export interface Trip {
   origin: Origin
   destination: Destination
   price: number
   currency: Currency
+  /** Belgium taxes by the owner's own region, so nothing can be said until it is named. */
+  region?: BelgianRegion
   /** EUR.1 or an origin declaration: the difference between 0% and 10% duty. */
   hasOriginProof: boolean
   /** Relief on transfer of normal residence. */
@@ -132,6 +136,6 @@ export type FxRates = Record<Foreign, Quote>
 export interface CountryInfo {
   eu: boolean
   vat: number
-  regTax: 'computed' | 'api' | 'none' | 'national'
+  regTax: 'computed' | 'api' | 'regional' | 'none' | 'national'
   customs: string
 }

@@ -1,0 +1,66 @@
+{
+  "_note": "Belgium is not one registration tax but three, and which one applies is decided by the address on the registration certificate — art. 101 of the Code des taxes assimilées aux impôts sur les revenus — so nothing can be said until the visitor names their region. Flanders and Wallonia are computed here. Brussels is not: its grid is statutory but has been indexed annually since 2024 and the indexed figures are not published anywhere that would load, so naming a stale amount would understate it.",
+  "effective": "2026-01-01",
+  "regions": ["FL", "WA", "BR"],
+  "flanders": {
+    "_note": "Vlaamse Codex Fiscaliteit arts. 2.3.4.1.1 to 2.3.4.1.4. Cars first registered after 2020 use the q form, older ones the x form; both are in force side by side. q = 1.07 in 2021 and 0.035 more each year; x = 4.5 g for every year since 2013. The euro standard is on the car's papers and we take it from the year of first registration.",
+    "source": { "title": "Vlaamse Codex Fiscaliteit, art. 2.3.4.1.2 — belasting op de inverkeerstelling", "url": "https://codex.vlaanderen.be/" },
+    "divisor": 246,
+    "factor": 4500,
+    "exponent": 6,
+    "qBase": 1.07, "qFromYear": 2021, "qStep": 0.035,
+    "xPerYear": 4.5, "xFromYear": 2013,
+    "fuelFactor": { "lpg": 0.88, "cng": 0.93, "other": 1 },
+    "euro": [
+      { "fromYear": 2016, "euro": "6", "diesel": 454.07, "petrol": 20.61 },
+      { "fromYear": 2011, "euro": "5", "diesel": 459.35, "petrol": 20.61 },
+      { "fromYear": 2006, "euro": "4", "diesel": 467.06, "petrol": 22.93 },
+      { "fromYear": 2001, "euro": "3", "diesel": 493.36, "petrol": 95.53 },
+      { "fromYear": 1997, "euro": "2", "diesel": 622.57, "petrol": 152.29 },
+      { "fromYear": 1993, "euro": "1", "diesel": 840.00, "petrol": 509.28 },
+      { "fromYear": 0, "euro": "0", "diesel": 2863.15, "petrol": 1138.78 }
+    ],
+    "age": [
+      { "maxMonths": 11, "pct": 100 }, { "maxMonths": 23, "pct": 90 }, { "maxMonths": 35, "pct": 80 },
+      { "maxMonths": 47, "pct": 70 }, { "maxMonths": 59, "pct": 60 }, { "maxMonths": 71, "pct": 50 },
+      { "maxMonths": 83, "pct": 40 }, { "maxMonths": 95, "pct": 30 }, { "maxMonths": 107, "pct": 20 },
+      { "maxMonths": null, "pct": 10 }
+    ],
+    "minEur": 41.99,
+    "maxEur": 10497.70,
+    "veteranEur": 41.99,
+    "veteranYears": 30,
+    "electricEur": 61.50
+  },
+  "wallonia": {
+    "_note": "Taxe de mise en circulation, table valid 1 July 2026 to 30 June 2027: a base by engine power, degressive with age, multiplied by CO2 over 136, by the maximum laden mass over 1 838 and by a coefficient for the energy.",
+    "source": { "title": "SPW Finances — taxe de mise en circulation (finances.wallonie.be)", "url": "https://finances.wallonie.be/home/taxes/taxes-vehicules/taxe-de-mise-en-circulation.html" },
+    "power": [
+      { "maxKw": 70, "eur": 64.01 }, { "maxKw": 85, "eur": 128.02 }, { "maxKw": 100, "eur": 515.20 },
+      { "maxKw": 110, "eur": 902.37 }, { "maxKw": 120, "eur": 1289.55 }, { "maxKw": 155, "eur": 2579.10 },
+      { "maxKw": null, "eur": 5159.25 }
+    ],
+    "age": [100, 90, 80, 70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10],
+    "veteranYears": 15,
+    "veteranEur": 61.50,
+    "co2Divisor": 136,
+    "massDivisor": 1838,
+    "energy": { "electricUpTo120Kw": 0.01, "electricTo155Kw": 0.10, "electricTo249Kw": 0.18, "electricAbove": 0.26, "hybrid": 0.80, "other": 1.00 },
+    "minEur": 50,
+    "maxEur": 9000
+  },
+  "brussels": {
+    "_note": "Code des taxes assimilées aux impôts sur les revenus, art. 98: a grid on fiscal horsepower and kilowatts, the higher of the two winning, less a reduction by year of age, with no CO2 component at all. These are the statutory amounts; art. 98bis has indexed them to the consumer price index every July since 2024, and the indexed table is not published anywhere we can read, so the line is shown and not counted.",
+    "source": { "title": "Bruxelles Fiscalité — taxe de mise en circulation (fisc.brussels)", "url": "https://fiscalite.brussels/" },
+    "grid": [
+      { "maxKw": 70, "maxCv": 8, "eur": 61.50 }, { "maxKw": 85, "maxCv": 10, "eur": 123.00 },
+      { "maxKw": 100, "maxCv": 11, "eur": 495.00 }, { "maxKw": 110, "maxCv": 14, "eur": 867.00 },
+      { "maxKw": 120, "maxCv": 15, "eur": 1239.00 }, { "maxKw": 155, "maxCv": 17, "eur": 2478.00 },
+      { "maxKw": null, "maxCv": null, "eur": 4957.00 }
+    ],
+    "age": [100, 90, 80, 70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10],
+    "veteranYears": 15,
+    "minEur": 61.50,
+    "lpgReductionEur": 298
+  }
+}

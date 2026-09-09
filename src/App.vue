@@ -18,6 +18,7 @@ import CountryBrief from './components/layout/CountryBrief.vue'
 import CountryLinks from './components/layout/CountryLinks.vue'
 import ConsentBar from './components/layout/ConsentBar.vue'
 import CountrySelect from './components/controls/CountrySelect.vue'
+import ChoiceChips from './components/controls/ChoiceChips.vue'
 import HelpTip from './components/controls/HelpTip.vue'
 import AmountField from './components/controls/AmountField.vue'
 import VehicleStep from './components/vehicle/VehicleStep.vue'
@@ -25,6 +26,7 @@ import ResultView from './components/result/ResultView.vue'
 
 const { t, locale, region, setLocale } = useI18n()
 const { vehicle, originCountry, destination, price, currency, hasOriginProof, residenceTransfer, fx } = calc
+const belgianRegion = calc.region
 
 /** The routes people actually take come first; the rest are alphabetical in their own language. */
 const PINNED_ORIGINS = ['US', 'DE', 'PL', 'LT', 'UA', 'JP', 'KR']
@@ -87,6 +89,8 @@ const snapshot = computed<Snapshot | null>(() =>
 
 const showOriginProof = computed(() => destination.value === 'UA' && calc.origin.value === 'EU')
 const showResidenceRelief = computed(() => destination.value !== 'UA' && calc.origin.value !== 'EU')
+/** Belgium taxes by the owner's region, so it has to be asked before anything can be said. */
+const belgianRegions = computed(() => (['FL', 'WA', 'BR'] as const).map((value) => ({ value, label: t(`price.region.${value}`) })))
 
 /**
  * The address bar is the state. It is written out once the first screen is restored and
@@ -154,6 +158,11 @@ onMounted(async () => {
             <span class="field-label">{{ t('price.label') }} <HelpTip :text="t('price.help')" /></span>
             <AmountField v-model:amount="price" v-model:currency="currency" v-model:text="priceText" :currencies="CURRENCIES" placeholder="10000" />
           </label>
+
+          <div v-if="destination === 'BE'" class="field">
+            <span class="field-label">{{ t('price.region') }} <HelpTip :text="t('price.help.region')" /></span>
+            <ChoiceChips v-model="belgianRegion" :options="belgianRegions" />
+          </div>
 
           <label v-if="showOriginProof" class="checkbox">
             <input v-model="hasOriginProof" type="checkbox" />

@@ -1,4 +1,4 @@
-import type { Currency, Destination, Trip, Vehicle } from '../types'
+import type { BelgianRegion, Currency, Destination, Trip, Vehicle } from '../types'
 import { CURRENCIES } from '../types'
 import type { Locale } from '../i18n'
 import { ORIGIN_GROUP } from '../lib/origins'
@@ -28,6 +28,7 @@ export interface Restored {
   display: Currency
   hasOriginProof: boolean
   residenceTransfer: boolean
+  region: BelgianRegion | null
 }
 
 export const blankVehicle = (): Vehicle => ({
@@ -49,7 +50,7 @@ export function toQuery(s: Snapshot): string {
   }
   put('cc', v.engineCc); put('kwh', v.batteryKwh); put('co2', v.co2Wltp); put('lp', v.listPriceEur); put('mass', v.grossMassKg)
   put('hp', v.powerHp); put('plant', v.plantCountry)
-  put('price', s.trip.price); put('cur', s.trip.currency); put('show', s.display)
+  put('price', s.trip.price); put('cur', s.trip.currency); put('show', s.display); put('reg', s.trip.region)
   if (!s.trip.hasOriginProof) q.set('proof', '0')
   if (s.trip.residenceTransfer) q.set('reloc', '1')
 
@@ -97,5 +98,6 @@ export function fromQuery(q: URLSearchParams, destinations: readonly string[]): 
     display: currency('show', 'EUR'),
     hasOriginProof: q.get('proof') !== '0',
     residenceTransfer: q.get('reloc') === '1',
+    region: (q.get('reg') as BelgianRegion | null) ?? null,
   }
 }

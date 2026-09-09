@@ -10,6 +10,7 @@ import hungary from '@config/rules.hungary.json'
 import france from '@config/rules.france.json'
 import ireland from '@config/rules.ireland.json'
 import croatia from '@config/rules.croatia.json'
+import belgium from '@config/rules.belgium.json'
 import { ESTONIA_SOURCE, type EstonianFee } from '../estonia'
 import { toEur } from '../fx'
 import { exact, money, nothing, percent, plus, times } from '../money'
@@ -214,6 +215,50 @@ export function franceMalus(v: Vehicle, now: Date) {
 
 interface Scale { firstGram: number; amounts: number[]; cap: number }
 
+/**
+ * Flanders: a sixth power of the CO₂, corrected for the fuel and for the year, plus a euro-standard
+ * amount, all of it written down by the age of the car. Two forms live side by side — cars first
+ * registered after 2020 take the multiplicative q, older ones the additive x.
+ */
+export function flandersBiv(v: Vehicle, now: Date) {
+  const fl = belgium.flanders
+  const years = now.getFullYear() - v.year
+  if (v.fuel === 'electric') return { total: fl.electricEur, flat: true, euro: '' }
+  if (years >= fl.veteranYears) return { total: fl.veteranEur, flat: true, euro: '' }
+  if (v.co2Wltp === undefined) return null
+
+  const f = v.fuel === 'lpg' ? fl.fuelFactor.lpg : fl.fuelFactor.other
+  const corrected = v.year > 2020
+    ? v.co2Wltp * f * (fl.qBase + fl.qStep * Math.max(0, now.getFullYear() - fl.qFromYear))
+    : v.co2Wltp * f + fl.xPerYear * (now.getFullYear() - fl.xFromYear)
+
+  const euro = fl.euro.find((e) => v.year >= e.fromYear)!
+  const c = v.fuel === 'diesel' ? euro.diesel : euro.petrol
+  const months = Math.round(age(v, now) * 12)
+  const written = fl.age.find((a) => a.maxMonths === null || months <= a.maxMonths)!.pct
+
+  const raw = ((corrected / fl.divisor) ** fl.exponent * fl.factor + c) * (written / 100)
+  return { total: Math.min(fl.maxEur, Math.max(fl.minEur, raw)), flat: false, euro: euro.euro }
+}
+
+/** Wallonia: a base by engine power, worn down by age, scaled by CO₂, by mass and by the energy. */
+export function walloniaTmc(v: Vehicle, now: Date) {
+  const wa = belgium.wallonia
+  const years = Math.floor(now.getFullYear() - v.year)
+  if (years >= wa.veteranYears) return { total: wa.veteranEur, flat: true }
+  if (!v.powerHp || v.co2Wltp === undefined || !v.grossMassKg) return null
+
+  const kw = v.powerHp * slovakia.hpToKw
+  const base = wa.power.find((p) => p.maxKw === null || kw <= p.maxKw)!.eur
+  const written = wa.age[Math.min(years, wa.age.length - 1)]!
+  const energy = v.fuel === 'electric'
+    ? kw <= 120 ? wa.energy.electricUpTo120Kw : kw <= 155 ? wa.energy.electricTo155Kw : kw <= 249 ? wa.energy.electricTo249Kw : wa.energy.electricAbove
+    : v.fuel === 'hybrid' || v.fuel === 'phev' ? wa.energy.hybrid : wa.energy.other
+
+  const raw = base * (written / 100) * (v.co2Wltp / wa.co2Divisor) * (v.grossMassKg / wa.massDivisor) * energy
+  return { total: Math.min(wa.maxEur, Math.max(wa.minEur, raw)), flat: false }
+}
+
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
 function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date, estonia?: EstonianFee | null): { line: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
@@ -221,6 +266,7 @@ function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: nu
   if (country.regTax === 'none') {
     return { line: line('regTax', msg('line.regTax'), 'tax', nothing, { notes: [msg('note.regTaxNone')], source: countries.regTaxNoneSource }) }
   }
+  if (trip.destination === 'BE') return belgianTax(v, trip.region, exempt, now)
   if (trip.destination === 'EE') return estonianFee(v, exempt, estonia)
   if (trip.destination === 'IE' && v.co2Wltp !== undefined) return irishBand(v)
   if (trip.destination === 'HR' && v.co2Wltp !== undefined) return croatianHalf(v)
@@ -476,6 +522,38 @@ function croatianHalf(v: Vehicle): { line: Line } {
       unknown: true,
       notes: [msg(v.fuel === 'electric' ? 'note.hrEv' : 'note.hrHalf', { co2, emissions: Math.round(emissions) })],
       source: croatia.source,
+    }),
+  }
+}
+
+/** Belgium: three regional taxes, and the owner's own address decides which one is theirs. */
+function belgianTax(v: Vehicle, region: Trip['region'], exempt: boolean, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: region === 'FL' ? 'BIV' : 'TMC' })
+  const source = region === 'WA' ? belgium.wallonia.source : region === 'BR' ? belgium.brussels.source : belgium.flanders.source
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  if (!region) {
+    return {
+      line: line('regTax', msg('line.regTax'), 'tax', nothing, { unknown: true, notes: [msg('note.beNoRegion')], source: belgium.flanders.source }),
+      warning: msg('warn.beNeedRegion'),
+    }
+  }
+  if (region === 'BR') {
+    return { line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.beBrussels')], source }) }
+  }
+
+  const tax = region === 'FL' ? flandersBiv(v, now) : walloniaTmc(v, now)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg(region === 'FL' ? 'note.beFlandersNoCo2' : 'note.beWalloniaNeeds')], source }),
+      warning: msg(region === 'FL' ? 'warn.frNeedCo2' : 'warn.beWalloniaNeeds'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.total), {
+      formula: region === 'FL' ? '((CO₂ · f · q) / 246)⁶ · 4500 + c' : 'MB · CO₂/136 · MMA/1838 · C',
+      notes: [msg(region === 'FL' ? 'note.beFlanders' : 'note.beWallonia')],
+      source,
     }),
   }
 }

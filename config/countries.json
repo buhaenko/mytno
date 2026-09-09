@@ -75,10 +75,10 @@
       "eu": true,
       "vat": 0.21,
       "customs": "https://finances.belgium.be/fr/douanes_accises",
-      "regTax": "national",
+      "regTax": "regional",
       "regTaxSource": {
-        "title": "Vlaamse Belastingdienst — belasting op de inverkeerstelling (vlaanderen.be)",
-        "url": "https://www.vlaanderen.be/en/authorities/flemish-taxes/road-taxes/vehicle-registration-tax"
+        "title": "Vlaamse Codex Fiscaliteit · SPW Finances · Bruxelles Fiscalité — три регіональні податки",
+        "url": "https://finances.wallonie.be/home/taxes/taxes-vehicules/taxe-de-mise-en-circulation.html"
       }
     },
     "BG": {
@@ -101,10 +101,10 @@
       "eu": true,
       "vat": 0.19,
       "customs": "https://www.mof.gov.cy/ce",
-      "regTax": "national",
+      "regTax": "none",
       "regTaxSource": {
-        "title": "Customs & Excise Department — motor vehicles (mof.gov.cy)",
-        "url": "https://www.mof.gov.cy/mof/customs/customs.nsf/ced07_en/ced07_en"
+        "title": "Ο περί Φόρων Κατανάλωσης Νόμος 91(I)/2004, Τέταρτος Πίνακας — «Ατελώς» για επιβατικά (cylaw.org)",
+        "url": "http://www.cylaw.org/nomoi/enop/non-ind/2004_1_91/full.html"
       }
     },
     "CZ": {

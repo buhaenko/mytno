@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T extends string">
 defineProps<{ options: { value: T; label: string }[] }>()
-const model = defineModel<T>({ required: true })
+const model = defineModel<T | null>({ required: true })
 </script>
 
 <template>

@@ -79,8 +79,9 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Hungary | duty, VAT 27%, **regisztrációs adó**: a multiplier from engine power on 47 000 Ft, less the monthly reduction for age — for cars first registered from 2021 and for hybrids of any age |
 | Italy | duty, VAT 22%, **IPT**: €150.81 up to 53 kW, then €3.5119/kW, shown as a range because the province may add up to 30% |
 | Estonia | duty, VAT 24%, and the **registration fee the register itself works out** — the browser asks Transpordiamet's own API and puts its answer in the total |
-| DE BG RO LU SE LV | duty + national VAT; registration tax a real €0, all six checked against their own authority on 9 Sep 2026 |
-| the other 8 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value we cannot reproduce or a table nobody publishes. Ireland and Croatia at least name what *is* known — the CO₂ band, the emissions half — instead of shrugging |
+| Belgium | duty, VAT 21%, and the tax of the **region the owner lives in**: Flanders' BIV and Wallonia's TMC are computed once the region is chosen, Brussels is shown and not counted |
+| DE BG RO LU SE LV CY | duty + national VAT; registration tax a real €0, every one checked against its own authority on 9 Sep 2026 |
+| the other 7 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value we cannot reproduce or a table nobody publishes. Ireland and Croatia at least name what *is* known — the CO₂ band, the emissions half — instead of shrugging |
 
 Market estimates, labelled as such in their “?”: certificate of conformity, homologación, ITV,
 DGT fee, plates, mandatory lighting conversion.
@@ -120,6 +121,21 @@ DGT fee, plates, mandatory lighting conversion.
 - **Italy has no registration tax in the CO₂ sense.** The IPT is a provincial transcription fee on
   engine power: €150.81 up to 53 kW, €3.5119/kW above it (D.M. 435/1998), which each province may
   raise by up to 30% — a genuine range, which is exactly what a line's min…max is for.
+- **Cyprus charges nothing, and the sources that say otherwise are wrong.** The excise duty on cars
+  was not replaced by an age-and-euro-standard surcharge, as the secondary sources kept repeating —
+  law 39(I)/2019 rewrote the Fourth Schedule of the Excise Duties Law 91(I)/2004 to read **«Ατελώς»**,
+  duty-free, for headings 8703.21 to 8703.90, and the consolidated text with amendments through 2026
+  still says so. Cyprus's own transport site is literally “under construction”, so the text comes from
+  cylaw.org, the public repository of the Gazette. It is `none` now, not a link.
+- **Greece taxes engine size and the emission Directive, not CO₂.** An AADE circular says so in as
+  many words: CO₂ “δεν καθορίζεται” — does not determine — the registration tax for ordinary cars.
+  Art. 121 of law 2960/2001 sets four coefficient tables by cylinder capacity, chosen by which
+  Directive the car meets, from 7–88% for Euro 5/6-era approvals up to 41–385% for pre-Euro; hybrids
+  meeting 94/12 or later and electric cars are exempt under §5. The used-car base is the price of the
+  equivalent new car less a monthly depreciation table by body type, which AADE does publish
+  (2% at one month, 19% at a year, 61% at five, 95% flat past sixteen). It is still not computable —
+  the base is a Greek new-car price — and about twenty-five amending laws sit unconsolidated between
+  us and the current coefficients.
 - **Belgium's Brussels grid is primary now, its Flemish coefficients are not.** The Brussels tax is
   in the Code des taxes assimilées aux impôts sur les revenus, art. 98: €61.50 to 70 kW, then 123,
   495, 867, 1 239, 2 478 and €4 957 above 155 kW, the higher of the CV and kW grids winning, less
@@ -128,6 +144,16 @@ DGT fee, plates, mandatory lighting conversion.
   are not on any page that would load. Art. 101 settles the product question: the tax follows the
   address on the registration certificate, so the region is the owner's domicile, and no Belgian
   answer can be given until the visitor says which of the three it is.
+- **Belgium is computed for two of its three regions**, and the region is now asked for: a set of
+  chips beside the price, because art. 101 ties the tax to the address on the registration
+  certificate. The same 2017 Audi is €276 in Flanders and €2 427 in Wallonia — which is the whole
+  argument for asking rather than picking one. Flanders came from the Vlaamse Codex's own open-data
+  API: two formulas side by side, `((CO₂·f·q)/246)⁶·4500 + c) · LC` for cars first registered after
+  2020 and the additive `x` form for older ones, with q = 1.07 in 2021 rising 0.035 a year (1.245 in
+  2026) and x = 4.5 g for every year since 2013, a euro-standard amount c from €20.61 to €2 863.15,
+  an age correction from 100% to 10%, bounds of €41.99 and €10 497.70, €61.50 flat for an electric
+  car registered from 2026 and €41.99 for anything past thirty. Brussels stays out of the total: its
+  grid is statutory but indexed every July since 2024, and the indexed table is published nowhere.
 - **Belgium is three taxes, and Wallonia's is the one we have.** Wallonia publishes the whole table
   (valid 1 Jul 2026 – 30 Jun 2027): a base by power — €64.01 to 70 kW, 128.02, 515.20, 902.37,
   1 289.55, 2 579.10 and €5 159.25 above 155 kW — times CO₂/136 (WLTP), times full mass/1 838, times
@@ -406,16 +432,15 @@ nothing.** A page that reproduces a law is not the law.
 of its register — six are a confirmed zero, and the eight that remain are each blocked by something
 specific, written down above.
 
-1. **Belgium** needs the visitor's region before anything can be said: art. 101 of the code ties the
-   tax to the address on the registration certificate. Wallonia's table is complete and Brussels'
-   is statutory but unindexed; Flanders still owes us its current coefficients.
-2. **Greece, Cyprus, Malta** are blocked on their own governments: AADE does not publish the
-   depreciation schedule, no Cypriot site would load, and Malta's base is a value Transport Malta
-   assigns from a market database.
-3. **Croatia, Denmark, Finland, Ireland** are settled as *not computable*, for one reason each says
-   out loud: the base is that country's own valuation of the car, and the invoice is not it. Ireland
-   and Croatia already say what they can; Denmark and Finland could do the same — Denmark's CO₂
-   surcharge (294 / 587 / 1 115 kr a gram) and Finland's per-gram rate table are both published.
+1. **Brussels** is the only piece of Belgium left, and it needs one number: the index that art. 98bis
+   has applied every July since 2024. Its grid is already in the config.
+2. **Greece and Malta** are blocked on their own governments — the Greek coefficients sit behind
+   twenty-five unconsolidated amendments, and Malta's base is a value Transport Malta assigns.
+3. **Croatia, Denmark, Finland, Ireland, Greece, Malta** are settled as *not computable*, for one
+   reason each says out loud: the base is that country's own valuation of the car, and the invoice is
+   not it. Ireland and Croatia already say what they can; Denmark and Finland could do the same —
+   Denmark's CO₂ surcharge (294 / 587 / 1 115 kr a gram) and Finland's per-gram rate table are both
+   published, and naming the band is more use than a shrug.
 
 **The remaining inputs, and what each would unlock.** The *month* of first registration would sharpen
 the Dutch, French and Hungarian tables, which are monthly while we still count from the middle of a
@@ -457,3 +482,7 @@ honest answer where the law itself leaves one.
     thirteen of the twenty-eight now compute. Croatia turned out to be impossible rather than merely
     missing a table, Estonia turned out to have an API, and Slovenia turned out to have a law that
     disagrees with its own bill in almost every number.
+  - **A fourth pass finished it**: Estonia is asked of its own register, Belgium asks the visitor
+    which region they live in and computes two of the three, Cyprus turned out to charge nothing at
+    all, and Ireland and Croatia say what is known where the amount cannot be. Twenty-one of the
+    twenty-eight destinations now end in a number.

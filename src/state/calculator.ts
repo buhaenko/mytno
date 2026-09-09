@@ -1,5 +1,5 @@
 import { computed, reactive, ref, watch } from 'vue'
-import type { Currency, Destination, Estimate, FxRates, Origin, Trip, Vehicle } from '../types'
+import type { BelgianRegion, Currency, Destination, Estimate, FxRates, Origin, Trip, Vehicle } from '../types'
 import countries from '@config/countries.json'
 import { estimate } from '../lib/calc'
 import { fallbackRates, loadFx } from '../lib/fx'
@@ -19,6 +19,8 @@ export const currency = ref<Currency>('EUR')
 export const display = ref<Currency>('EUR')
 export const hasOriginProof = ref(true)
 export const residenceTransfer = ref(false)
+/** Belgium's three regions levy three different taxes; only the owner knows which one is theirs. */
+export const region = ref<BelgianRegion | null>(null)
 export const fx = reactive<FxRates>(fallbackRates())
 /** Estonia is the one country that answers for itself; this is what its register said. */
 export const estonia = ref<EstonianFee | null>(null)
@@ -42,6 +44,7 @@ export const trip = computed<Trip | null>(() =>
         currency: currency.value,
         hasOriginProof: hasOriginProof.value,
         residenceTransfer: residenceTransfer.value,
+        region: region.value ?? undefined,
       }
     : null)
 
@@ -86,6 +89,7 @@ export function apply(state: Restored) {
   display.value = state.display
   hasOriginProof.value = state.hasOriginProof
   residenceTransfer.value = state.residenceTransfer
+  region.value = state.region
 }
 
 export const refreshRates = async () => Object.assign(fx, await loadFx())
