@@ -1,8 +1,8 @@
 {
   "_note": "Site-wide settings: brand, legal contact and analytics. Analytics stays off until an id is set.",
-  "brand": "Tarifo",
+  "brand": "mytno.io",
   "legal": {
-    "owner": "Tarifo",
+    "owner": "mytno.io",
     "contactEmail": "",
     "updated": "2026-09-09",
     "jurisdictionNote": "Rates and rules are taken from the official sources listed next to every line of the calculation."

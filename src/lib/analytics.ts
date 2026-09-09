@@ -6,7 +6,7 @@ import site from '@config/site.json'
  */
 const GA = (import.meta.env.VITE_GA_ID as string) || site.analytics.gaMeasurementId
 const PLAUSIBLE = (import.meta.env.VITE_PLAUSIBLE_DOMAIN as string) || site.analytics.plausibleDomain
-const CONSENT_KEY = 'tarifo:analytics-consent'
+const CONSENT_KEY = 'mytno:analytics-consent'
 
 export const needsConsent = !!GA
 export const consentAnswered = () => { try { return localStorage.getItem(CONSENT_KEY) !== null } catch { return true } }

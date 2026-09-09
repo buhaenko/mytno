@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Jiná země',
   'app.foot': 'Sazby z oficiálních národních zdrojů. Kurz NBU {date}. Výpočet probíhá ve vašem prohlížeči.',
   'app.lang': 'Jazyk',
-  'seo.title': 'Tarifo — Kalkulačka daní při dovozu auta podle VIN — Ukrajina a země EU',
+  'seo.title': 'mytno.io — Kalkulačka daní při dovozu auta podle VIN — Ukrajina a země EU',
   'seo.description': 'Kolik stojí proclení a registrace auta: clo, spotřební daň, DPH a registrační daně podle oficiálních sazeb. Vyhledání podle VIN, kompletní katalog modelů, Ukrajina, Španělsko, Polsko, Německo a další země EU.',
 
   'car.byVin': 'Podle VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Rakousko počítá NoVA z CO₂. Bez hodnoty WLTP zůstává registrační daň mimo celkovou částku.',
   'notice.intraEuNoTax': 'Ojeté auto ze země EU: není zde clo, DPH ani registrační daň, cena proto celkovou částku neovlivňuje.',
   'result.notInTotal': 'mimo součet',
-  'footer.disclaimer': 'Tarifo je informační nástroj, nikoli daňové či právní poradenství. Konečnou částku stanoví celní a registrační úřad.',
+  'footer.disclaimer': 'mytno.io je informační nástroj, nikoli daňové či právní poradenství. Konečnou částku stanoví celní a registrační úřad.',
   'footer.data': 'Sazby a pravidla pocházejí z oficiálních veřejných zdrojů, odkazy jsou u každé položky. Data o vozidle: NHTSA vPIC a EPA fueleconomy.gov (veřejné dílo USA). Kurzy: Národní banka Ukrajiny.',
   'footer.privacy': 'Bez účtů a bez sledovacích cookies. Výpočet běží ve vašem prohlížeči; sdílený odkaz uchová jen ten výpočet, který jste sdíleli.',
   'footer.liability': 'Poskytováno tak, jak je, bez jakékoli záruky. Před nákupem nebo platbou ověřte oficiální zdroje.',

@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Andet land',
   'app.foot': 'Satser fra officielle nationale kilder. NBU-valutakurs {date}. Beregnes i din browser.',
   'app.lang': 'Sprog',
-  'seo.title': 'Tarifo — Beregner for bilimportafgift via VIN — Ukraine og EU-lande',
+  'seo.title': 'mytno.io — Beregner for bilimportafgift via VIN — Ukraine og EU-lande',
   'seo.description': 'Hvad det koster at fortolde og indregistrere en bil: told, punktafgift, moms og registreringsafgifter efter officielle satser. VIN-opslag, komplet modelkatalog, Ukraine, Spanien, Polen, Tyskland og andre EU-lande.',
 
   'car.byVin': 'Via VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Østrig beregner NoVA ud fra CO₂. Uden en WLTP-værdi holdes registreringsafgiften uden for beløbet.',
   'notice.intraEuNoTax': 'Brugt bil fra et EU-land: her er hverken told, moms eller registreringsafgift, så prisen påvirker ikke beløbet.',
   'result.notInTotal': 'uden for beløbet',
-  'footer.disclaimer': 'Tarifo er et informationsværktøj, ikke skatte- eller juridisk rådgivning. Det endelige beløb fastsættes af told- og registreringsmyndigheden.',
+  'footer.disclaimer': 'mytno.io er et informationsværktøj, ikke skatte- eller juridisk rådgivning. Det endelige beløb fastsættes af told- og registreringsmyndigheden.',
   'footer.data': 'Satser og regler stammer fra officielle offentlige kilder, linket ved hver linje. Køretøjsdata: NHTSA vPIC og EPA fueleconomy.gov (amerikansk public domain). Valutakurser: Ukraines Nationalbank.',
   'footer.privacy': 'Ingen konti og ingen sporingscookies. Beregningen kører i din browser; et delt link gemmer kun den beregning, du valgte at dele.',
   'footer.liability': 'Leveres som den er, uden nogen form for garanti. Tjek de officielle kilder, før du køber eller betaler.',

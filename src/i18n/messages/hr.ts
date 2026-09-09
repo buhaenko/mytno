@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Druga država',
   'app.foot': 'Stope iz službenih nacionalnih izvora. Tečaj NBU {date}. Izračun u vašem pregledniku.',
   'app.lang': 'Jezik',
-  'seo.title': 'Tarifo — Kalkulator poreza na uvoz automobila po VIN-u — Ukrajina i države EU-a',
+  'seo.title': 'mytno.io — Kalkulator poreza na uvoz automobila po VIN-u — Ukrajina i države EU-a',
   'seo.description': 'Koliko stoji carinjenje i registracija automobila: carina, trošarina, PDV i porezi na registraciju po službenim stopama. Pretraga po VIN-u, potpuni katalog modela, Ukrajina, Španjolska, Poljska, Njemačka i druge države EU-a.',
 
   'car.byVin': 'Po VIN-u',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Austrija računa NoVA-u prema CO₂. Bez WLTP vrijednosti porez na registraciju ostaje izvan iznosa.',
   'notice.intraEuNoTax': 'Rabljeni automobil iz zemlje EU-a: ovdje nema carine, PDV-a ni poreza na registraciju, pa cijena ne utječe na iznos.',
   'result.notInTotal': 'izvan iznosa',
-  'footer.disclaimer': 'Tarifo je informativni alat, a ne porezni ili pravni savjet. Konačni iznos određuju carina i tijelo za registraciju.',
+  'footer.disclaimer': 'mytno.io je informativni alat, a ne porezni ili pravni savjet. Konačni iznos određuju carina i tijelo za registraciju.',
   'footer.data': 'Stope i pravila dolaze iz službenih javnih izvora, povezanih uz svaku stavku. Podaci o vozilu: NHTSA vPIC i EPA fueleconomy.gov (javno vlasništvo SAD-a). Tečajevi: Narodna banka Ukrajine.',
   'footer.privacy': 'Bez računa i bez kolačića za praćenje. Izračun se izvodi u vašem pregledniku; dijeljena poveznica čuva samo izračun koji ste podijelili.',
   'footer.liability': 'Pruža se kakav jest, bez ikakvog jamstva. Provjerite službene izvore prije kupnje ili plaćanja.',

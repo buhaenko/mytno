@@ -1,11 +1,11 @@
-# CLAUDE.md — Tarifo (~/homeprojects/tarifo)
+# CLAUDE.md — mytno.io (~/homeprojects/tarifo)
 
 Read this first. It is the only context file for this project; keep it current at the end of
 every session and do not create notes, docs folders or summaries anywhere else.
 
 ## What this is
 
-**Tarifo** — a free calculator for what it costs to clear customs and register a car:
+**mytno.io** — a free calculator for what it costs to clear customs and register a car:
 duty, excise, VAT, registration taxes and the mandatory registration costs, at official rates.
 Route: any of 43 purchase countries → Ukraine or any of the 27 EU countries. 23 languages.
 
@@ -22,7 +22,8 @@ import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over wou
 - **Code in English** — identifiers, comments, commit messages. Chat with Serhii in Ukrainian.
 - **Aesthetics matter.** One concern per file, a header comment saying why the file exists, short
   templates, no dead CSS. Serhii reads the code and wants it to look considered.
-- Verify before asserting: run it, screenshot it, measure it. Playwright is set up for that.
+- Verify before asserting: run it, measure it, read the output. No browser test runner is
+  installed — `npm test` (vitest) and the dev server are what there is.
 
 ## Run it
 
@@ -58,7 +59,7 @@ src/
   lib/                     money · fx · api · shareLink · analytics · origins
   components/              layout · controls · vehicle · result · icons
   styles/                  tokens · base · layout · controls · result · footer · motion
-  i18n/                    locales.ts + one message file per language (224 keys each)
+  i18n/                    locales.ts + one message file per language (225 keys each)
 scripts/                   prerender (SEO) · build-catalog
 ```
 
@@ -88,9 +89,9 @@ DGT fee, plates, mandatory lighting conversion.
   Spain and Austria (WLTP CO₂, list price) come from `config/models.json`, a hand-checked list.
 - **rdap.org returns 403**; Google Registry RDAP lies (says `google.app` is free). For domain checks
   use DNS NS records plus Verisign RDAP for `.com` and whois for `.io`.
-- **Domains** (checked 9 Sep 2026): `tarifo.app`, `tarifo.dev`, `tarifo.io`, `tarifo.xyz` free,
-  `tarifo.com` taken. Runners-up if the name changes: **Mytno** (.app .dev .io .co .xyz free) and
-  **Dogana** (.dev .io .co free).
+- **Domains** (checked 9 Sep 2026): `mytno.io` free, as are `mytno.app`, `mytno.dev`, `mytno.co`,
+  `mytno.xyz` — none is bought yet. Fallbacks if `.io` falls through: `mytno.app`, or **Dogana**
+  (.dev .io .co free). The former name Tarifo is gone; `tarifo.com` was taken anyway.
 
 ## Decisions already made
 
@@ -110,14 +111,15 @@ DGT fee, plates, mandatory lighting conversion.
 
 ## Where things stand
 
-Everything above is built, tested and committed locally. HEAD `387ec99`.
+Everything above is built, tested and committed locally. HEAD `43f4206`.
 
 **Not done yet:**
-1. **Nothing is pushed.** The GitHub repo `SerhiiBuhaenko/tarifo` does not exist and `gh` is not
-   logged in (SSH to GitHub works, the remote is already set). Ask Serhii to run `gh auth login`,
-   or to create an empty repo, then push and enable Pages.
-2. **No domain bought.** Recommend `tarifo.app` on Cloudflare Registrar; then set the repository
-   variable `SITE_URL=https://tarifo.app` so canonical links and the sitemap are right.
+1. ~~Nothing is pushed.~~ Pushed to **`buhaenko/mytno`** (public), GitHub Pages on. Note the two
+   accounts: `gh` is logged in as **buhaenko** — the personal one, the only one this project goes
+   to — while the machine's SSH key belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git
+   authenticates through the `gh` credential helper; do not switch it back to SSH.
+2. **No domain bought.** Buy `mytno.io` on Cloudflare Registrar; then set the repository
+   variable `SITE_URL=https://mytno.io` so canonical links and the sitemap are right.
 3. **`config/site.json` has no contact email.** Germany and Austria require an Impressum.
 4. **More registration taxes worth computing**, each needs its official table: Netherlands BPM,
    France malus, Ireland VRT, Portugal ISV, Finland autovero.
@@ -129,5 +131,9 @@ Everything above is built, tested and committed locally. HEAD `387ec99`.
 - **09-08** Built from scratch in `~/work/vin-import-calc`: VIN decode, EPA catalogue (45 391 engine
   versions, 1984–2026), Ukraine and Spain rules, 23 languages, SEO prerender, share links.
 - **09-09** Added the EU-27, Austrian NoVA, the legal footer, the Fastify + Mongoose backend and the
-  shared `config/`. Rewrote the whole frontend for readability. Renamed from Vinta to **Tarifo** and
+  shared `config/`. Rewrote the whole frontend for readability. Renamed from Vinta to Tarifo and
   moved to `~/homeprojects/tarifo`. Removed from the `~/work/CLAUDE.md` repository table.
+  Renamed again to **mytno.io** — the brand is written in full, domain and all, everywhere it is
+  visible (titles, og tags, footer in all 23 languages); identifiers and the Mongo database are
+  plain `mytno`. Pushed to `buhaenko/mytno` and deployed to GitHub Pages; the working directory
+  keeps its old name `~/homeprojects/tarifo`.

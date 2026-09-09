@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Other country',
   'app.foot': 'Rates from official national sources. NBU exchange rate {date}. Calculated in your browser.',
   'app.lang': 'Language',
-  'seo.title': 'Tarifo — Car import tax calculator by VIN — Ukraine and EU countries',
+  'seo.title': 'mytno.io — Car import tax calculator by VIN — Ukraine and EU countries',
   'seo.description': 'What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official rates. VIN lookup, full model catalogue, Ukraine, Spain, Poland, Germany and other EU countries.',
 
   'car.byVin': 'By VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Austria calculates NoVA from CO₂. Without a WLTP value the registration tax stays out of the total.',
   'notice.intraEuNoTax': 'Used car from an EU country: no duty, no VAT and no registration tax here, so the price does not affect the total.',
   'result.notInTotal': 'not in total',
-  'footer.disclaimer': 'Tarifo is an information tool, not tax or legal advice. The final amount is set by the customs and registration authorities.',
+  'footer.disclaimer': 'mytno.io is an information tool, not tax or legal advice. The final amount is set by the customs and registration authorities.',
   'footer.data': 'Rates and rules come from official public sources, linked next to every line. Vehicle data: NHTSA vPIC and EPA fueleconomy.gov (US public domain). Exchange rates: National Bank of Ukraine.',
   'footer.privacy': 'No accounts and no tracking cookies. The calculation runs in your browser; a share link stores only the calculation you chose to share.',
   'footer.liability': 'Provided as is, without warranty of any kind. Check the official sources before you buy or pay.',

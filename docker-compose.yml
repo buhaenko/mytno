@@ -1,4 +1,4 @@
-# Production-ish stack: MongoDB + the Tarifo API + the built site behind nginx.
+# Production-ish stack: MongoDB + the mytno.io API + the built site behind nginx.
 # Local development does not need this — `npm run dev` starts an embedded MongoDB.
 services:
   mongo:
@@ -16,7 +16,7 @@ services:
     restart: unless-stopped
     environment:
       MONGO_URL: mongodb://mongo:27017
-      MONGO_DB: tarifo
+      MONGO_DB: mytno
       CORS_ORIGIN: ${CORS_ORIGIN:-*}
       PORT: 8787
     depends_on:

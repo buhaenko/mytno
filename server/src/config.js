@@ -11,7 +11,7 @@ export const env = {
   port: Number(process.env.PORT ?? 8787),
   /** Set to use a real MongoDB. Empty in local dev: an embedded MongoDB is started instead. */
   mongoUrl: process.env.MONGO_URL ?? '',
-  dbName: process.env.MONGO_DB ?? 'tarifo',
+  dbName: process.env.MONGO_DB ?? 'mytno',
   /** Where the embedded dev database keeps its files. */
   localDbPath: process.env.LOCAL_DB_PATH ?? join(ROOT, 'server/.data/mongo'),
   corsOrigin: process.env.CORS_ORIGIN ?? '*',
