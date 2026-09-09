@@ -3,6 +3,7 @@ import type { Currency, Destination, Estimate, FxRates, Origin, Trip, Vehicle } 
 import countries from '@config/countries.json'
 import { estimate } from '../lib/calc'
 import { fallbackRates, loadFx } from '../lib/fx'
+import { estoniaFee, type EstonianFee } from '../lib/estonia'
 import { currencyOf, ORIGIN_GROUP } from '../lib/origins'
 import { blankVehicle, type Restored } from './snapshot'
 
@@ -19,6 +20,8 @@ export const display = ref<Currency>('EUR')
 export const hasOriginProof = ref(true)
 export const residenceTransfer = ref(false)
 export const fx = reactive<FxRates>(fallbackRates())
+/** Estonia is the one country that answers for itself; this is what its register said. */
+export const estonia = ref<EstonianFee | null>(null)
 
 /** Customs rules follow a group of countries, not a single one. */
 export const origin = computed<Origin | null>(() => (originCountry.value ? ORIGIN_GROUP[originCountry.value] ?? 'OTHER' : null))
@@ -43,7 +46,23 @@ export const trip = computed<Trip | null>(() =>
     : null)
 
 export const result = computed<Estimate | null>(() =>
-  trip.value && vehicleReady.value && price.value > 0 ? estimate(vehicle.value, trip.value, fx) : null)
+  trip.value && vehicleReady.value && price.value > 0 ? estimate(vehicle.value, trip.value, fx, estonia.value) : null)
+
+/**
+ * Ask Transpordiamet whenever the car or the destination changes, and let the answer arrive
+ * late: only the newest question counts, so a slow reply cannot overwrite a newer one.
+ */
+let asked = 0
+watch([vehicle, destination], async () => {
+  if (destination.value !== 'EE') { estonia.value = null; return }
+  const question = ++asked
+  try {
+    const fee = await estoniaFee(vehicle.value)
+    if (question === asked) estonia.value = fee
+  } catch {
+    if (question === asked) estonia.value = null
+  }
+}, { deep: true, immediate: true })
 
 /**
  * The country decides the currency: a car in Poland is priced in zloty, one in

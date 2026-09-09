@@ -47,7 +47,7 @@ export function toQuery(s: Snapshot): string {
   if (v.make) {
     put('make', v.make); put('model', v.model); put('year', v.year); put('fuel', v.fuel); put('market', v.market)
   }
-  put('cc', v.engineCc); put('kwh', v.batteryKwh); put('co2', v.co2Wltp); put('lp', v.listPriceEur)
+  put('cc', v.engineCc); put('kwh', v.batteryKwh); put('co2', v.co2Wltp); put('lp', v.listPriceEur); put('mass', v.grossMassKg)
   put('hp', v.powerHp); put('plant', v.plantCountry)
   put('price', s.trip.price); put('cur', s.trip.currency); put('show', s.display)
   if (!s.trip.hasOriginProof) q.set('proof', '0')
@@ -80,6 +80,7 @@ export function fromQuery(q: URLSearchParams, destinations: readonly string[]): 
     engineCc: num('cc'),
     batteryKwh: num('kwh'),
     co2Wltp: num('co2'),
+    grossMassKg: num('mass'),
     listPriceEur: num('lp'),
     powerHp: num('hp'),
     plantCountry: q.get('plant') ?? undefined,

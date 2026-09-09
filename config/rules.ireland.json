@@ -1,0 +1,38 @@
+{
+  "_note": "VRT cannot be totalled here: it is a percentage of the OMSP, the open market selling price Revenue itself assigns to that exact car in Ireland, and the invoice is not it. The percentage, though, is a published table read off CO2 — so the line says which band the car falls in and leaves the total alone. The NOx levy is on top and needs a mg/km figure no ordinary vehicle data carries.",
+  "effective": "2022-01-01",
+  "source": {
+    "title": "Revenue — calculating Vehicle Registration Tax (revenue.ie)",
+    "url": "https://www.revenue.ie/en/vrt/calculating-vrt/applying-tax.aspx"
+  },
+  "noxSource": {
+    "title": "Revenue — calculating the NOx charge (revenue.ie)",
+    "url": "https://www.revenue.ie/en/vrt/calculating-vrt/calculating-nox-charge.aspx"
+  },
+  "bands": [
+    { "maxCo2": 50, "rate": 7, "minEur": 140 },
+    { "maxCo2": 80, "rate": 9, "minEur": 180 },
+    { "maxCo2": 85, "rate": 9.75, "minEur": 195 },
+    { "maxCo2": 90, "rate": 10.5, "minEur": 210 },
+    { "maxCo2": 95, "rate": 11.25, "minEur": 225 },
+    { "maxCo2": 100, "rate": 12, "minEur": 240 },
+    { "maxCo2": 105, "rate": 12.75, "minEur": 255 },
+    { "maxCo2": 110, "rate": 13.5, "minEur": 270 },
+    { "maxCo2": 115, "rate": 15.25, "minEur": 305 },
+    { "maxCo2": 120, "rate": 16, "minEur": 320 },
+    { "maxCo2": 125, "rate": 16.75, "minEur": 335 },
+    { "maxCo2": 130, "rate": 17.5, "minEur": 350 },
+    { "maxCo2": 135, "rate": 19.25, "minEur": 385 },
+    { "maxCo2": 140, "rate": 20, "minEur": 400 },
+    { "maxCo2": 145, "rate": 21.5, "minEur": 430 },
+    { "maxCo2": 150, "rate": 25, "minEur": 500 },
+    { "maxCo2": 155, "rate": 27.5, "minEur": 550 },
+    { "maxCo2": 170, "rate": 30, "minEur": 600 },
+    { "maxCo2": 190, "rate": 35, "minEur": 700 },
+    { "maxCo2": null, "rate": 41, "minEur": 820 }
+  ],
+  "nox": {
+    "tiers": [{ "maxMg": 40, "perMg": 5 }, { "maxMg": 80, "perMg": 15 }, { "maxMg": null, "perMg": 25 }],
+    "capDieselEur": 4850, "capOtherEur": 600
+  }
+}

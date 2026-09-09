@@ -51,6 +51,8 @@ export interface Vehicle {
   batteryKwh?: number
   powerHp?: number
   co2Wltp?: number
+  /** Gross mass in kilograms, field F.1 of a European registration certificate: the Estonian fee needs it. */
+  grossMassKg?: number
   /** List price when new, in the destination country: the base of the Spanish registration tax. */
   listPriceEur?: number
   mileageKm?: number
@@ -130,6 +132,6 @@ export type FxRates = Record<Foreign, Quote>
 export interface CountryInfo {
   eu: boolean
   vat: number
-  regTax: 'computed' | 'none' | 'national'
+  regTax: 'computed' | 'api' | 'none' | 'national'
   customs: string
 }

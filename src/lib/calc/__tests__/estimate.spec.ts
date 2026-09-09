@@ -253,6 +253,17 @@ describe('Other EU countries', () => {
     expect(lineOf(us, 'regTax').unknown).toBe(true)
   })
 
+  it('takes the Estonian fee from the register, and says so when it cannot', () => {
+    const ee = { ...trip, origin: 'EU' as const, destination: 'EE' as const, currency: 'EUR' as const }
+    const car = { ...audi, market: 'EU' as const }
+    // Without a gross mass there is nothing to ask with, so the line stays out of the total.
+    expect(lineOf(estimateEu(car, ee, fx, now), 'regTax').unknown).toBe(true)
+    // With the register's own answer, the line is exactly what it said.
+    const answered = estimateEu({ ...car, grossMassKg: 2000 }, ee, fx, now, { total: 528.3, base: 150, co2: 378.3, mass: 0, ageCoef: 0.26 })
+    expect(lineOf(answered, 'regTax').unknown).toBeUndefined()
+    expect(lineOf(answered, 'regTax').amount.likely).toBe(528.3)
+  })
+
   it('reads the Czech emission fee off the model year', () => {
     expect(czechiaEmissionFee(audi).czk).toBe(0)
     expect(czechiaEmissionFee({ ...audi, year: 1999 }).czk).toBe(3000)

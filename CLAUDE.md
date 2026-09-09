@@ -78,8 +78,9 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Slovenia | duty, VAT 22%, **DMV**: an amount for CO₂ and fuel, one for engine power and one for the EURO standard, added and then reduced for the age of the car |
 | Hungary | duty, VAT 27%, **regisztrációs adó**: a multiplier from engine power on 47 000 Ft, less the monthly reduction for age — for cars first registered from 2021 and for hybrids of any age |
 | Italy | duty, VAT 22%, **IPT**: €150.81 up to 53 kW, then €3.5119/kW, shown as a range because the province may add up to 30% |
+| Estonia | duty, VAT 24%, and the **registration fee the register itself works out** — the browser asks Transpordiamet's own API and puts its answer in the total |
 | DE BG RO LU SE LV | duty + national VAT; registration tax a real €0, all six checked against their own authority on 9 Sep 2026 |
-| the other 9 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value we cannot reproduce or a table nobody publishes |
+| the other 8 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value we cannot reproduce or a table nobody publishes. Ireland and Croatia at least name what *is* known — the CO₂ band, the emissions half — instead of shrugging |
 
 Market estimates, labelled as such in their “?”: certificate of conformity, homologación, ITV,
 DGT fee, plates, mandatory lighting conversion.
@@ -213,6 +214,11 @@ DGT fee, plates, mandatory lighting conversion.
   “Inférieures à N | 0” and then “N | 50”, so N is taxed, not exempt — the one thing to get wrong.
   A car with no European type approval is charged on fiscal horsepower (L.421-64) instead, which no
   ordinary vehicle data carries, so those stay out of the total rather than being charged on CO₂.
+- **Estonia is asked, not reproduced — and it has a state of its own, `api`.** The line is filled in
+  from the authority's reply the way the exchange rates are: a watcher fires when the car or the
+  destination changes, only the newest question counts, and a slow or failed answer leaves the line
+  out of the total rather than guessing. It is the only country needing a gross mass, so that field
+  appears for Estonia alone.
 - **Estonia has an official calculator API, and it answers a browser.**
   `https://apimsm.transpordiamet.ee/v2/msm/regTasu/by-technical-parameters` takes `category`,
   `co2wltp`, `technPermMaxLadenMass`, `initialRegDate`, `seats` and `regFeeCalcDate` as a plain GET,
@@ -222,6 +228,12 @@ DGT fee, plates, mandatory lighting conversion.
   since riigiteataja.ee serves an Angular shell and the ministry's draft figures do not match what the
   API returns. It needs a gross mass, which nothing in our data carries and which every European
   registration certificate prints.
+- **Where the amount cannot be honest, the note can still be useful.** Ireland's line names the band
+  the car falls into — “CO₂ 168 g/km puts it in the 30% band, or €600, whichever is greater” — and
+  says the percentage is of a value Revenue assigns, not of the invoice. Croatia's names the emissions
+  half in euro and says the other half runs off a Croatian list price nobody publishes. Both stay out
+  of the total. A number that is wrong is worse than no number, but a blank where a fact was available
+  is a waste of a line.
 - **Croatia cannot be computed at all, and now we know why.** The customs administration's own FAQ:
   “Neovisno gdje je rabljeno motorno vozilo kupljeno i koliko je za njega plaćeno, Carinska uprava će
   u svim slučajevima utvrđivati tržišnu vrijednost rabljenog motornog vozila na hrvatskom tržištu.”
@@ -390,21 +402,20 @@ nothing.** A page that reproduces a law is not the law.
 6. Check it in the browser before pushing (see **Working rules**), and record the date and the source
    in this file under **Facts worth not re-deriving**.
 
-**What is left.** Thirteen countries compute, six are a confirmed zero, and the nine that remain are
-each blocked by something specific, written down above.
+**What is left.** Fourteen countries answer with a number — thirteen computed here and Estonia asked
+of its register — six are a confirmed zero, and the eight that remain are each blocked by something
+specific, written down above.
 
-1. **Estonia** is the one worth doing next, and it is not a table but a request: its own authority
-   answers a browser. It needs a gross-mass field (and a seat count, five by default), and the fee
-   arrives asynchronously the way the exchange rates already do.
-2. **Belgium** needs the visitor's region before anything can be said. Wallonia's table is complete
-   and Brussels' is statutory; Flanders still owes us its current coefficients.
-3. **Greece, Cyprus, Malta** are blocked on their own governments: AADE does not publish the
+1. **Belgium** needs the visitor's region before anything can be said: art. 101 of the code ties the
+   tax to the address on the registration certificate. Wallonia's table is complete and Brussels'
+   is statutory but unindexed; Flanders still owes us its current coefficients.
+2. **Greece, Cyprus, Malta** are blocked on their own governments: AADE does not publish the
    depreciation schedule, no Cypriot site would load, and Malta's base is a value Transport Malta
    assigns from a market database.
-4. **Croatia, Denmark, Finland, Ireland** are settled as *not computable*, for one reason each says
-   out loud: the base is that country's own valuation of the car, and the invoice is not it. Their
-   rates are all written down above and could honestly be *shown* — “your car is in the 29.7% band” —
-   but never totalled.
+3. **Croatia, Denmark, Finland, Ireland** are settled as *not computable*, for one reason each says
+   out loud: the base is that country's own valuation of the car, and the invoice is not it. Ireland
+   and Croatia already say what they can; Denmark and Finland could do the same — Denmark's CO₂
+   surcharge (294 / 587 / 1 115 kr a gram) and Finland's per-gram rate table are both published.
 
 **The remaining inputs, and what each would unlock.** The *month* of first registration would sharpen
 the Dutch, French and Hungarian tables, which are monthly while we still count from the middle of a

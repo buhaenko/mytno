@@ -1,0 +1,33 @@
+{
+  "_note": "The Croatian tax has two halves: one from CO2, which is a published table, and one from the price — but the price is the Croatian list price of the equivalent NEW car, filed with customs by the manufacturers and published nowhere. Their own FAQ says it outright: “Neovisno gdje je rabljeno motorno vozilo kupljeno i koliko je za njega plaćeno, Carinska uprava će u svim slučajevima utvrđivati tržišnu vrijednost rabljenog motornog vozila na hrvatskom tržištu.” So the amount is never in the total; the note names the half we can see. Both halves are computed as for a new car and then multiplied by the residual-value percentage of the Pravilnik's table 1.",
+  "effective": "2023-01-01",
+  "source": {
+    "title": "Zakon o posebnom porezu na motorna vozila (zakon.hr)",
+    "url": "https://www.zakon.hr/z/561/Zakon-o-posebnom-porezu-na-motorna-vozila"
+  },
+  "ratesSource": {
+    "title": "Uredba o visini posebnog poreza, NN 156/2022 (narodne-novine.nn.hr)",
+    "url": "https://narodne-novine.nn.hr/clanci/sluzbeni/2022_12_156_2525.html"
+  },
+  "co2": {
+    "petrol": [
+      { "from": 95, "base": 3.32, "perGram": 5.97 },
+      { "from": 125, "base": 182.42, "perGram": 18.58 },
+      { "from": 155, "base": 739.82, "perGram": 73.66 },
+      { "from": 175, "base": 2213.02, "perGram": 96.22 },
+      { "from": 200, "base": 4618.52, "perGram": 129.40 },
+      { "from": 240, "base": 9794.52, "perGram": 218.99 }
+    ],
+    "diesel": [
+      { "from": 95, "base": 11.28, "perGram": 13.94 },
+      { "from": 125, "base": 429.48, "perGram": 24.55 },
+      { "from": 155, "base": 1165.98, "perGram": 146.00 },
+      { "from": 190, "base": 6275.98, "perGram": 165.90 },
+      { "from": 215, "base": 10423.48, "perGram": 179.18 },
+      { "from": 255, "base": 17590.68, "perGram": 205.72 }
+    ]
+  },
+  "unknownCo2Gkm": 401,
+  "electricExempt": true,
+  "over30YearsEur": 265.45
+}

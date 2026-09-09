@@ -93,8 +93,8 @@
       "customs": "https://carina.gov.hr/",
       "regTax": "national",
       "regTaxSource": {
-        "title": "Porezna uprava — posebni porez na motorna vozila (porezna-uprava.gov.hr)",
-        "url": "https://porezna-uprava.gov.hr/hr/porezni-sustav--posebni-porezi-na-osobne-automobile-ostala-motorna-vozila-plovila-i-zrakoplove/4416"
+        "title": "Zakon o posebnom porezu na motorna vozila (zakon.hr)",
+        "url": "https://www.zakon.hr/z/561/Zakon-o-posebnom-porezu-na-motorna-vozila"
       }
     },
     "CY": {
@@ -131,9 +131,9 @@
       "eu": true,
       "vat": 0.24,
       "customs": "https://www.emta.ee",
-      "regTax": "national",
+      "regTax": "api",
       "regTaxSource": {
-        "title": "Transpordiamet — motor vehicle tax and registration fee (transpordiamet.ee)",
+        "title": "Transpordiamet — registreerimistasu (transpordiamet.ee)",
         "url": "https://www.transpordiamet.ee/en/motor-vehicle-tax"
       }
     },

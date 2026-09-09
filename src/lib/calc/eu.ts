@@ -8,6 +8,9 @@ import italy from '@config/rules.italy.json'
 import slovenia from '@config/rules.slovenia.json'
 import hungary from '@config/rules.hungary.json'
 import france from '@config/rules.france.json'
+import ireland from '@config/rules.ireland.json'
+import croatia from '@config/rules.croatia.json'
+import { ESTONIA_SOURCE, type EstonianFee } from '../estonia'
 import { toEur } from '../fx'
 import { exact, money, nothing, percent, plus, times } from '../money'
 import { age, builtInEu, conversion, line, msg, newForVat, totalOf } from './common'
@@ -212,12 +215,15 @@ export function franceMalus(v: Vehicle, now: Date) {
 interface Scale { firstGram: number; amounts: number[]; cap: number }
 
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
-function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date, estonia?: EstonianFee | null): { line: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
 
   if (country.regTax === 'none') {
     return { line: line('regTax', msg('line.regTax'), 'tax', nothing, { notes: [msg('note.regTaxNone')], source: countries.regTaxNoneSource }) }
   }
+  if (trip.destination === 'EE') return estonianFee(v, exempt, estonia)
+  if (trip.destination === 'IE' && v.co2Wltp !== undefined) return irishBand(v)
+  if (trip.destination === 'HR' && v.co2Wltp !== undefined) return croatianHalf(v)
   if (country.regTax === 'national') {
     // Point at the authority that levies it where the country names one, not at customs.
     const source = (country as { regTaxSource?: { title: string; url: string } }).regTaxSource ?? customsLink
@@ -440,6 +446,62 @@ function frenchMalus(v: Vehicle, exempt: boolean, now: Date): { line: Line; warn
   }
 }
 
+/**
+ * Ireland: the amount is a share of a value Revenue assigns to that exact car, so it is never in
+ * the total — but the share itself is published, and naming the band is more use than a shrug.
+ */
+function irishBand(v: Vehicle): { line: Line } {
+  const co2 = Math.round(v.co2Wltp!)
+  const band = ireland.bands.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!
+  return {
+    line: line('regTax', msg('line.regTaxNamed', { name: 'VRT' }), 'tax', nothing, {
+      unknown: true,
+      notes: [msg('note.ieBand', { co2, rate: band.rate, min: band.minEur }), msg('note.ieNox')],
+      source: ireland.source,
+    }),
+  }
+}
+
+/**
+ * Croatia: half the tax is a CO₂ table we have, the other half runs off the Croatian list price of
+ * the equivalent new car, which customs keep and nobody publishes. So the line names the half it can.
+ */
+function croatianHalf(v: Vehicle): { line: Line } {
+  const co2 = Math.round(v.co2Wltp!)
+  const table = v.fuel === 'diesel' ? croatia.co2.diesel : croatia.co2.petrol
+  const band = [...table].reverse().find((b) => co2 >= b.from)
+  const emissions = band ? band.base + band.perGram * (co2 - band.from) : 0
+  return {
+    line: line('regTax', msg('line.regTaxNamed', { name: 'poseban porez' }), 'tax', nothing, {
+      unknown: true,
+      notes: [msg(v.fuel === 'electric' ? 'note.hrEv' : 'note.hrHalf', { co2, emissions: Math.round(emissions) })],
+      source: croatia.source,
+    }),
+  }
+}
+
+/** Estonia: what its own register answered, or the reason it could not be asked. */
+function estonianFee(v: Vehicle, exempt: boolean, fee?: EstonianFee | null): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'registreerimistasu' })
+  const source = ESTONIA_SOURCE
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  if (!fee) {
+    const missing = (v.fuel !== 'electric' && v.co2Wltp === undefined) || !v.grossMassKg
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg(missing ? 'note.eeNeedData' : 'note.eeNoAnswer')], source }),
+      warning: missing ? msg('warn.eeNeedData') : undefined,
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(fee.total), {
+      formula: 'Transpordiamet',
+      notes: [msg('note.eeFee', { base: Math.round(fee.base), co2: Math.round(fee.co2), mass: Math.round(fee.mass), age: fee.ageCoef })],
+      source,
+    }),
+  }
+}
+
 /** Czechia: the one-off emission fee, in koruna, converted at the rate of the day. */
 function czechFee(v: Vehicle, fx: FxRates): { line: Line } {
   const fee = czechiaEmissionFee(v)
@@ -452,7 +514,7 @@ function czechFee(v: Vehicle, fx: FxRates): { line: Line } {
 }
 
 /** Every EU destination except Spain, which has its own module. */
-export function estimateEu(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()): Estimate {
+export function estimateEu(v: Vehicle, trip: Trip, fx: FxRates, now = new Date(), estonia?: EstonianFee | null): Estimate {
   const country = COUNTRIES[trip.destination]
   const price = toEur(trip.price, trip.currency, fx)
   const fromOutsideEu = trip.origin !== 'EU'
@@ -497,7 +559,7 @@ export function estimateEu(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()
     }))
   }
 
-  const registration = registrationTax(country, v, trip, price, fx, customsLink, now)
+  const registration = registrationTax(country, v, trip, price, fx, customsLink, now, estonia)
   lines.push(registration.line)
   if (registration.warning) warnings.push(registration.warning)
 
@@ -514,7 +576,7 @@ export function estimateEu(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()
   if (trip.destination === 'DE') warnings.push(msg('warn.deNoRegTax'))
 
   // When nothing in the total depends on the price, say so instead of leaving the user guessing.
-  const priceIsIrrelevant = !fromOutsideEu && !isNew && country.regTax !== 'computed'
+  const priceIsIrrelevant = !fromOutsideEu && !isNew && country.regTax !== 'computed' && country.regTax !== 'api'
   const notice = priceIsIrrelevant ? msg(country.regTax === 'none' ? 'notice.intraEuNoTax' : 'notice.intraEuUsed')
     : exempt ? msg('notice.relocation') : undefined
 
