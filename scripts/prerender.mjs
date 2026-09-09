@@ -27,7 +27,7 @@ for (const l of LOCALES) {
     .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${esc(m.description)}" />`)
     .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${esc(m.title)}" />`)
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${esc(m.description)}" />`)
-    .replace('<!--seo-->', `<link rel="canonical" href="${urlFor(l)}" />\n    <meta property="og:url" content="${urlFor(l)}" />\n    <meta property="og:locale" content="${l}" />\n    ${hreflang}\n    <script type="application/ld+json">${ld}</script>`)
+    .replace('<!--seo-->', `<meta property="og:site_name" content="Vinta" />\n    <link rel="canonical" href="${urlFor(l)}" />\n    <meta property="og:url" content="${urlFor(l)}" />\n    <meta property="og:locale" content="${l}" />\n    ${hreflang}\n    <script type="application/ld+json">${ld}</script>`)
     .replace('<div id="app"></div>', `<div id="app"><noscript><h1>${esc(m.h1)}</h1><p>${esc(m.tagline)}</p></noscript></div>`)
   if (l === 'en') writeFileSync(join(dist, 'index.html'), out)
   mkdirSync(join(dist, l), { recursive: true })

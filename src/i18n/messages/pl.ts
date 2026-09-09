@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Inny kraj',
   'app.foot': 'Stawki z oficjalnych źródeł krajowych. Kurs NBU {date}. Obliczenia w przeglądarce.',
   'app.lang': 'Język',
-  'seo.title': 'Kalkulator podatków od importu samochodu po VIN — Ukraina i kraje UE',
+  'seo.title': 'Vinta — Kalkulator podatków od importu samochodu po VIN — Ukraina i kraje UE',
   'seo.description': 'Ile kosztuje odprawa celna i rejestracja samochodu: cło, akcyza, VAT i podatki rejestracyjne według oficjalnych stawek. Wyszukiwanie po VIN, pełny katalog modeli, Ukraina, Hiszpania, Polska, Niemcy i inne kraje UE.',
   'car.byVin': 'Po VIN',
   'car.catalog': 'Znajdź w katalogu',

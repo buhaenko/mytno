@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Cita valsts',
   'app.foot': 'Likmes no oficiāliem valstu avotiem. NBU valūtas kurss {date}. Aprēķins tiek veikts Jūsu pārlūkprogrammā.',
   'app.lang': 'Valoda',
-  'seo.title': 'Automašīnas importa nodokļu kalkulators pēc VIN — Ukraina un ES valstis',
+  'seo.title': 'Vinta — Automašīnas importa nodokļu kalkulators pēc VIN — Ukraina un ES valstis',
   'seo.description': 'Cik maksā automašīnas muitošana un reģistrācija: muitas nodoklis, akcīzes nodoklis, PVN un reģistrācijas nodokļi pēc oficiālajām likmēm. VIN pārbaude, pilns modeļu katalogs, Ukraina, Spānija, Polija, Vācija un citas ES valstis.',
 
   'car.byVin': 'Pēc VIN',

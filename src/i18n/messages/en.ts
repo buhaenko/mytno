@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Other country',
   'app.foot': 'Rates from official national sources. NBU exchange rate {date}. Calculated in your browser.',
   'app.lang': 'Language',
-  'seo.title': 'Car import tax calculator by VIN — Ukraine and EU countries',
+  'seo.title': 'Vinta — Car import tax calculator by VIN — Ukraine and EU countries',
   'seo.description': 'What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official rates. VIN lookup, full model catalogue, Ukraine, Spain, Poland, Germany and other EU countries.',
 
   'car.byVin': 'By VIN',

@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Annat land',
   'app.foot': 'Satser från officiella nationella källor. NBU-växelkurs {date}. Beräknas i din webbläsare.',
   'app.lang': 'Språk',
-  'seo.title': 'Bilimportskatt-kalkylator via VIN — Ukraina och EU-länder',
+  'seo.title': 'Vinta — Bilimportskatt-kalkylator via VIN — Ukraina och EU-länder',
   'seo.description': 'Vad det kostar att förtulla och registrera en bil: tull, punktskatt, moms och registreringsskatter enligt officiella satser. VIN-uppslag, komplett modellkatalog, Ukraina, Spanien, Polen, Tyskland och andra EU-länder.',
 
   'car.byVin': 'Via VIN',

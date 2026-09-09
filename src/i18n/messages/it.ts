@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Altro paese',
   'app.foot': 'Aliquote da fonti ufficiali nazionali. Cambio BNU del {date}. Calcolo nel browser.',
   'app.lang': 'Lingua',
-  'seo.title': 'Calcolatore delle tasse di importazione auto tramite VIN — Ucraina e paesi UE',
+  'seo.title': 'Vinta — Calcolatore delle tasse di importazione auto tramite VIN — Ucraina e paesi UE',
   'seo.description': 'Quanto costa sdoganare e immatricolare un’auto: dazio, accise, IVA e tasse di immatricolazione alle aliquote ufficiali. Ricerca per VIN, catalogo completo dei modelli, Ucraina, Spagna, Polonia, Germania e altri paesi UE.',
   'car.byVin': 'Per VIN',
   'car.catalog': 'Cerca nel catalogo',

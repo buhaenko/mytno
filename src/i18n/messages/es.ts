@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Otro país',
   'app.foot': 'Tipos de fuentes oficiales de cada país. Tipo de cambio del BNU {date}. El cálculo se hace en tu navegador.',
   'app.lang': 'Idioma',
-  'seo.title': 'Calculadora de impuestos de importación de coches por VIN — Ucrania y países de la UE',
+  'seo.title': 'Vinta — Calculadora de impuestos de importación de coches por VIN — Ucrania y países de la UE',
   'seo.description': 'Cuánto cuesta despachar en aduana y matricular un coche: arancel, impuestos especiales, IVA y matriculación a tipos oficiales. Búsqueda por VIN, catálogo completo de modelos, Ucrania, España, Polonia, Alemania y otros países de la UE.',
   'car.byVin': 'Por VIN',
   'car.catalog': 'Buscar en el catálogo',

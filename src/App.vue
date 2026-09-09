@@ -14,6 +14,7 @@ import ResultView from './components/ResultView.vue'
 import CountrySelect from './components/CountrySelect.vue'
 import Help from './components/Help.vue'
 import LangSelect from './components/LangSelect.vue'
+import Wheel from './components/Wheel.vue'
 
 const { t, locale, region, setLocale } = useI18n()
 // Last word of the headline gets the gradient treatment
@@ -177,12 +178,13 @@ onMounted(async () => {
 <template>
   <div class="wrap">
     <header class="topbar">
-      <span class="mark" aria-hidden="true"><i></i></span>
+      <span class="mark"><Wheel :size="19" /><span class="word">Vinta</span></span>
       <LangSelect :model-value="locale" :label="t('app.lang')" @update:model-value="changeLocale" />
     </header>
     <div class="hero" :class="{ compact: started }">
       <div class="glow"></div>
       <div class="ring"></div>
+      <div class="pill-row"><Wheel class="hero-wheel" :size="44" /></div>
       <div class="pill-row"><span class="pill"><span class="pd"></span>{{ t('app.badge') }}</span></div>
       <div class="hero-text">
         <h1>{{ title.head }} <span class="grad">{{ title.last }}</span>{{ title.tail }}</h1>

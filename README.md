@@ -1,4 +1,4 @@
-# Na Nomery — car import tax calculator
+# Vinta — car import tax calculator
 
 Free, client-side calculator of what it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official rates, plus mandatory registration costs. Route: any of 43 purchase countries (USA, Canada, Mexico, EU-27, Ukraine, Japan, Korea, UK, Switzerland, Norway, Georgia, UAE, China, Turkey, Moldova, Serbia, Australia) → Ukraine or any of the 27 EU countries. 23 languages, auto-detected.
 

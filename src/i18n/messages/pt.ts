@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Outro país',
   'app.foot': 'Taxas de fontes oficiais nacionais. Câmbio do BNU em {date}. Cálculo feito no teu navegador.',
   'app.lang': 'Idioma',
-  'seo.title': 'Calculadora de impostos de importação de carros por VIN — Ucrânia e países da UE',
+  'seo.title': 'Vinta — Calculadora de impostos de importação de carros por VIN — Ucrânia e países da UE',
   'seo.description': 'Quanto custa desalfandegar e matricular um carro: direitos aduaneiros, imposto especial, IVA e impostos de matrícula às taxas oficiais. Pesquisa por VIN, catálogo completo de modelos, Ucrânia, Espanha, Polónia, Alemanha e outros países da UE.',
   'car.byVin': 'Por VIN',
   'car.catalog': 'Procurar no catálogo',

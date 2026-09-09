@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Muu maa',
   'app.foot': 'Verokannat maiden virallisista lähteistä. NBU:n valuuttakurssi {date}. Laskenta tehdään selaimessanne.',
   'app.lang': 'Kieli',
-  'seo.title': 'Auton tuontiverolaskuri VIN-koodilla — Ukraina ja EU-maat',
+  'seo.title': 'Vinta — Auton tuontiverolaskuri VIN-koodilla — Ukraina ja EU-maat',
   'seo.description': 'Mitä auton tulliselvitys ja rekisteröinti maksaa: tulli, valmistevero, arvonlisävero ja rekisteröintiverot virallisten verokantojen mukaan. VIN-haku, täydellinen malliluettelo, Ukraina, Espanja, Puola, Saksa ja muut EU-maat.',
 
   'car.byVin': 'VIN-koodilla',

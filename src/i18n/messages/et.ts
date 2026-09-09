@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Muu riik',
   'app.foot': 'Määrad riikide ametlikest allikatest. NBU vahetuskurss {date}. Arvutus tehakse Teie brauseris.',
   'app.lang': 'Keel',
-  'seo.title': 'Auto impordimaksude kalkulaator VIN-koodi järgi — Ukraina ja ELi riigid',
+  'seo.title': 'Vinta — Auto impordimaksude kalkulaator VIN-koodi järgi — Ukraina ja ELi riigid',
   'seo.description': 'Mida maksab auto tollivormistus ja registreerimine: tollimaks, aktsiis, käibemaks ja registreerimismaksud ametlike määrade alusel. VIN-päring, täielik mudelikataloog, Ukraina, Hispaania, Poola, Saksamaa ja teised ELi riigid.',
 
   'car.byVin': 'VIN-koodi järgi',

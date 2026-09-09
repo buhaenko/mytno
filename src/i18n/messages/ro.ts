@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Altă țară',
   'app.foot': 'Tarife din surse oficiale naționale. Curs de schimb BNU {date}. Calculat în browserul dumneavoastră.',
   'app.lang': 'Limbă',
-  'seo.title': 'Calculator taxe import auto după VIN — Ucraina și țările UE',
+  'seo.title': 'Vinta — Calculator taxe import auto după VIN — Ucraina și țările UE',
   'seo.description': 'Cât costă vămuirea și înmatricularea unei mașini: taxe vamale, accize, TVA și taxe de înmatriculare la tarife oficiale. Căutare după VIN, catalog complet de modele, Ucraina, Spania, Polonia, Germania și alte țări UE.',
 
   'car.byVin': 'După VIN',

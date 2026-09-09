@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Anderes Land',
   'app.foot': 'Sätze aus amtlichen Quellen der Länder. NBU-Wechselkurs {date}. Berechnung im Browser.',
   'app.lang': 'Sprache',
-  'seo.title': 'Kfz-Importsteuer-Rechner per VIN — Ukraine und EU-Länder',
+  'seo.title': 'Vinta — Kfz-Importsteuer-Rechner per VIN — Ukraine und EU-Länder',
   'seo.description': 'Was Verzollung und Zulassung eines Autos kosten: Zoll, Verbrauchsteuer, Mehrwertsteuer und Zulassungssteuern zu amtlichen Sätzen. VIN-Abfrage, vollständiger Modellkatalog, Ukraine, Spanien, Polen, Deutschland und weitere EU-Länder.',
   'car.byVin': 'Per VIN',
   'car.catalog': 'Im Katalog suchen',

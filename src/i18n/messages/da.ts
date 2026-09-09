@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Andet land',
   'app.foot': 'Satser fra officielle nationale kilder. NBU-valutakurs {date}. Beregnes i din browser.',
   'app.lang': 'Sprog',
-  'seo.title': 'Beregner for bilimportafgift via VIN — Ukraine og EU-lande',
+  'seo.title': 'Vinta — Beregner for bilimportafgift via VIN — Ukraine og EU-lande',
   'seo.description': 'Hvad det koster at fortolde og indregistrere en bil: told, punktafgift, moms og registreringsafgifter efter officielle satser. VIN-opslag, komplet modelkatalog, Ukraine, Spanien, Polen, Tyskland og andre EU-lande.',
 
   'car.byVin': 'Via VIN',

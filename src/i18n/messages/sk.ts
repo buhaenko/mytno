@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Iná krajina',
   'app.foot': 'Sadzby z oficiálnych národných zdrojov. Kurz NBU {date}. Výpočet vo vašom prehliadači.',
   'app.lang': 'Jazyk',
-  'seo.title': 'Kalkulačka daní pri dovoze auta podľa VIN — Ukrajina a krajiny EÚ',
+  'seo.title': 'Vinta — Kalkulačka daní pri dovoze auta podľa VIN — Ukrajina a krajiny EÚ',
   'seo.description': 'Koľko stojí preclenie a registrácia auta: clo, spotrebná daň, DPH a registračné dane podľa oficiálnych sadzieb. Vyhľadanie podľa VIN, kompletný katalóg modelov, Ukrajina, Španielsko, Poľsko, Nemecko a ďalšie krajiny EÚ.',
 
   'car.byVin': 'Podľa VIN',

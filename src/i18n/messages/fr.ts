@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Autre pays',
   'app.foot': 'Taux issus des sources officielles nationales. Cours de la BNU au {date}. Calcul effectué dans votre navigateur.',
   'app.lang': 'Langue',
-  'seo.title': 'Calculateur de taxes d’importation de voiture par VIN — Ukraine et pays de l’UE',
+  'seo.title': 'Vinta — Calculateur de taxes d’importation de voiture par VIN — Ukraine et pays de l’UE',
   'seo.description': 'Combien coûtent le dédouanement et l’immatriculation d’une voiture : droits de douane, accises, TVA et taxes d’immatriculation aux taux officiels. Recherche par VIN, catalogue complet des modèles, Ukraine, Espagne, Pologne, Allemagne et autres pays de l’UE.',
   'car.byVin': 'Par VIN',
   'car.catalog': 'Chercher dans le catalogue',

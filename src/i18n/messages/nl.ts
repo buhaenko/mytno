@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Ander land',
   'app.foot': 'Tarieven uit officiële nationale bronnen. NBU-wisselkoers {date}. Berekend in uw browser.',
   'app.lang': 'Taal',
-  'seo.title': 'Autoimportbelasting berekenen op VIN — Oekraïne en EU-landen',
+  'seo.title': 'Vinta — Autoimportbelasting berekenen op VIN — Oekraïne en EU-landen',
   'seo.description': 'Wat de inklaring en registratie van een auto kost: invoerrechten, accijns, btw en registratiebelastingen tegen officiële tarieven. VIN-opzoeking, volledige modelcatalogus, Oekraïne, Spanje, Polen, Duitsland en andere EU-landen.',
 
   'car.byVin': 'Op VIN',

@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Kita šalis',
   'app.foot': 'Tarifai iš oficialių nacionalinių šaltinių. NBU kursas {date}. Skaičiuojama jūsų naršyklėje.',
   'app.lang': 'Kalba',
-  'seo.title': 'Automobilio importo mokesčių skaičiuoklė pagal VIN — Ukraina ir ES šalys',
+  'seo.title': 'Vinta — Automobilio importo mokesčių skaičiuoklė pagal VIN — Ukraina ir ES šalys',
   'seo.description': 'Kiek kainuoja automobilio muitinės procedūros ir registracija: muitas, akcizas, PVM ir registracijos mokesčiai pagal oficialius tarifus. Paieška pagal VIN, pilnas modelių katalogas, Ukraina, Ispanija, Lenkija, Vokietija ir kitos ES šalys.',
 
   'car.byVin': 'Pagal VIN',

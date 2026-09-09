@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Más ország',
   'app.foot': 'Díjtételek hivatalos nemzeti forrásokból. NBU árfolyam {date}. A számítás az Ön böngészőjében történik.',
   'app.lang': 'Nyelv',
-  'seo.title': 'Autóimport-adókalkulátor VIN alapján — Ukrajna és az EU országai',
+  'seo.title': 'Vinta — Autóimport-adókalkulátor VIN alapján — Ukrajna és az EU országai',
   'seo.description': 'Mennyibe kerül egy autó vámkezelése és forgalomba helyezése: vám, jövedéki adó, áfa és regisztrációs adók hivatalos díjtételek szerint. VIN-keresés, teljes modellkatalógus, Ukrajna, Spanyolország, Lengyelország, Németország és más EU-országok.',
 
   'car.byVin': 'VIN alapján',
