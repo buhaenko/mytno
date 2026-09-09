@@ -29,7 +29,7 @@ jobs:
         env:
           VITE_BASE: /${{ github.event.repository.name }}/
           SITE_URL: ${{ vars.SITE_URL || format('https://{0}.github.io/{1}', github.repository_owner, github.event.repository.name) }}
-          VITE_SHARE_API: ${{ vars.VITE_SHARE_API }}
+          VITE_API_URL: ${{ vars.VITE_API_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

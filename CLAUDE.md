@@ -1,4 +1,4 @@
-# CLAUDE.md — mytno.io (~/homeprojects/tarifo)
+# CLAUDE.md — mytno.io (~/homeprojects/mytno)
 
 Read this first. It is the only context file for this project; keep it current at the end of
 every session and do not create notes, docs folders or summaries anywhere else.
@@ -100,6 +100,11 @@ DGT fee, plates, mandatory lighting conversion.
   minted. The short code (`/uk/f4uz`) appears only in the share field.
 - **Share links** are generated automatically, half a second after the numbers settle; the field is
   click-to-copy. Identical calculations get one code (hash dedupe).
+- **Without the API the site still shares.** `hasApi` is just `!!VITE_API_URL`; with no backend the
+  link degrades to a self-contained `#s=<base64 snapshot>` instead of `/uk/f4uz`, VIN decoding calls
+  NHTSA straight from the browser and the rates come from the bundled `config/fx.fallback.json`.
+  That is what GitHub Pages serves today — Pages is static, the Fastify API is deployed nowhere.
+  Set the repository variable `VITE_API_URL` once the API has a host and the short codes come back.
 - **Design**: soft off-white canvas `#F4F4F6`, near-white surfaces, hairline borders, no shadows on
   cards, Inter only (no display serif), JetBrains Mono for the small labels, one warm orange accent
   `#E2662A` used sparingly. Everything explanatory hides behind a “?”.
@@ -136,5 +141,6 @@ Everything above is built, tested and committed locally. HEAD `43f4206`.
   moved to `~/homeprojects/tarifo`. Removed from the `~/work/CLAUDE.md` repository table.
   Renamed again to **mytno.io** — the brand is written in full, domain and all, everywhere it is
   visible (titles, og tags, footer in all 23 languages); identifiers and the Mongo database are
-  plain `mytno`. Pushed to `buhaenko/mytno` and deployed to GitHub Pages; the working directory
-  keeps its old name `~/homeprojects/tarifo`.
+  plain `mytno`. Pushed to `buhaenko/mytno`, deployed to GitHub Pages, and the working directory
+  moved to `~/homeprojects/mytno`. The deploy workflow was passing `VITE_SHARE_API`, a name nothing
+  reads; it now passes `VITE_API_URL`, the one `src/lib/api.ts` actually looks at.
