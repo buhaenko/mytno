@@ -136,6 +136,10 @@ DGT fee, plates, mandatory lighting conversion.
 - **The title says what the tool does, not where.** Naming Ukraine and three EU countries in the
   meta description read as a Ukrainian tool with a European footnote; it gives the scope instead —
   43 countries of purchase, 28 destinations.
+- **The favicon is not the wheel mark.** The mark has five thin spokes and a hairline rim, which at
+  16 pixels turns to mush; the icon is a solid white disc with five cut spokes and the orange hub, on
+  the dark square (`public/favicon.svg`, with a 32px PNG and a full-bleed 180px apple-touch beside
+  it). Judged by rendering it at 16, 20, 24, 32 and 56 pixels and looking, not by taste at full size.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
