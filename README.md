@@ -1,4 +1,4 @@
-# Vinta — car import tax calculator
+# Tarifo — car import tax calculator
 
 What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official
 rates, plus the mandatory registration costs. Route: any of 43 purchase countries → Ukraine or any of the

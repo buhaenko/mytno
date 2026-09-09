@@ -1,5 +1,5 @@
 /**
- * The Vinta API (server/). Set VITE_API_URL to use it.
+ * The Tarifo API (server/). Set VITE_API_URL to use it.
  * Without it the app still works: it calls the public services directly and
  * falls back to the bundled config, so it can be hosted as a static site.
  */

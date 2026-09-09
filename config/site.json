@@ -1,8 +1,8 @@
 {
   "_note": "Site-wide settings: brand, legal contact and analytics. Analytics stays off until an id is set.",
-  "brand": "Vinta",
+  "brand": "Tarifo",
   "legal": {
-    "owner": "Vinta",
+    "owner": "Tarifo",
     "contactEmail": "",
     "updated": "2026-09-09",
     "jurisdictionNote": "Rates and rules are taken from the official sources listed next to every line of the calculation."
@@ -13,10 +13,29 @@
     "gaMeasurementId": ""
   },
   "dataSources": [
-    { "name": "National sources of each country", "note": "Tax rates and registration rules, linked next to every line." },
-    { "name": "NHTSA vPIC", "url": "https://vpic.nhtsa.dot.gov/api/", "note": "VIN decoding. US government data, public domain." },
-    { "name": "EPA fueleconomy.gov", "url": "https://www.fueleconomy.gov/feg/download.shtml", "note": "Vehicle catalogue 1984–2026. US government data, public domain." },
-    { "name": "National Bank of Ukraine", "url": "https://bank.gov.ua/ua/markets/exchangerates", "note": "Exchange rates. Open data." },
-    { "name": "Taxes in Europe Database", "url": "https://ec.europa.eu/taxation_customs/tedb/", "note": "EU VAT rates. European Commission, reuse permitted with attribution." }
+    {
+      "name": "National sources of each country",
+      "note": "Tax rates and registration rules, linked next to every line."
+    },
+    {
+      "name": "NHTSA vPIC",
+      "url": "https://vpic.nhtsa.dot.gov/api/",
+      "note": "VIN decoding. US government data, public domain."
+    },
+    {
+      "name": "EPA fueleconomy.gov",
+      "url": "https://www.fueleconomy.gov/feg/download.shtml",
+      "note": "Vehicle catalogue 1984–2026. US government data, public domain."
+    },
+    {
+      "name": "National Bank of Ukraine",
+      "url": "https://bank.gov.ua/ua/markets/exchangerates",
+      "note": "Exchange rates. Open data."
+    },
+    {
+      "name": "Taxes in Europe Database",
+      "url": "https://ec.europa.eu/taxation_customs/tedb/",
+      "note": "EU VAT rates. European Commission, reuse permitted with attribution."
+    }
   ]
 }

@@ -1,5 +1,5 @@
 /**
- * Vinta API: share links, exchange rates, VIN decoding and the rule config.
+ * Tarifo API: share links, exchange rates, VIN decoding and the rule config.
  * `npm run server` starts it with an embedded MongoDB; set MONGO_URL for a real one.
  */
 import { env } from './config.js'

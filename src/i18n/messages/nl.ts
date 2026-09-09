@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Ander land',
   'app.foot': 'Tarieven uit officiële nationale bronnen. NBU-wisselkoers {date}. Berekend in uw browser.',
   'app.lang': 'Taal',
-  'seo.title': 'Vinta — Autoimportbelasting berekenen op VIN — Oekraïne en EU-landen',
+  'seo.title': 'Tarifo — Autoimportbelasting berekenen op VIN — Oekraïne en EU-landen',
   'seo.description': 'Wat de inklaring en registratie van een auto kost: invoerrechten, accijns, btw en registratiebelastingen tegen officiële tarieven. VIN-opzoeking, volledige modelcatalogus, Oekraïne, Spanje, Polen, Duitsland en andere EU-landen.',
 
   'car.byVin': 'Op VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Oostenrijk berekent NoVA op basis van CO₂. Zonder WLTP-waarde blijft de registratiebelasting buiten het totaal.',
   'notice.intraEuNoTax': 'Gebruikte auto uit een EU-land: hier zijn geen invoerrechten, btw of registratiebelasting, dus de prijs heeft geen invloed op het totaal.',
   'result.notInTotal': 'niet in totaal',
-  'footer.disclaimer': 'Vinta is een informatiehulpmiddel, geen fiscaal of juridisch advies. Het uiteindelijke bedrag wordt bepaald door de douane en de registratie-instantie.',
+  'footer.disclaimer': 'Tarifo is een informatiehulpmiddel, geen fiscaal of juridisch advies. Het uiteindelijke bedrag wordt bepaald door de douane en de registratie-instantie.',
   'footer.data': 'Tarieven en regels komen uit officiële openbare bronnen, gelinkt bij elke regel. Voertuiggegevens: NHTSA vPIC en EPA fueleconomy.gov (publiek domein VS). Wisselkoersen: Nationale Bank van Oekraïne.',
   'footer.privacy': 'Geen accounts en geen tracking-cookies. De berekening draait in uw browser; een gedeelde link bewaart alleen de berekening die u wilde delen.',
   'footer.liability': 'Geleverd zoals het is, zonder enige garantie. Controleer de officiële bronnen voordat u koopt of betaalt.',

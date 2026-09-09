@@ -32,7 +32,7 @@ function pageFor(locale) {
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'Vinta',
+    name: 'Tarifo',
     alternateName: title,
     description,
     url: urlFor(locale),
@@ -52,7 +52,7 @@ function pageFor(locale) {
       `<link rel="canonical" href="${urlFor(locale)}" />`,
       `<meta property="og:url" content="${urlFor(locale)}" />`,
       `<meta property="og:locale" content="${locale}" />`,
-      `<meta property="og:site_name" content="Vinta" />`,
+      `<meta property="og:site_name" content="Tarifo" />`,
       hreflang,
       `<script type="application/ld+json">${jsonLd}</script>`,
     ].join('\n    '))
