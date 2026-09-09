@@ -1,5 +1,5 @@
-# The site is deployed by Cloudflare Pages, which builds from this repository itself.
-# GitHub only checks that what lands on main is sound.
+# Every push to main is tested, built and published to Cloudflare Pages.
+# Pull requests stop after the build: nothing they contain reaches the site.
 name: CI
 
 on:
@@ -20,3 +20,11 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+
+      - name: Deploy to Cloudflare Pages
+        if: github.ref == 'refs/heads/main'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist --project-name=mytno --branch=main
