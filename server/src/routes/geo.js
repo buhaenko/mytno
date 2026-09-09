@@ -1,7 +1,11 @@
-// Country of the visitor, used only to pick a default language.
-// Filled in by the CDN or proxy in front of the API; null when it is not.
-export const geoRoute = (req, res) => {
-  const country = req.get('cf-ipcountry') ?? req.get('x-vercel-ip-country') ?? req.get('x-country') ?? null
-  res.set('cache-control', 'no-store')
-  res.json({ country: country && country !== 'XX' ? country.toUpperCase() : null })
+/**
+ * The visitor's country, used only to pick a default language.
+ * The CDN in front of the API fills the header in; without one this is null.
+ */
+export async function geoRoutes(app) {
+  app.get('/api/geo', async (request, reply) => {
+    const header = request.headers['cf-ipcountry'] ?? request.headers['x-vercel-ip-country'] ?? request.headers['x-country']
+    reply.header('cache-control', 'no-store')
+    return { country: header && header !== 'XX' ? String(header).toUpperCase() : null }
+  })
 }

@@ -25,11 +25,13 @@ docker compose up    # MongoDB + API + nginx, the shape of a production deploy
 
 ```
 config/                    the single source of truth — rules, rates, sources (plain JSON)
-server/src/
+server/src/                Fastify + Mongoose
   config.js                every setting and every upstream URL, in one file
-  routes/                  config · fx · vin · share · geo · health
-  services/                codes (share links) · fx (National Bank) · vin (NHTSA)
-  store/mongo.js           connection, indexes, TTLs
+  app.js                   the API in one readable list of registrations
+  db.js                    connection (embedded MongoDB in development)
+  models/                  ShareLink · VinDecode · ExchangeRate, with their indexes and TTLs
+  routes/                  health · config · rates · vin · share · geo
+  services/                codes (share links) · rates (National Bank) · vin (NHTSA)
 src/
   types.ts                 the vocabulary: Vehicle, Trip, Money, Line, Estimate
   state/                   calculator (the seven values everything derives from) · snapshot · share
@@ -68,7 +70,7 @@ self-contained share links. That is the static-hosting mode.
   ITV, plates and the mandatory lighting conversion.
 
 ## Deploying
-The API needs Node 24 and a MongoDB. The site is static output in `dist/`.
+The API needs Node 24 and a MongoDB. Requests are validated by JSON Schema at the route, and rate limited per IP. The site is static output in `dist/`.
 `docker compose up` runs the whole thing; see the deployment notes in `docs` of the project chat for
 hosting options (Fly.io / Railway / Hetzner + Atlas, Cloudflare Pages or Netlify for the site).
 
