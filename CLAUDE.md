@@ -106,7 +106,13 @@ DGT fee, plates, mandatory lighting conversion.
   Copying the address is the whole sharing mechanism, which is why there is no share button.
 - **Design**: soft off-white canvas `#F4F4F6`, near-white surfaces, hairline borders, no shadows on
   cards, Inter only (no display serif), JetBrains Mono for the small labels, one warm orange accent
-  `#E2662A` used sparingly. Everything explanatory hides behind a “?”.
+  `#E2662A` used sparingly. Everything explanatory hides behind a “?”. The steps are labels, not
+  numbers — an accent dot, the mono label, a rule — and the footer ends in a centred colophon under
+  its own hairline. The site name is set in Inter 600 wherever it is spoken, so `footer.disclaimer`
+  carries a `{brand}` slot rather than the word.
+- **The title says what the tool does, not where.** Naming Ukraine and three EU countries in the
+  meta description read as a Ukrainian tool with a European footnote; it gives the scope instead —
+  43 countries of purchase, 28 destinations.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
