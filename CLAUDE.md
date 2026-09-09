@@ -97,6 +97,15 @@ DGT fee, plates, mandatory lighting conversion.
 
 ## Decisions already made
 
+- **A page per country, in every language — 667 in all.** `/uk/import/es/`, `/de/import/se/`: the
+  place a car is registered, its rates, the official source behind each one and the two questions
+  people ask, with the calculator underneath and the destination already chosen. The text is built
+  by `countryBrief()` in `src/lib/pages.ts`, which imports nothing — `scripts/prerender.mjs` runs the
+  same function in Node with the JSON read from disk, so what a crawler reads and what the app
+  renders cannot drift apart. The country name always leads (`Іспанія: розмитнення авто`) because no
+  language then has to decline it. Every page carries the country index as plain links, so a crawler
+  reaches all 667 from any one of them.
+
 - **There is no backend.** Everything runs in the browser: the rules are bundled JSON, the VIN goes
   to NHTSA, the dollar rate to the ECB and the hryvnia to the National Bank of Ukraine, all of which
   answer `access-control-allow-origin: *`; `config/fx.fallback.json` covers either bank being down. Deleted

@@ -39,6 +39,33 @@
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
+/* A country page: the rates that apply there, then the questions they raise. */
+.brief { margin-top: 40px; }
+.brief-rows { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 0; }
+.brief-rows dt { font-weight: 500; color: var(--ink); }
+.brief-rows dd { margin: 0; color: var(--ink-soft); }
+.brief-rows dd a { margin-left: 6px; color: var(--ink-faint); text-decoration: underline; text-underline-offset: 2px; }
+.brief-rows dd a:hover { color: var(--accent-deep); }
+.brief-faq { margin-top: 18px; }
+.brief-faq summary { padding: 9px 0; color: var(--ink); }
+.brief-faq p { margin: 0 0 8px; }
+@media (max-width: 560px) {
+  .brief-rows { grid-template-columns: 1fr; gap: 2px; }
+  .brief-rows dd { margin-bottom: 10px; }
+}
+
+/* Every country page, one line of quiet links: a reader finds them, so does a crawler. */
+.countries {
+  display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline;
+  margin-top: 40px; font-size: 12.5px; color: var(--ink-faint);
+}
+.countries-label {
+  font-family: var(--mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.countries a { color: var(--ink-soft); }
+.countries a:hover { color: var(--accent-deep); }
+
 .page-note { margin-top: 44px; text-align: center; font-size: 12.5px; color: var(--ink-faint); }
 /* The note already ends the page; the footer does not need to start a second time. */
 .page-note + .footer { margin-top: 28px; }
