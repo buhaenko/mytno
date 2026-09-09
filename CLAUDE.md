@@ -114,7 +114,8 @@ DGT fee, plates, mandatory lighting conversion.
 Everything above is built, tested and committed locally. HEAD `43f4206`.
 
 **Not done yet:**
-1. ~~Nothing is pushed.~~ Pushed to **`buhaenko/mytno`** (public), GitHub Pages on. Note the two
+1. ~~Nothing is pushed.~~ Live at **https://buhaenko.github.io/mytno/** — pushed to
+   **`buhaenko/mytno`** (public), GitHub Pages built by the workflow. Note the two
    accounts: `gh` is logged in as **buhaenko** — the personal one, the only one this project goes
    to — while the machine's SSH key belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git
    authenticates through the `gh` credential helper; do not switch it back to SSH.
