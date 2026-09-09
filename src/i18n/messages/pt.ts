@@ -4,7 +4,7 @@ export default {
   'app.from': 'De',
   'app.to': 'Matricular em',
   'app.origin.OTHER': 'Outro país',
-  'app.foot': 'Taxas de fontes oficiais nacionais. Câmbios do BCE e do BNU. Cálculo feito no teu navegador.',
+  'app.foot': 'Taxas de fontes oficiais nacionais. Cálculo feito no teu navegador.',
   'app.lang': 'Idioma',
   'seo.title': 'mytno.app — Calculadora de impostos de importação de carros por VIN',
   'seo.description': 'Quanto custa desalfandegar e matricular um carro: direitos aduaneiros, imposto especial, IVA e impostos de matrícula às taxas oficiais. Pesquisa por VIN, catálogo completo de modelos, 43 países de compra e 28 destinos.',

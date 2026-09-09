@@ -4,7 +4,7 @@ export default {
   'app.from': 'Depuis',
   'app.to': 'Immatriculer en',
   'app.origin.OTHER': 'Autre pays',
-  'app.foot': 'Taux issus des sources officielles nationales. Cours de change de la BCE et de la BNU. Calcul effectué dans votre navigateur.',
+  'app.foot': 'Taux issus des sources officielles nationales. Calcul effectué dans votre navigateur.',
   'app.lang': 'Langue',
   'seo.title': 'mytno.app — Calculateur de taxes d’importation de voiture par VIN',
   'seo.description': 'Combien coûtent le dédouanement et l’immatriculation d’une voiture : droits de douane, accises, TVA et taxes d’immatriculation aux taux officiels. Recherche par VIN, catalogue complet des modèles, 43 pays d’achat et 28 destinations.',

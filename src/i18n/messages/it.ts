@@ -4,7 +4,7 @@ export default {
   'app.from': 'Da',
   'app.to': 'Immatricolare in',
   'app.origin.OTHER': 'Altro paese',
-  'app.foot': 'Aliquote da fonti ufficiali nazionali. Cambi della BCE e della BNU. Calcolo nel browser.',
+  'app.foot': 'Aliquote da fonti ufficiali nazionali. Calcolo nel browser.',
   'app.lang': 'Lingua',
   'seo.title': 'mytno.app — Calcolatore delle tasse di importazione auto tramite VIN',
   'seo.description': 'Quanto costa sdoganare e immatricolare un’auto: dazio, accise, IVA e tasse di immatricolazione alle aliquote ufficiali. Ricerca per VIN, catalogo completo dei modelli, 43 paesi di acquisto e 28 destinazioni.',

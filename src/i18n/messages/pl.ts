@@ -4,7 +4,7 @@ export default {
   'app.from': 'Skąd',
   'app.to': 'Rejestracja w',
   'app.origin.OTHER': 'Inny kraj',
-  'app.foot': 'Stawki z oficjalnych źródeł krajowych. Kursy EBC i NBU. Obliczenia w przeglądarce.',
+  'app.foot': 'Stawki z oficjalnych źródeł krajowych. Obliczenia w przeglądarce.',
   'app.lang': 'Język',
   'seo.title': 'mytno.app — Kalkulator podatków od importu samochodu po VIN',
   'seo.description': 'Ile kosztuje odprawa celna i rejestracja samochodu: cło, akcyza, VAT i podatki rejestracyjne według oficjalnych stawek. Wyszukiwanie po VIN, pełny katalog modeli, 43 kraje zakupu i 28 kierunków.',

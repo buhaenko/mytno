@@ -4,7 +4,7 @@ export default {
   'app.from': 'No',
   'app.to': 'Reģistrācijas valsts',
   'app.origin.OTHER': 'Cita valsts',
-  'app.foot': 'Likmes no oficiāliem valstu avotiem. ECB un NBU valūtas kursi. Aprēķins tiek veikts Jūsu pārlūkprogrammā.',
+  'app.foot': 'Likmes no oficiāliem valstu avotiem. Aprēķins tiek veikts Jūsu pārlūkprogrammā.',
   'app.lang': 'Valoda',
   'seo.title': 'mytno.app — Automašīnas importa nodokļu kalkulators pēc VIN',
   'seo.description': 'Cik maksā automašīnas muitošana un reģistrācija: muitas nodoklis, akcīzes nodoklis, PVN un reģistrācijas nodokļi pēc oficiālajām likmēm. VIN pārbaude, pilns modeļu katalogs, 43 pirkuma valstis un 28 galamērķi.',

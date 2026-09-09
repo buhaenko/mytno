@@ -4,7 +4,7 @@ export default {
   'app.from': 'Odkud',
   'app.to': 'Registrace v',
   'app.origin.OTHER': 'Jiná země',
-  'app.foot': 'Sazby z oficiálních národních zdrojů. Kurzy ECB a NBU. Výpočet probíhá ve vašem prohlížeči.',
+  'app.foot': 'Sazby z oficiálních národních zdrojů. Výpočet probíhá ve vašem prohlížeči.',
   'app.lang': 'Jazyk',
   'seo.title': 'mytno.app — Kalkulačka daní při dovozu auta podle VIN',
   'seo.description': 'Kolik stojí proclení a registrace auta: clo, spotřební daň, DPH a registrační daně podle oficiálních sazeb. Vyhledání podle VIN, kompletní katalog modelů, 43 zemí nákupu a 28 cílových zemí.',

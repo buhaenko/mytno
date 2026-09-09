@@ -4,7 +4,7 @@ export default {
   'app.from': 'Från',
   'app.to': 'Registrering i',
   'app.origin.OTHER': 'Annat land',
-  'app.foot': 'Satser från officiella nationella källor. Växelkurser från ECB och NBU. Beräknas i din webbläsare.',
+  'app.foot': 'Satser från officiella nationella källor. Beräknas i din webbläsare.',
   'app.lang': 'Språk',
   'seo.title': 'mytno.app — Bilimportskatt-kalkylator via VIN',
   'seo.description': 'Vad det kostar att förtulla och registrera en bil: tull, punktskatt, moms och registreringsskatter enligt officiella satser. VIN-uppslag, komplett modellkatalog, 43 inköpsländer och 28 destinationer.',

@@ -4,7 +4,7 @@ export default {
   'app.from': 'Iz',
   'app.to': 'Registracija u',
   'app.origin.OTHER': 'Druga država',
-  'app.foot': 'Stope iz službenih nacionalnih izvora. Tečajevi ESB-a i NBU-a. Izračun u vašem pregledniku.',
+  'app.foot': 'Stope iz službenih nacionalnih izvora. Izračun u vašem pregledniku.',
   'app.lang': 'Jezik',
   'seo.title': 'mytno.app — Kalkulator poreza na uvoz automobila po VIN-u',
   'seo.description': 'Koliko stoji carinjenje i registracija automobila: carina, trošarina, PDV i porezi na registraciju po službenim stopama. Pretraga po VIN-u, potpuni katalog modela, 43 države kupnje i 28 odredišta.',

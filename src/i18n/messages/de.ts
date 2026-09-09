@@ -4,7 +4,7 @@ export default {
   'app.from': 'Woher',
   'app.to': 'Zulassung in',
   'app.origin.OTHER': 'Anderes Land',
-  'app.foot': 'Sätze aus amtlichen Quellen der Länder. Wechselkurse von EZB und NBU. Berechnung im Browser.',
+  'app.foot': 'Sätze aus amtlichen Quellen der Länder. Berechnung im Browser.',
   'app.lang': 'Sprache',
   'seo.title': 'mytno.app — Kfz-Importsteuer-Rechner per VIN',
   'seo.description': 'Was Verzollung und Zulassung eines Autos kosten: Zoll, Verbrauchsteuer, Mehrwertsteuer und Zulassungssteuern zu amtlichen Sätzen. VIN-Abfrage, vollständiger Modellkatalog, 43 Kaufländer und 28 Zielländer.',

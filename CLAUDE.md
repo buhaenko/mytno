@@ -112,13 +112,12 @@ DGT fee, plates, mandatory lighting conversion.
   currency by country of purchase, which made the tool look Ukrainian and moved fields on its own.
 - **Design**: soft off-white canvas `#F4F4F6`, near-white surfaces, hairline borders, no shadows on
   cards, Inter only (no display serif), JetBrains Mono for the small labels, one warm orange accent
-  `#E2662A` used sparingly. Everything explanatory hides behind a “?”, including in the footer: the
-  invitation to write in is a tip on the address, and “open data, reused under the terms of each
-  source” is a tip carrying three official sources as examples of what that means. `HelpTip` takes
-  either one source or a list. The steps are labels, not numbers — an accent dot, the mono label, a
-  rule. The whole footer is centred and reads as four short lines: what the tool is, the address,
-  the legal disclosure, the colophon under its own hairline. The site name is set in Inter 600
-  wherever it is spoken, so `footer.disclaimer` carries a `{brand}` slot rather than the word.
+  `#E2662A` used sparingly. Everything explanatory hides behind a “?”. The steps are labels, not
+  numbers — an accent dot, the mono label, a rule. **The footer is one line**: `© year mytno.app ·
+  Legal and data ? · feedback@mytno.app · updated`. Everything legal lives in that single tip — the
+  disclaimer, what “official source” means, the data, privacy and liability notes, and three
+  official sources as examples. It was four stacked paragraphs of small print before, which is
+  three paragraphs too many, and the name was repeated in each of them.
 - **The title says what the tool does, not where.** Naming Ukraine and three EU countries in the
   meta description read as a Ukrainian tool with a European footnote; it gives the scope instead —
   43 countries of purchase, 28 destinations.

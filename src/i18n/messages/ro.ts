@@ -4,7 +4,7 @@ export default {
   'app.from': 'Din',
   'app.to': 'Înmatriculare în',
   'app.origin.OTHER': 'Altă țară',
-  'app.foot': 'Tarife din surse oficiale naționale. Cursuri de schimb BCE și BNU. Calculat în browserul dumneavoastră.',
+  'app.foot': 'Tarife din surse oficiale naționale. Calculat în browserul dumneavoastră.',
   'app.lang': 'Limbă',
   'seo.title': 'mytno.app — Calculator taxe import auto după VIN',
   'seo.description': 'Cât costă vămuirea și înmatricularea unei mașini: taxe vamale, accize, TVA și taxe de înmatriculare la tarife oficiale. Căutare după VIN, catalog complet de modele, 43 de țări de cumpărare și 28 de destinații.',

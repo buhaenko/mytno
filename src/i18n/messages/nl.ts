@@ -4,7 +4,7 @@ export default {
   'app.from': 'Vanuit',
   'app.to': 'Registratie in',
   'app.origin.OTHER': 'Ander land',
-  'app.foot': 'Tarieven uit officiële nationale bronnen. Wisselkoersen van de ECB en de NBU. Berekend in uw browser.',
+  'app.foot': 'Tarieven uit officiële nationale bronnen. Berekend in uw browser.',
   'app.lang': 'Taal',
   'seo.title': 'mytno.app — Autoimportbelasting berekenen op VIN',
   'seo.description': 'Wat de inklaring en registratie van een auto kost: invoerrechten, accijns, btw en registratiebelastingen tegen officiële tarieven. VIN-opzoeking, volledige modelcatalogus, 43 landen van aankoop en 28 bestemmingen.',

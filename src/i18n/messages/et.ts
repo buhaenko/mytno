@@ -4,7 +4,7 @@ export default {
   'app.from': 'Kust',
   'app.to': 'Registreerimisriik',
   'app.origin.OTHER': 'Muu riik',
-  'app.foot': 'Määrad riikide ametlikest allikatest. Vahetuskursid EKP-lt ja NBU-lt. Arvutus tehakse Teie brauseris.',
+  'app.foot': 'Määrad riikide ametlikest allikatest. Arvutus tehakse Teie brauseris.',
   'app.lang': 'Keel',
   'seo.title': 'mytno.app — Auto impordimaksude kalkulaator VIN-koodi järgi',
   'seo.description': 'Mida maksab auto tollivormistus ja registreerimine: tollimaks, aktsiis, käibemaks ja registreerimismaksud ametlike määrade alusel. VIN-päring, täielik mudelikataloog, 43 osturiiki ja 28 sihtriiki.',

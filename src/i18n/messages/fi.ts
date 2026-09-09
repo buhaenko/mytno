@@ -4,7 +4,7 @@ export default {
   'app.from': 'Mistä',
   'app.to': 'Rekisteröintimaa',
   'app.origin.OTHER': 'Muu maa',
-  'app.foot': 'Verokannat maiden virallisista lähteistä. Valuuttakurssit EKP:ltä ja NBU:lta. Laskenta tehdään selaimessanne.',
+  'app.foot': 'Verokannat maiden virallisista lähteistä. Laskenta tehdään selaimessanne.',
   'app.lang': 'Kieli',
   'seo.title': 'mytno.app — Auton tuontiverolaskuri VIN-koodilla',
   'seo.description': 'Mitä auton tulliselvitys ja rekisteröinti maksaa: tulli, valmistevero, arvonlisävero ja rekisteröintiverot virallisten verokantojen mukaan. VIN-haku, täydellinen malliluettelo, 43 ostomaata ja 28 kohdemaata.',

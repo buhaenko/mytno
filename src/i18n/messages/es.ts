@@ -4,7 +4,7 @@ export default {
   'app.from': 'Desde',
   'app.to': 'Matricular en',
   'app.origin.OTHER': 'Otro país',
-  'app.foot': 'Tipos de fuentes oficiales de cada país. Tipos de cambio del BCE y del BNU. El cálculo se hace en tu navegador.',
+  'app.foot': 'Tipos de fuentes oficiales de cada país. El cálculo se hace en tu navegador.',
   'app.lang': 'Idioma',
   'seo.title': 'mytno.app — Calculadora de impuestos de importación de coches por VIN',
   'seo.description': 'Cuánto cuesta despachar en aduana y matricular un coche: arancel, impuestos especiales, IVA y matriculación a tipos oficiales. Búsqueda por VIN, catálogo completo de modelos, 43 países de compra y 28 destinos.',

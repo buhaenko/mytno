@@ -4,7 +4,7 @@ export default {
   'app.from': 'Iš',
   'app.to': 'Registracija',
   'app.origin.OTHER': 'Kita šalis',
-  'app.foot': 'Tarifai iš oficialių nacionalinių šaltinių. ECB ir NBU kursai. Skaičiuojama jūsų naršyklėje.',
+  'app.foot': 'Tarifai iš oficialių nacionalinių šaltinių. Skaičiuojama jūsų naršyklėje.',
   'app.lang': 'Kalba',
   'seo.title': 'mytno.app — Automobilio importo mokesčių skaičiuoklė pagal VIN',
   'seo.description': 'Kiek kainuoja automobilio muitinės procedūros ir registracija: muitas, akcizas, PVM ir registracijos mokesčiai pagal oficialius tarifus. Paieška pagal VIN, pilnas modelių katalogas, 43 pirkimo šalys ir 28 kryptys.',

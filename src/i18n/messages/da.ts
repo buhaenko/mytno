@@ -4,7 +4,7 @@ export default {
   'app.from': 'Fra',
   'app.to': 'Indregistrering i',
   'app.origin.OTHER': 'Andet land',
-  'app.foot': 'Satser fra officielle nationale kilder. Valutakurser fra ECB og NBU. Beregnes i din browser.',
+  'app.foot': 'Satser fra officielle nationale kilder. Beregnes i din browser.',
   'app.lang': 'Sprog',
   'seo.title': 'mytno.app — Beregner for bilimportafgift via VIN',
   'seo.description': 'Hvad det koster at fortolde og indregistrere en bil: told, punktafgift, moms og registreringsafgifter efter officielle satser. VIN-opslag, komplet modelkatalog, 43 købslande og 28 destinationer.',

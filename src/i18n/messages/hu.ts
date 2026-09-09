@@ -4,7 +4,7 @@ export default {
   'app.from': 'Honnan',
   'app.to': 'Forgalomba helyezés itt',
   'app.origin.OTHER': 'Más ország',
-  'app.foot': 'Díjtételek hivatalos nemzeti forrásokból. Árfolyamok az EKB-tól és az NBU-tól. A számítás az Ön böngészőjében történik.',
+  'app.foot': 'Díjtételek hivatalos nemzeti forrásokból. A számítás az Ön böngészőjében történik.',
   'app.lang': 'Nyelv',
   'seo.title': 'mytno.app — Autóimport-adókalkulátor VIN alapján',
   'seo.description': 'Mennyibe kerül egy autó vámkezelése és forgalomba helyezése: vám, jövedéki adó, áfa és regisztrációs adók hivatalos díjtételek szerint. VIN-keresés, teljes modellkatalógus, 43 vásárlási ország és 28 célország.',

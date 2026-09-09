@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { computed } from 'vue'
 import site from '@config/site.json'
 import countries from '@config/countries.json'
 import ukraine from '@config/rules.ukraine.json'
 import { useI18n } from '../../i18n'
 import HelpTip from '../controls/HelpTip.vue'
 
-/** What the numbers are, what they are not, and where every one of them came from. */
+/**
+ * One line. What the tool is, what the numbers are made of and where to write —
+ * all of it behind a single “?”, the way the rest of the app explains itself.
+ */
 const { t } = useI18n()
 const year = new Date().getFullYear()
-
-/** The disclaimer names the site; the name is set in type, so it is a slot, not a word. */
-const disclaimer = computed(() => t('footer.disclaimer').split('{brand}'))
 
 /** Three of the sources behind the numbers, as examples of what “official” means here. */
 const examples = [countries.euDutySource, countries.vatSource, ukraine.refs.excise]
@@ -19,34 +18,23 @@ const examples = [countries.euDutySource, countries.vatSource, ukraine.refs.exci
 
 <template>
   <footer class="footer">
-    <p class="footer-lead">{{ disclaimer[0] }}<strong>{{ site.brand }}</strong>{{ disclaimer[1] }}</p>
-
-    <p v-if="site.legal.contactEmail" class="footer-contact">
-      <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>
-      <HelpTip :text="t('footer.contact')" />
-    </p>
-
-    <details>
-      <summary>{{ t('footer.legal') }}</summary>
-      <div class="disclosure">
-        <p>{{ t('footer.data') }}</p>
-        <p>{{ t('footer.privacy') }}</p>
-        <p>{{ t('footer.liability') }}</p>
-        <ul>
-          <li v-for="source in site.dataSources" :key="source.name">
-            <a v-if="source.url" :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.name }}</a>
-            <span v-else>{{ source.name }}</span> — {{ source.note }}
-          </li>
-        </ul>
-      </div>
-    </details>
-
-    <p class="footer-rights">
-      © {{ year }} <strong>{{ site.legal.owner }}</strong>
+    <p class="footer-line">
+      <span>© {{ year }} <strong>{{ site.brand }}</strong></span>
       <span class="footer-dot">·</span>
-      {{ t('footer.rights') }} <HelpTip :text="t('footer.help.rights')" :source="examples" />
+      <span class="footer-legal">
+        {{ t('footer.legal') }}
+        <HelpTip
+          :text="t('footer.disclaimer').replace('{brand}', site.brand)"
+          :notes="[t('footer.help.rights'), t('footer.data'), t('footer.privacy'), t('footer.liability')]"
+          :source="examples"
+        />
+      </span>
+      <template v-if="site.legal.contactEmail">
+        <span class="footer-dot">·</span>
+        <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>
+      </template>
       <span class="footer-dot">·</span>
-      {{ site.legal.updated }}
+      <span>{{ site.legal.updated }}</span>
     </p>
   </footer>
 </template>
