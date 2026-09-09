@@ -44,7 +44,9 @@ function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: nu
     return { line: line('regTax', msg('line.regTax'), 'tax', nothing, { notes: [msg('note.regTaxNone')], source: countries.regTaxNoneSource }) }
   }
   if (country.regTax === 'national') {
-    return { line: line('regTax', msg('line.regTax'), 'tax', nothing, { unknown: true, notes: [msg('note.regTaxNational')], source: customsLink }) }
+    // Point at the authority that levies it where the country names one, not at customs.
+    const source = (country as { regTaxSource?: { title: string; url: string } }).regTaxSource ?? customsLink
+    return { line: line('regTax', msg('line.regTax'), 'tax', nothing, { unknown: true, notes: [msg('note.regTaxNational')], source }) }
   }
 
   // Austria is the one country in this module with a formula of its own.

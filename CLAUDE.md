@@ -202,10 +202,48 @@ Live, tested and pushed. HEAD `af02709`.
 3. **IndexNow** in CI: a key file at the root and a ping on every deploy.
 4. **Route pages** — `/uk/import/us-ua/`, about thirty of them, not the 1204 the grid allows. The
    country pages are the pattern to follow.
-5. **More registration taxes worth computing**, each needs its official table: Netherlands BPM,
-   France malus, Ireland VRT, Portugal ISV, Finland autovero.
+5. **Verify every registration tax** — the biggest hole in the data, and the one thing that can make
+   a number wrong rather than merely absent. It has a section of its own below.
 6. **Before real traffic**: Sentry, UptimeRobot, and a redirect rule so `www.mytno.app` goes to the
    apex instead of serving a second copy (the canonical tag covers it for now).
+
+## The next job: verify every registration tax
+
+The calculation is only as honest as this table, and it is the one part that is not yet checked
+country by country. Whoever picks this up: **one country at a time, an official source or nothing.**
+
+**Where each of the 28 stands today**
+
+| State | Countries | What it means |
+| --- | --- | --- |
+| `computed` | UA ES PL AT | the full formula, from an official table, cited in the breakdown |
+| `none` | DE BG RO · **LU SE LV** | declared a real €0. DE, BG and RO were re-checked on 9 Sep 2026; the three in bold are inherited from the first draft and **nobody has verified them** |
+| `national` | BE HR CY DK EE CZ FI FR GR HU IE IT LT MT NL PT SK SI | a tax exists but we do not compute it: the line is shown, marked “not in total”, linked to the authority |
+
+**How to do one country**
+
+1. Find the levying authority's own page — tax office, customs, vehicle registry, or the law itself.
+   Not a blog, not a dealer, not an aggregator. Ukrainian, Polish and Austrian entries in
+   `config/` are the pattern to copy.
+2. Decide which of the three states it really is. A country that charges anything at registration is
+   never `none`, even when the usual car pays zero — Czechia charges only EURO 2 and below, and
+   saying “no tax” was still wrong.
+3. Put it in `config/countries.json` → `destinations.<CC>`: keep `regTax`, add `regTaxSource`
+   (`{title, url}`) when the authority is not the customs service, and add the rates in a
+   `config/rules.<country>.json` of their own if the formula is worth computing.
+4. Compute it when the inputs are already on screen — price, year, CO₂, fuel, engine size. The Czech
+   emission fee is derivable from the model year alone (EURO 3 from January 2001), so it belongs in
+   the computed column, not the linked one. `src/lib/calc/eu.ts` → `registrationTax()` is where a
+   new formula goes; Austria's NoVA in the same function shows the shape.
+5. Say where the number came from: every new line needs a `source` and every new sentence a key in
+   all 23 message files. The country pages pick both up automatically.
+6. Check it in the browser before pushing (see **Working rules**), and record the date and the source
+   in this file under **Facts worth not re-deriving**.
+
+**Worth the most, in order.** These are the countries where the registration tax can exceed the car,
+which is exactly what people search for: **Netherlands BPM**, **Denmark registreringsafgift**,
+**Finland autovero**, **Ireland VRT**, **Portugal ISV**, **France malus**. Then the unverified zeros
+— Luxembourg, Sweden, Latvia — because a wrong €0 is worse than an honest “not in total”.
 
 ## History
 
