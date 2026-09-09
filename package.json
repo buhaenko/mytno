@@ -16,7 +16,6 @@
     "@fastify/rate-limit": "^11.2.0",
     "fastify": "^5.12.3",
     "flag-icons": "^7.5.0",
-    "mongodb": "^7.6.0",
     "mongoose": "^9.9.5",
     "vue": "^3.5.41"
   },
