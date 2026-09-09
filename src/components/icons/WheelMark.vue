@@ -4,6 +4,9 @@ import { computed, ref } from 'vue'
 /**
  * A five-spoke alloy wheel. Hovering spins it up; hovering again while it turns
  * adds momentum instead of restarting, and it always coasts to a smooth stop.
+ *
+ * It turns around a point a little off centre, so the spin wobbles like a real
+ * wheel on a kerb; the SVG lets that wobble paint outside its box instead of clipping it.
  */
 withDefaults(defineProps<{ size?: number }>(), { size: 22 })
 
