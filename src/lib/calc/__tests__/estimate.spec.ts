@@ -4,13 +4,12 @@ import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
 import { austriaNova, estimateEu, polandExcise } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
+import { fallbackRates } from '../../fx'
 
+/** The bundled rates, with the two the assertions below reason about pinned. */
 const fx: FxRates = {
+  ...fallbackRates(),
   USD: { rate: 1.1612, date: '2026-09-08', source: 'ecb' },
-  GBP: { rate: 0.8590, date: '2026-09-08', source: 'ecb' },
-  CHF: { rate: 0.9404, date: '2026-09-08', source: 'ecb' },
-  PLN: { rate: 4.3171, date: '2026-09-08', source: 'nbp' },
-  NOK: { rate: 10.6975, date: '2026-09-08', source: 'norges' },
   UAH: { rate: 51.6383, date: '2026-09-08', source: 'nbu' },
 }
 const now = new Date('2026-09-08')

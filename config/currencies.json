@@ -1,0 +1,24 @@
+{
+  "_note": "What a car is priced in, by country. Anything not listed is priced in euro: the euro area, and the few countries whose currency no bank here publishes (AE, GE, MD, RS). Bulgaria joined the euro on 1 Jan 2026, which is why the lev is not here.",
+  "default": "EUR",
+  "byCountry": {
+    "US": "USD",
+    "CA": "CAD",
+    "MX": "MXN",
+    "GB": "GBP",
+    "CH": "CHF",
+    "NO": "NOK",
+    "UA": "UAH",
+    "PL": "PLN",
+    "CZ": "CZK",
+    "HU": "HUF",
+    "RO": "RON",
+    "SE": "SEK",
+    "DK": "DKK",
+    "JP": "JPY",
+    "KR": "KRW",
+    "CN": "CNY",
+    "AU": "AUD",
+    "TR": "TRY"
+  }
+}

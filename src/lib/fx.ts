@@ -3,14 +3,16 @@ import fallback from '@config/fx.fallback.json'
 
 /**
  * Every amount is held in euro, so each rate says how much of a currency one euro
- * buys — and each comes from the bank that publishes it: the zloty from Narodowy
- * Bank Polski, the krone from Norges Bank, the hryvnia from the National Bank of
- * Ukraine. The Swiss National Bank and the Bank of England serve nothing
- * cross-origin, so the pound and the franc come from the ECB reference rate,
- * which also gives the dollar. Every bank is asked in parallel and falls back to
- * the bundled snapshot on its own.
+ * buys — and each comes from the bank that publishes it where that bank answers a
+ * browser: the zloty from Narodowy Bank Polski, the krone from Norges Bank, the
+ * hryvnia from the National Bank of Ukraine. The Swiss National Bank, the Bank of
+ * England, ČNB, Riksbank, MNB and BNR serve nothing cross-origin, so their
+ * currencies come from the ECB reference rate — which is an official source for
+ * all of them, and the only one the browser can read. Every bank is asked in
+ * parallel and falls back to the bundled snapshot on its own.
  */
-const ECB = 'https://data-api.ecb.europa.eu/service/data/EXR/D.USD+GBP+CHF.EUR.SP00.A?lastNObservations=1&format=csvdata'
+const ECB_SERIES = 'USD+GBP+CHF+CZK+SEK+DKK+HUF+RON+JPY+KRW+CNY+AUD+CAD+MXN+TRY'
+const ECB = `https://data-api.ecb.europa.eu/service/data/EXR/D.${ECB_SERIES}.EUR.SP00.A?lastNObservations=1&format=csvdata`
 const NBP = 'https://api.nbp.pl/api/exchangerates/rates/a/eur/?format=json'
 const NORGES = 'https://data.norges-bank.no/api/data/EXR/B.EUR.NOK.SP?lastNObservations=1&format=csv'
 const NBU = 'https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json'

@@ -71,6 +71,9 @@ DGT fee, plates, mandatory lighting conversion.
 ## Facts worth not re-deriving
 
 - **EU VAT rates**: Taxes in Europe Database, as of 1 July 2025; Romania went to 21% on 1 Aug 2025.
+- **Bulgaria joined the euro on 1 Jan 2026.** The ECB's last lev observation is 2025-12-31, so there
+  is no BGN in the app and `BG` maps to the euro. AE, GE, MD and RS map to the euro too: no bank
+  reachable from a browser publishes their currencies.
 - **The ECB publishes no hryvnia.** `data-api.ecb.europa.eu/service/data/EXR/D.UAH.EUR.SP00.A` is a
   404 — its reference rates cover about thirty currencies and UAH is not among them. That is why
   there are two sources rather than one. The ECB's `eurofxref-daily.xml` sends no CORS header;
@@ -128,13 +131,17 @@ DGT fee, plates, mandatory lighting conversion.
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
 - **Every amount is held in euro**, and each rate says what one euro buys — from the bank that
-  publishes it: **zloty** from Narodowy Bank Polski, **krone** from Norges Bank, **hryvnia** from the
-  National Bank of Ukraine, **dollar, pound and franc** from the ECB reference rate in one request
-  (`D.USD+GBP+CHF.EUR.SP00.A`, SDMX-CSV). The Swiss National Bank and the Bank of England serve
-  nothing cross-origin — that is why their currencies come from the ECB and not from home. No rate
-  is derived through another: the old code crossed USD and EUR through the hryvnia, which put a
-  Ukrainian rate inside a Spain→Germany calculation. Every quote carries its own date and source
-  and every bank is asked in parallel, so one failing costs only its own currency.
+  publishes it wherever that bank answers a browser: **zloty** from Narodowy Bank Polski, **krone**
+  from Norges Bank, **hryvnia** from the National Bank of Ukraine. The other fifteen come from the
+  ECB reference rate in one request (`D.USD+GBP+CHF+CZK+SEK+DKK+HUF+RON+JPY+KRW+CNY+AUD+CAD+MXN+TRY`,
+  SDMX-CSV). Probed and rejected for having no CORS header: SNB, the Bank of England, ČNB, Riksbank,
+  MNB, BNR, BNB. No rate is derived through another: the old code crossed USD and EUR through the
+  hryvnia, which put a Ukrainian rate inside a Spain→Germany calculation. Every quote carries its
+  own date and source and every bank is asked in parallel, so one failing costs only its currency.
+- **The country picks the currency**, `config/currencies.json`: the price follows the country of
+  purchase, the total follows the country of registration — Poland is zloty, Norway is kroner,
+  Czechia is koruna. The watchers are `flush: 'sync'` so that a currency named in the URL, applied
+  right after the countries, still wins over the guess.
 - **The result names only the rates it used** — the currency the price was paid in and the one the
   total is read in — one line each, linked to the bank that published it. `config/countries.json` →
   `fxSources` holds their names; adding a currency is a loader, a fallback line and an entry there.

@@ -3,7 +3,7 @@ import type { Currency, Destination, Estimate, FxRates, Origin, Trip, Vehicle } 
 import countries from '@config/countries.json'
 import { estimate } from '../lib/calc'
 import { fallbackRates, loadFx } from '../lib/fx'
-import { ORIGIN_GROUP } from '../lib/origins'
+import { currencyOf, ORIGIN_GROUP } from '../lib/origins'
 import { blankVehicle, type Restored } from './snapshot'
 
 export const DESTINATIONS = Object.keys(countries.destinations) as Destination[]
@@ -45,10 +45,17 @@ export const trip = computed<Trip | null>(() =>
 export const result = computed<Estimate | null>(() =>
   trip.value && vehicleReady.value && price.value > 0 ? estimate(vehicle.value, trip.value, fx) : null)
 
-/** A car cannot be brought from Ukraine to Ukraine. */
-watch(originCountry, () => {
+/**
+ * The country decides the currency: a car in Poland is priced in zloty, one in
+ * Norway in kroner. The price follows where it is bought, the total follows where
+ * it is registered — synchronously, so a currency named in the URL still wins.
+ */
+watch(originCountry, (code) => {
   if (origin.value === 'UA' && destination.value === 'UA') destination.value = null
-})
+  currency.value = currencyOf(code)
+}, { flush: 'sync' })
+
+watch(destination, (code) => { display.value = currencyOf(code) }, { flush: 'sync' })
 
 /** Everything on screen comes from the query string, and nothing that is absent is guessed. */
 export function apply(state: Restored) {

@@ -1,9 +1,13 @@
 import type { Currency, FxRates, Money } from '../types'
 import { fromEur } from './fx'
 
-const SYMBOL: Record<Currency, string> = { EUR: '€', USD: '$', GBP: '£', CHF: 'CHF', PLN: 'zł', NOK: 'kr', UAH: '₴' }
+const SYMBOL: Record<Currency, string> = {
+  EUR: '€', USD: '$', GBP: '£', CHF: 'CHF', JPY: '¥', CNY: 'CN¥', KRW: '₩',
+  AUD: 'A$', CAD: 'C$', MXN: 'MX$', TRY: '₺',
+  PLN: 'zł', CZK: 'Kč', SEK: 'kr', DKK: 'kr', NOK: 'kr', HUF: 'Ft', RON: 'lei', UAH: '₴',
+}
 /** Some currencies are written after the number in every language that uses them. */
-const AFTER = new Set<Currency>(['CHF', 'PLN', 'NOK', 'UAH'])
+const AFTER = new Set<Currency>(['CHF', 'PLN', 'CZK', 'SEK', 'DKK', 'NOK', 'HUF', 'RON', 'UAH'])
 
 export const money = (min: number, likely = min, max = likely): Money => ({ min, likely, max })
 export const exact = (value: number): Money => money(value, value, value)
