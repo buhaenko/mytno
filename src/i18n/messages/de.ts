@@ -197,4 +197,9 @@ export default {
   'nuance.eu-export-plates.why': 'Deutschland: Ausfuhrkennzeichen + Versicherung für 5–30 Tage; Polen/Litauen ähnlich. Ohne sie darf das Fahrzeug nicht auf eigener Achse ausreisen.',
   'notice.intraEuUsed': 'Gebrauchtwagen aus einem EU-Land: kein Zoll und keine Mehrwertsteuer, daher beeinflusst der Preis die Summe nicht. Es fallen nur die nationale Zulassungssteuer (hier nicht berechnet, siehe Quelle) und Zulassungsgebühren an.',
   'notice.relocation': 'Übersiedlungsgut: kein Zoll, keine Mehrwertsteuer und keine Zulassungssteuer, daher beeinflusst der Preis die Summe nicht.',
+  'step.route': 'Route',
+  'step.car': 'Fahrzeug',
+  'step.price': 'Preis',
+  'step.result': 'Ergebnis',
+  'app.badge': 'Zollrechner',
 } as Record<string, string>

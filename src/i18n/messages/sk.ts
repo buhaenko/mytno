@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Nemecko: Ausfuhrkennzeichen + poistenie na 5–30 dní; Poľsko/Litva podobne. Bez nich auto nemožno vyviezť po vlastnej osi.',
   'notice.intraEuUsed': 'Ojazdené auto z krajiny EÚ: žiadne clo ani DPH, cena preto celkovú sumu neovplyvňuje. Platí sa len národná registračná daň (tu sa nepočíta, pozri zdroj) a registračné poplatky.',
   'notice.relocation': 'Sťahovanie: žiadne clo, DPH ani registračná daň, cena preto celkovú sumu neovplyvňuje.',
+  'step.route': 'Trasa',
+  'step.car': 'Vozidlo',
+  'step.price': 'Cena',
+  'step.result': 'Výsledok',
+  'app.badge': 'Colná kalkulačka',
 } as Record<string, string>

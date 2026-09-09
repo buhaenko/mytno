@@ -197,4 +197,9 @@ export default {
   'nuance.eu-export-plates.why': 'Germania: Ausfuhrkennzeichen + assicurazione 5–30 giorni; Polonia/Lituania simili. Senza, l’auto non può uscire su strada.',
   'notice.intraEuUsed': 'Auto usata da un paese UE: nessun dazio né IVA, quindi il prezzo non incide sul totale. Si pagano solo la tassa di immatricolazione nazionale (non calcolata qui, vedi la fonte) e gli oneri di immatricolazione.',
   'notice.relocation': 'Trasferimento di residenza: nessun dazio, IVA o tassa di immatricolazione, quindi il prezzo non incide sul totale.',
+  'step.route': 'Percorso',
+  'step.car': 'Veicolo',
+  'step.price': 'Prezzo',
+  'step.result': 'Risultato',
+  'app.badge': 'Calcolatore doganale',
 } as Record<string, string>

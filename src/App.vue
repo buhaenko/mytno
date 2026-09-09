@@ -15,6 +15,8 @@ import CountrySelect from './components/CountrySelect.vue'
 import Help from './components/Help.vue'
 
 const { t, locale, region, setLocale } = useI18n()
+// Last word of the headline gets the gradient treatment
+const title = computed(() => { const w = t('app.title').trim().split(' '); return { head: w.slice(0, -1).join(' '), last: w[w.length - 1] ?? '' } })
 const blankVehicle = (): Vehicle => ({ make: '', model: '', year: new Date().getFullYear() - 5, fuel: 'petrol', marketSpec: 'US', brandTier: 'mass', decodeNotes: [] })
 const vehicle = ref<Vehicle>(blankVehicle())
 const originCountry = ref<string | null>(null)
@@ -173,40 +175,52 @@ onMounted(async () => {
       </label>
     </div>
     <div class="hero" :class="{ compact: started }">
+      <div class="glow"></div>
+      <div class="ring"></div>
+      <div class="pill-row"><span class="pill"><span class="pd"></span>{{ t('app.badge') }}</span></div>
       <div class="hero-text">
-        <h1>{{ t('app.title') }}</h1>
+        <h1>{{ title.head }} <span class="grad">{{ title.last }}</span></h1>
         <p>{{ t('app.tagline') }}</p>
       </div>
       <div class="route">
         <CountrySelect v-model="originCountry" :options="origins" :placeholder="t('app.from')" />
-        <svg class="arrow" viewBox="0 0 24 12" width="24" height="12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+        <span class="arrow"><svg viewBox="0 0 24 12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" /></svg></span>
         <CountrySelect v-model="destination" :options="destinations" :placeholder="t('app.to')" />
       </div>
     </div>
 
     <Transition name="rise">
-      <section v-if="started && routeChosen" class="s"><CarStep v-model="vehicle" :destination="destination!" :origin="origin!" /></section>
+      <section v-if="started && routeChosen" class="s">
+        <div class="step-head"><span class="num">01</span><span class="t">{{ t('step.car') }}</span><span class="line"></span></div>
+        <div class="card"><CarStep v-model="vehicle" :destination="destination!" :origin="origin!" /></div>
+      </section>
     </Transition>
 
     <Transition name="rise">
       <section v-if="started && routeChosen && vehicleReady" class="s">
-        <div class="row three">
-          <div class="f"><label>{{ t('price.label') }} <Help :text="t('price.help')" /></label>
-            <div class="group"><input :value="priceText" type="text" inputmode="numeric" autocomplete="off" class="in" placeholder="10000" @input="onPriceInput" /><select v-model="currency" class="in"><option v-for="c in currencies" :key="c" :value="c">{{ c }}</option></select></div>
+        <div class="step-head"><span class="num">02</span><span class="t">{{ t('step.price') }}</span><span class="line"></span></div>
+        <div class="card">
+          <div class="row three">
+            <div class="f"><label>{{ t('price.label') }} <Help :text="t('price.help')" /></label>
+              <div class="group"><input :value="priceText" type="text" inputmode="numeric" autocomplete="off" class="in" placeholder="10000" @input="onPriceInput" /><select v-model="currency" class="in"><option v-for="c in currencies" :key="c" :value="c">{{ c }}</option></select></div>
+            </div>
+            <label v-if="showOriginProof" class="check"><input v-model="hasOriginProof" type="checkbox" /><span>{{ t('price.originProof') }}</span><Help :text="t('price.help.originProof')" :source="{ title: 'zakon.rada.gov.ua', url: 'https://zakon.rada.gov.ua/laws/show/2697-20' }" /></label>
+            <label v-if="showResidence" class="check"><input v-model="residenceTransfer" type="checkbox" /><span>{{ t('price.residence') }}</span><Help :text="t('price.help.residence')" :source="{ title: 'Regulation (EC) 1186/2009', url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009R1186' }" /></label>
           </div>
-          <label v-if="showOriginProof" class="check"><input v-model="hasOriginProof" type="checkbox" /><span>{{ t('price.originProof') }}</span><Help :text="t('price.help.originProof')" :source="{ title: 'zakon.rada.gov.ua', url: 'https://zakon.rada.gov.ua/laws/show/2697-20' }" /></label>
-          <label v-if="showResidence" class="check"><input v-model="residenceTransfer" type="checkbox" /><span>{{ t('price.residence') }}</span><Help :text="t('price.help.residence')" :source="{ title: 'Regulation (EC) 1186/2009', url: 'https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32009R1186' }" /></label>
         </div>
       </section>
     </Transition>
 
     <Transition name="rise">
       <section v-if="result && route" ref="resultEl" class="s result">
+        <div class="step-head"><span class="num">03</span><span class="t">{{ t('step.result') }}</span><span class="line"></span></div>
         <ResultView :result="result" :vehicle="vehicle" :route="route" :fx="fx">
           <template #share>
             <label class="sharebox" :class="{ done: copied }" @click="copyShare">
-              <span class="k">{{ copied ? t('result.copied') : t('result.share') }}</span>
-              <input class="in mono-url" :value="shareUrl || '…'" readonly @focus="($event.target as HTMLInputElement).select()" />
+              <span class="inner">
+                <span class="k"><span class="pd" :class="{ pulse: !shareUrl }"></span>{{ copied ? t('result.copied') : t('result.share') }}</span>
+                <input class="in mono-url" :value="shareUrl || '…'" readonly @focus="($event.target as HTMLInputElement).select()" />
+              </span>
             </label>
           </template>
         </ResultView>

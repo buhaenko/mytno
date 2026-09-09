@@ -197,4 +197,9 @@ export default {
   'nuance.eu-export-plates.why': 'Allemagne : Ausfuhrkennzeichen + assurance 5–30 jours ; Pologne/Lituanie similaires. Sans elles, la voiture ne peut pas sortir par la route.',
   'notice.intraEuUsed': 'Voiture d’occasion d’un pays de l’UE : ni droits de douane ni TVA, le prix n’influe donc pas sur le total. Seuls la taxe d’immatriculation nationale (non calculée ici, voir la source) et les frais d’immatriculation s’appliquent.',
   'notice.relocation': 'Transfert de résidence : ni droits, ni TVA, ni taxe d’immatriculation, le prix n’influe donc pas sur le total.',
+  'step.route': 'Trajet',
+  'step.car': 'Véhicule',
+  'step.price': 'Prix',
+  'step.result': 'Résultat',
+  'app.badge': 'Calculateur douanier',
 } as Record<string, string>

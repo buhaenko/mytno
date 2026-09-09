@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Njemačka: Ausfuhrkennzeichen + osiguranje na 5–30 dana; Poljska/Litva slično. Bez njih automobil nije moguće odvesti.',
   'notice.intraEuUsed': 'Rabljeni automobil iz zemlje EU-a: nema carine ni PDV-a, pa cijena ne utječe na iznos. Plaćaju se samo nacionalni porez na registraciju (ovdje se ne računa, vidi izvor) i naknade za registraciju.',
   'notice.relocation': 'Preseljenje: nema carine, PDV-a ni poreza na registraciju, pa cijena ne utječe na iznos.',
+  'step.route': 'Ruta',
+  'step.car': 'Vozilo',
+  'step.price': 'Cijena',
+  'step.result': 'Rezultat',
+  'app.badge': 'Carinski kalkulator',
 } as Record<string, string>

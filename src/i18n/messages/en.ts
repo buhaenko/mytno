@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Germany: Ausfuhrkennzeichen + insurance for 5–30 days; Poland/Lithuania similar. Without them the car cannot be driven out.',
   'notice.intraEuUsed': 'Used car from an EU country: no customs duty or VAT, so the price does not affect the total. Only the national registration tax (not computed here, see the source) and registration fees apply.',
   'notice.relocation': 'Relocation relief: no duty, VAT or registration tax, so the price does not affect the total.',
+  'step.route': 'Route',
+  'step.car': 'Vehicle',
+  'step.price': 'Price',
+  'step.result': 'Result',
+  'app.badge': 'Customs calculator',
 } as Record<string, string>

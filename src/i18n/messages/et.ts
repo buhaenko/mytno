@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Saksamaa: Ausfuhrkennzeichen + kindlustus 5–30 päevaks; Poola/Leedu sarnaselt. Ilma nendeta ei saa autoga riigist välja sõita.',
   'notice.intraEuUsed': 'Kasutatud auto EL-i riigist: tollimaksu ega käibemaksu ei ole, seega hind summat ei mõjuta. Tasuda tuleb ainult riiklik registreerimismaks (siin ei arvutata, vt allikat) ja registreerimistasud.',
   'notice.relocation': 'Kolimissoodustus: tollimaksu, käibemaksu ega registreerimismaksu ei ole, seega hind summat ei mõjuta.',
+  'step.route': 'Marsruut',
+  'step.car': 'Sõiduk',
+  'step.price': 'Hind',
+  'step.result': 'Tulemus',
+  'app.badge': 'Tollikalkulaator',
 } as Record<string, string>

@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Vokietija: Ausfuhrkennzeichen + draudimas 5–30 dienų; Lenkijoje / Lietuvoje panašiai. Be jų automobilio išvažiuoti negalima.',
   'notice.intraEuUsed': 'Naudotas automobilis iš ES šalies: nėra muito ir PVM, todėl kaina sumai įtakos neturi. Mokami tik nacionalinis registracijos mokestis (čia neskaičiuojamas, žr. šaltinį) ir registracijos rinkliavos.',
   'notice.relocation': 'Persikėlimo lengvata: nėra muito, PVM ir registracijos mokesčio, todėl kaina sumai įtakos neturi.',
+  'step.route': 'Maršrutas',
+  'step.car': 'Automobilis',
+  'step.price': 'Kaina',
+  'step.result': 'Rezultatas',
+  'app.badge': 'Muitinės skaičiuoklė',
 } as Record<string, string>

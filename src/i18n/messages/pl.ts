@@ -197,4 +197,9 @@ export default {
   'nuance.eu-export-plates.why': 'Niemcy: Ausfuhrkennzeichen + ubezpieczenie na 5–30 dni; Polska/Litwa podobnie. Bez nich auto nie wyjedzie o własnych siłach.',
   'notice.intraEuUsed': 'Używane auto z kraju UE: brak cła i VAT, dlatego cena nie wpływa na sumę. Płaci się tylko krajowy podatek rejestracyjny (tu nieliczony, zob. źródło) i opłaty rejestracyjne.',
   'notice.relocation': 'Mienie przesiedleńcze: brak cła, VAT i podatku rejestracyjnego, dlatego cena nie wpływa na sumę.',
+  'step.route': 'Trasa',
+  'step.car': 'Pojazd',
+  'step.price': 'Cena',
+  'step.result': 'Wynik',
+  'app.badge': 'Kalkulator celny',
 } as Record<string, string>

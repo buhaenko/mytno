@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Vācija: Ausfuhrkennzeichen + apdrošināšana 5–30 dienām; Polija/Lietuva līdzīgi. Bez tām ar automašīnu nevar izbraukt no valsts.',
   'notice.intraEuUsed': 'Lietots auto no ES valsts: nav muitas nodokļa un PVN, tāpēc cena summu neietekmē. Jāmaksā tikai valsts reģistrācijas nodoklis (šeit netiek aprēķināts, sk. avotu) un reģistrācijas nodevas.',
   'notice.relocation': 'Pārcelšanās atvieglojums: nav muitas nodokļa, PVN un reģistrācijas nodokļa, tāpēc cena summu neietekmē.',
+  'step.route': 'Maršruts',
+  'step.car': 'Auto',
+  'step.price': 'Cena',
+  'step.result': 'Rezultāts',
+  'app.badge': 'Muitas kalkulators',
 } as Record<string, string>

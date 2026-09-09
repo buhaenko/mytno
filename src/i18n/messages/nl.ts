@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Duitsland: Ausfuhrkennzeichen + verzekering voor 5–30 dagen; Polen/Litouwen vergelijkbaar. Zonder deze platen mag de auto het land niet uitrijden.',
   'notice.intraEuUsed': 'Gebruikte auto uit een EU-land: geen invoerrechten of btw, dus de prijs heeft geen invloed op het totaal. Alleen de nationale registratiebelasting (hier niet berekend, zie de bron) en registratiekosten zijn verschuldigd.',
   'notice.relocation': 'Verhuisboedel: geen invoerrechten, btw of registratiebelasting, dus de prijs heeft geen invloed op het totaal.',
+  'step.route': 'Route',
+  'step.car': 'Voertuig',
+  'step.price': 'Prijs',
+  'step.result': 'Resultaat',
+  'app.badge': 'Douanecalculator',
 } as Record<string, string>

@@ -197,4 +197,9 @@ export default {
   'nuance.eu-export-plates.why': 'Alemanha: Ausfuhrkennzeichen + seguro por 5–30 dias; Polónia/Lituânia semelhante. Sem elas o carro não pode sair pela estrada.',
   'notice.intraEuUsed': 'Carro usado de um país da UE: sem direitos aduaneiros nem IVA, por isso o preço não afeta o total. Pagam-se apenas o imposto de matrícula nacional (não calculado aqui, ver a fonte) e as taxas de matrícula.',
   'notice.relocation': 'Transferência de residência: sem direitos, IVA nem imposto de matrícula, por isso o preço não afeta o total.',
+  'step.route': 'Percurso',
+  'step.car': 'Veículo',
+  'step.price': 'Preço',
+  'step.result': 'Resultado',
+  'app.badge': 'Calculadora aduaneira',
 } as Record<string, string>

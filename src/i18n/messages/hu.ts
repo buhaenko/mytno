@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Németország: Ausfuhrkennzeichen + biztosítás 5–30 napra; Lengyelország/Litvánia hasonlóan. Ezek nélkül az autó nem hajtható ki az országból.',
   'notice.intraEuUsed': 'Használt autó EU-tagországból: nincs vám és áfa, ezért az ár nem befolyásolja a végösszeget. Csak a nemzeti regisztrációs adó (itt nem számoljuk, lásd a forrást) és a forgalomba helyezési díjak fizetendők.',
   'notice.relocation': 'Költözési kedvezmény: nincs vám, áfa és regisztrációs adó, ezért az ár nem befolyásolja a végösszeget.',
+  'step.route': 'Útvonal',
+  'step.car': 'Jármű',
+  'step.price': 'Ár',
+  'step.result': 'Eredmény',
+  'app.badge': 'Vámkalkulátor',
 } as Record<string, string>

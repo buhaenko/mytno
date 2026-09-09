@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Tyskland: Ausfuhrkennzeichen + forsikring i 5–30 dage; Polen/Litauen tilsvarende. Uden dem kan bilen ikke køres ud af landet.',
   'notice.intraEuUsed': 'Brugt bil fra et EU-land: ingen told eller moms, så prisen påvirker ikke beløbet. Kun den nationale registreringsafgift (beregnes ikke her, se kilden) og registreringsgebyrer skal betales.',
   'notice.relocation': 'Flyttegods: ingen told, moms eller registreringsafgift, så prisen påvirker ikke beløbet.',
+  'step.route': 'Rute',
+  'step.car': 'Køretøj',
+  'step.price': 'Pris',
+  'step.result': 'Resultat',
+  'app.badge': 'Toldberegner',
 } as Record<string, string>

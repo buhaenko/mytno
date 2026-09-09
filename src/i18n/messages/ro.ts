@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Germania: Ausfuhrkennzeichen + asigurare pentru 5–30 de zile; Polonia/Lituania similar. Fără ele mașina nu poate ieși din țară pe roți proprii.',
   'notice.intraEuUsed': 'Mașină second-hand dintr-o țară UE: fără taxe vamale sau TVA, deci prețul nu influențează totalul. Se plătesc doar taxa națională de înmatriculare (necalculată aici, vezi sursa) și taxele de înmatriculare.',
   'notice.relocation': 'Scutire la schimbarea reședinței: fără taxe vamale, TVA sau taxă de înmatriculare, deci prețul nu influențează totalul.',
+  'step.route': 'Traseu',
+  'step.car': 'Vehicul',
+  'step.price': 'Preț',
+  'step.result': 'Rezultat',
+  'app.badge': 'Calculator vamal',
 } as Record<string, string>

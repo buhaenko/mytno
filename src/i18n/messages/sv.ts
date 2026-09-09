@@ -205,4 +205,9 @@ export default {
   'nuance.eu-export-plates.why': 'Tyskland: Ausfuhrkennzeichen + försäkring för 5–30 dagar; Polen/Litauen liknande. Utan dem får bilen inte köras ut ur landet.',
   'notice.intraEuUsed': 'Begagnad bil från ett EU-land: ingen tull eller moms, så priset påverkar inte summan. Endast den nationella registreringsskatten (beräknas inte här, se källan) och registreringsavgifter tillkommer.',
   'notice.relocation': 'Flyttsakslättnad: ingen tull, moms eller registreringsskatt, så priset påverkar inte summan.',
+  'step.route': 'Rutt',
+  'step.car': 'Fordon',
+  'step.price': 'Pris',
+  'step.result': 'Resultat',
+  'app.badge': 'Tullkalkylator',
 } as Record<string, string>
