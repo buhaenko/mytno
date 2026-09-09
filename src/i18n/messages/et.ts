@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Muu riik',
   'app.foot': 'Määrad riikide ametlikest allikatest. NBU vahetuskurss {date}. Arvutus tehakse Teie brauseris.',
   'app.lang': 'Keel',
-  'seo.title': 'mytno.io — Auto impordimaksude kalkulaator VIN-koodi järgi — Ukraina ja ELi riigid',
+  'seo.title': 'mytno.app — Auto impordimaksude kalkulaator VIN-koodi järgi — Ukraina ja ELi riigid',
   'seo.description': 'Mida maksab auto tollivormistus ja registreerimine: tollimaks, aktsiis, käibemaks ja registreerimismaksud ametlike määrade alusel. VIN-päring, täielik mudelikataloog, Ukraina, Hispaania, Poola, Saksamaa ja teised ELi riigid.',
 
   'car.byVin': 'VIN-koodi järgi',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Austria arvutab NoVA CO₂ alusel. Ilma WLTP väärtuseta jääb registreerimismaks summast välja.',
   'notice.intraEuNoTax': 'Kasutatud auto EL-i riigist: siin ei ole tollimaksu, käibemaksu ega registreerimismaksu, seega hind summat ei mõjuta.',
   'result.notInTotal': 'summast väljas',
-  'footer.disclaimer': 'mytno.io on teabevahend, mitte maksu- või õigusnõu. Lõpliku summa määravad toll ja registreerimisasutus.',
+  'footer.disclaimer': 'mytno.app on teabevahend, mitte maksu- või õigusnõu. Lõpliku summa määravad toll ja registreerimisasutus.',
   'footer.data': 'Määrad ja reeglid pärinevad ametlikest avalikest allikatest, viited on iga rea juures. Sõiduki andmed: NHTSA vPIC ja EPA fueleconomy.gov (USA avalik omand). Kursid: Ukraina Rahvuspank.',
   'footer.privacy': 'Ilma kontode ja jälgimisküpsisteta. Arvutus toimub teie brauseris; jagatud link hoiab ainult seda arvutust, mille jagamise valisite.',
   'footer.liability': 'Pakutakse sellisena, nagu see on, ilma igasuguse garantiita. Kontrollige ametlikke allikaid enne ostmist või maksmist.',

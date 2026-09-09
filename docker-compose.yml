@@ -1,4 +1,4 @@
-# Production-ish stack: MongoDB + the mytno.io API + the built site behind nginx.
+# Production-ish stack: MongoDB + the mytno.app API + the built site behind nginx.
 # Local development does not need this — `npm run dev` starts an embedded MongoDB.
 services:
   mongo:

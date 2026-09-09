@@ -1,4 +1,4 @@
-# mytno.io — car import tax calculator
+# mytno.app — car import tax calculator
 
 What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official
 rates, plus the mandatory registration costs. Route: any of 43 purchase countries → Ukraine or any of the
@@ -83,7 +83,7 @@ it needs are in the repository already:
 | Build command | `npm run build` |
 | Output directory | `dist` |
 | Node version | from `.node-version` (22) |
-| `SITE_URL` | `https://mytno.io` — canonical links, hreflang and the sitemap |
+| `SITE_URL` | `https://mytno.app` — canonical links, hreflang and the sitemap |
 | `VITE_API_URL` | the API's address, only if one is deployed |
 
 `public/_headers` sets the caching and the security headers. Unknown paths fall back to the

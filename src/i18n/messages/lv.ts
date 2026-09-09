@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Cita valsts',
   'app.foot': 'Likmes no oficiāliem valstu avotiem. NBU valūtas kurss {date}. Aprēķins tiek veikts Jūsu pārlūkprogrammā.',
   'app.lang': 'Valoda',
-  'seo.title': 'mytno.io — Automašīnas importa nodokļu kalkulators pēc VIN — Ukraina un ES valstis',
+  'seo.title': 'mytno.app — Automašīnas importa nodokļu kalkulators pēc VIN — Ukraina un ES valstis',
   'seo.description': 'Cik maksā automašīnas muitošana un reģistrācija: muitas nodoklis, akcīzes nodoklis, PVN un reģistrācijas nodokļi pēc oficiālajām likmēm. VIN pārbaude, pilns modeļu katalogs, Ukraina, Spānija, Polija, Vācija un citas ES valstis.',
 
   'car.byVin': 'Pēc VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Austrija NoVA aprēķina pēc CO₂. Bez WLTP vērtības reģistrācijas nodoklis paliek ārpus summas.',
   'notice.intraEuNoTax': 'Lietots auto no ES valsts: šeit nav ne muitas nodokļa, ne PVN, ne reģistrācijas nodokļa, tāpēc cena summu neietekmē.',
   'result.notInTotal': 'ārpus summas',
-  'footer.disclaimer': 'mytno.io ir informatīvs rīks, nevis nodokļu vai juridiska konsultācija. Galīgo summu nosaka muita un reģistrācijas iestāde.',
+  'footer.disclaimer': 'mytno.app ir informatīvs rīks, nevis nodokļu vai juridiska konsultācija. Galīgo summu nosaka muita un reģistrācijas iestāde.',
   'footer.data': 'Likmes un noteikumi ņemti no oficiāliem publiskiem avotiem, saites ir pie katras rindas. Auto dati: NHTSA vPIC un EPA fueleconomy.gov (ASV sabiedriskais īpašums). Kursi: Ukrainas Nacionālā banka.',
   'footer.privacy': 'Bez kontiem un bez izsekošanas sīkdatnēm. Aprēķins notiek jūsu pārlūkā; koplietotā saite glabā tikai to aprēķinu, kuru izvēlējāties koplietot.',
   'footer.liability': 'Tiek sniegts tāds, kāds ir, bez jebkādas garantijas. Pirms pirkuma vai maksājuma pārbaudiet oficiālos avotus.',

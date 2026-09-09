@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Altă țară',
   'app.foot': 'Tarife din surse oficiale naționale. Curs de schimb BNU {date}. Calculat în browserul dumneavoastră.',
   'app.lang': 'Limbă',
-  'seo.title': 'mytno.io — Calculator taxe import auto după VIN — Ucraina și țările UE',
+  'seo.title': 'mytno.app — Calculator taxe import auto după VIN — Ucraina și țările UE',
   'seo.description': 'Cât costă vămuirea și înmatricularea unei mașini: taxe vamale, accize, TVA și taxe de înmatriculare la tarife oficiale. Căutare după VIN, catalog complet de modele, Ucraina, Spania, Polonia, Germania și alte țări UE.',
 
   'car.byVin': 'După VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Austria calculează NoVA din CO₂. Fără o valoare WLTP, taxa de înmatriculare rămâne în afara totalului.',
   'notice.intraEuNoTax': 'Mașină second-hand dintr-o țară UE: aici nu există taxe vamale, TVA sau taxă de înmatriculare, deci prețul nu influențează totalul.',
   'result.notInTotal': 'în afara totalului',
-  'footer.disclaimer': 'mytno.io este un instrument informativ, nu consultanță fiscală sau juridică. Suma finală este stabilită de vamă și de autoritatea de înmatriculare.',
+  'footer.disclaimer': 'mytno.app este un instrument informativ, nu consultanță fiscală sau juridică. Suma finală este stabilită de vamă și de autoritatea de înmatriculare.',
   'footer.data': 'Cotele și regulile provin din surse publice oficiale, legate lângă fiecare rând. Date despre vehicul: NHTSA vPIC și EPA fueleconomy.gov (domeniu public SUA). Cursuri: Banca Națională a Ucrainei.',
   'footer.privacy': 'Fără conturi și fără cookie-uri de urmărire. Calculul rulează în browserul dumneavoastră; linkul partajat păstrează doar calculul pe care l-ați ales.',
   'footer.liability': 'Oferit ca atare, fără nicio garanție. Verificați sursele oficiale înainte de a cumpăra sau de a plăti.',

@@ -1,11 +1,11 @@
-# CLAUDE.md — mytno.io (~/homeprojects/mytno)
+# CLAUDE.md — mytno.app (~/homeprojects/mytno)
 
 Read this first. It is the only context file for this project; keep it current at the end of
 every session and do not create notes, docs folders or summaries anywhere else.
 
 ## What this is
 
-**mytno.io** — a free calculator for what it costs to clear customs and register a car:
+**mytno.app** — a free calculator for what it costs to clear customs and register a car:
 duty, excise, VAT, registration taxes and the mandatory registration costs, at official rates.
 Route: any of 43 purchase countries → Ukraine or any of the 27 EU countries. 23 languages.
 
@@ -87,11 +87,15 @@ DGT fee, plates, mandatory lighting conversion.
   approval is needed.
 - **NHTSA** decodes US-market VINs fully and European ones barely (make, year, plant). The gaps for
   Spain and Austria (WLTP CO₂, list price) come from `config/models.json`, a hand-checked list.
-- **rdap.org returns 403**; Google Registry RDAP lies (says `google.app` is free). For domain checks
-  use DNS NS records plus Verisign RDAP for `.com` and whois for `.io`.
-- **Domains** (checked 9 Sep 2026): `mytno.io` free, as are `mytno.app`, `mytno.dev`, `mytno.co`,
-  `mytno.xyz` — none is bought yet. Fallbacks if `.io` falls through: `mytno.app`, or **Dogana**
-  (.dev .io .co free). The former name Tarifo is gone; `tarifo.com` was taken anyway.
+- **rdap.org returns 403**; Google Registry RDAP lies (says `google.app` is free), and `whois` on a
+  `.app` name answers with the TLD record, which reads as “registered” for everything. So a `.app`
+  domain is checked by DNS: NXDOMAIN on Cloudflare, Google and Quad9 means free. For `.com` use
+  Verisign RDAP, for `.io` plain whois.
+- **Domains** (checked 9 Sep 2026): the name is **`mytno.app`**, not `.io` — at Cloudflare, at cost,
+  `.app` is **$14.20/year** and `.io` is **$50.00/year**, registration and renewal alike. Nothing is
+  bought yet. Also free that day: `mytn.app`, `rozmyt.app`, `klir.app`, `mytto.app`, `tarifo.app`,
+  and on the expensive side `mytno.io`, `tarifo.io`, `dogana.io`. Taken: `myto.app`, `myto.io`,
+  `myt.app`, `vin.app`, `duty.app`, `vinta.*`, `kosht.*`, `dogana.app`.
 
 ## Decisions already made
 
@@ -124,10 +128,10 @@ Everything above is built, tested and pushed. HEAD `7b88821`.
    accounts: `gh` is logged in as **buhaenko** — the personal one, the only one this project goes
    to — while the machine's SSH key belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git
    authenticates through the `gh` credential helper; do not switch it back to SSH.
-2. **No domain bought.** Buy `mytno.io` on Cloudflare Registrar; then point Cloudflare Pages at it
-   and set `SITE_URL=https://mytno.io` so canonical links, hreflang and the sitemap stop saying
+2. **No domain bought.** Buy `mytno.app` on Cloudflare Registrar ($14.20/year); then point it at
+   and set `SITE_URL=https://mytno.app` so canonical links, hreflang and the sitemap stop saying
    `github.io`.
-3. ~~No contact email.~~ `feedback@mytno.io` — in `config/site.json`, shown in the footer above the
+3. ~~No contact email.~~ `feedback@mytno.app` — in `config/site.json`, shown in the footer above the
    copyright line with an invitation to report a wrong rate or a missing country, translated into
    all 23 languages (`footer.contact`). **The mailbox does not exist yet**: it needs the domain,
    then a Cloudflare Email Routing rule forwarding it to Serhii's inbox.
@@ -148,8 +152,9 @@ Everything above is built, tested and pushed. HEAD `7b88821`.
 - **09-09** Added the EU-27, Austrian NoVA, the legal footer, the Fastify + Mongoose backend and the
   shared `config/`. Rewrote the whole frontend for readability. Renamed from Vinta to Tarifo and
   moved to `~/homeprojects/tarifo`. Removed from the `~/work/CLAUDE.md` repository table.
-  Renamed again to **mytno.io** — the brand is written in full, domain and all, everywhere it is
-  visible (titles, og tags, footer in all 23 languages); identifiers and the Mongo database are
-  plain `mytno`. Pushed to `buhaenko/mytno`, deployed to GitHub Pages, and the working directory
+  Renamed again to **mytno.app** — the brand is written in full, domain and all, everywhere it is
+  visible (titles, og tags, footer in all 23 languages); identifiers, the repository and the Mongo
+  database stay plain `mytno`. It was `mytno.io` for a few hours until the price came up: `.io`
+  costs $50 a year against $14.20 for `.app`, so only the TLD moved. Pushed to `buhaenko/mytno`, deployed to GitHub Pages, and the working directory
   moved to `~/homeprojects/mytno`. The deploy workflow was passing `VITE_SHARE_API`, a name nothing
   reads; it now passes `VITE_API_URL`, the one `src/lib/api.ts` actually looks at.

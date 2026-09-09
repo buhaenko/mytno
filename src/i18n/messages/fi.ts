@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Muu maa',
   'app.foot': 'Verokannat maiden virallisista lähteistä. NBU:n valuuttakurssi {date}. Laskenta tehdään selaimessanne.',
   'app.lang': 'Kieli',
-  'seo.title': 'mytno.io — Auton tuontiverolaskuri VIN-koodilla — Ukraina ja EU-maat',
+  'seo.title': 'mytno.app — Auton tuontiverolaskuri VIN-koodilla — Ukraina ja EU-maat',
   'seo.description': 'Mitä auton tulliselvitys ja rekisteröinti maksaa: tulli, valmistevero, arvonlisävero ja rekisteröintiverot virallisten verokantojen mukaan. VIN-haku, täydellinen malliluettelo, Ukraina, Espanja, Puola, Saksa ja muut EU-maat.',
 
   'car.byVin': 'VIN-koodilla',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Itävalta laskee NoVA-veron CO₂:n perusteella. Ilman WLTP-arvoa rekisteröintivero jää summan ulkopuolelle.',
   'notice.intraEuNoTax': 'Käytetty auto EU-maasta: täällä ei ole tullia, arvonlisäveroa eikä rekisteröintiveroa, joten hinta ei vaikuta summaan.',
   'result.notInTotal': 'ei summassa',
-  'footer.disclaimer': 'mytno.io on tietotyökalu, ei vero- tai oikeudellinen neuvo. Lopullisen summan määrittävät tulli ja rekisteriviranomainen.',
+  'footer.disclaimer': 'mytno.app on tietotyökalu, ei vero- tai oikeudellinen neuvo. Lopullisen summan määrittävät tulli ja rekisteriviranomainen.',
   'footer.data': 'Verokannat ja säännöt ovat virallisista julkisista lähteistä, linkit ovat jokaisen rivin vieressä. Ajoneuvotiedot: NHTSA vPIC ja EPA fueleconomy.gov (Yhdysvaltain public domain). Kurssit: Ukrainan keskuspankki.',
   'footer.privacy': 'Ei tilejä eikä seurantaevästeitä. Laskenta tapahtuu selaimessasi; jaettu linkki tallentaa vain sen laskelman, jonka valitsit jakaa.',
   'footer.liability': 'Tarjotaan sellaisenaan, ilman minkäänlaista takuuta. Tarkista viralliset lähteet ennen ostoa tai maksua.',

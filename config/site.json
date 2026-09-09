@@ -1,9 +1,9 @@
 {
   "_note": "Site-wide settings: brand, legal contact and analytics. Analytics stays off until an id is set.",
-  "brand": "mytno.io",
+  "brand": "mytno.app",
   "legal": {
-    "owner": "mytno.io",
-    "contactEmail": "feedback@mytno.io",
+    "owner": "mytno.app",
+    "contactEmail": "feedback@mytno.app",
     "updated": "2026-09-09",
     "jurisdictionNote": "Rates and rules are taken from the official sources listed next to every line of the calculation."
   },

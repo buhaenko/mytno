@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { LOCALES } from '../src/i18n/locales.ts'
 
-const SITE = (process.env.SITE_URL ?? 'https://mytno.io').replace(/\/$/, '')
+const SITE = (process.env.SITE_URL ?? 'https://mytno.app').replace(/\/$/, '')
 const DIST = 'dist'
 const shell = readFileSync(join(DIST, 'index.html'), 'utf8')
 
@@ -32,7 +32,7 @@ function pageFor(locale) {
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    name: 'mytno.io',
+    name: 'mytno.app',
     alternateName: title,
     description,
     url: urlFor(locale),
@@ -52,7 +52,7 @@ function pageFor(locale) {
       `<link rel="canonical" href="${urlFor(locale)}" />`,
       `<meta property="og:url" content="${urlFor(locale)}" />`,
       `<meta property="og:locale" content="${locale}" />`,
-      `<meta property="og:site_name" content="mytno.io" />`,
+      `<meta property="og:site_name" content="mytno.app" />`,
       hreflang,
       `<script type="application/ld+json">${jsonLd}</script>`,
     ].join('\n    '))

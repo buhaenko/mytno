@@ -6,7 +6,7 @@ export default {
   'app.origin.OTHER': 'Kita šalis',
   'app.foot': 'Tarifai iš oficialių nacionalinių šaltinių. NBU kursas {date}. Skaičiuojama jūsų naršyklėje.',
   'app.lang': 'Kalba',
-  'seo.title': 'mytno.io — Automobilio importo mokesčių skaičiuoklė pagal VIN — Ukraina ir ES šalys',
+  'seo.title': 'mytno.app — Automobilio importo mokesčių skaičiuoklė pagal VIN — Ukraina ir ES šalys',
   'seo.description': 'Kiek kainuoja automobilio muitinės procedūros ir registracija: muitas, akcizas, PVM ir registracijos mokesčiai pagal oficialius tarifus. Paieška pagal VIN, pilnas modelių katalogas, Ukraina, Ispanija, Lenkija, Vokietija ir kitos ES šalys.',
 
   'car.byVin': 'Pagal VIN',
@@ -222,7 +222,7 @@ export default {
   'warn.atNeedCo2': 'Austrija NoVA skaičiuoja pagal CO₂. Be WLTP vertės registracijos mokestis lieka už sumos ribų.',
   'notice.intraEuNoTax': 'Naudotas automobilis iš ES šalies: čia nėra nei muito, nei PVM, nei registracijos mokesčio, todėl kaina sumai įtakos neturi.',
   'result.notInTotal': 'ne sumoje',
-  'footer.disclaimer': 'mytno.io yra informacinė priemonė, o ne mokestinė ar teisinė konsultacija. Galutinę sumą nustato muitinė ir registravimo institucija.',
+  'footer.disclaimer': 'mytno.app yra informacinė priemonė, o ne mokestinė ar teisinė konsultacija. Galutinę sumą nustato muitinė ir registravimo institucija.',
   'footer.data': 'Tarifai ir taisyklės paimti iš oficialių viešų šaltinių, nuorodos yra prie kiekvienos eilutės. Automobilio duomenys: NHTSA vPIC ir EPA fueleconomy.gov (JAV viešoji nuosavybė). Kursai: Ukrainos nacionalinis bankas.',
   'footer.privacy': 'Be paskyrų ir be sekimo slapukų. Skaičiavimas vyksta jūsų naršyklėje; bendrinta nuoroda saugo tik tą skaičiavimą, kurį pasirinkote bendrinti.',
   'footer.liability': 'Teikiama tokia, kokia yra, be jokios garantijos. Prieš pirkdami ar mokėdami patikrinkite oficialius šaltinius.',
