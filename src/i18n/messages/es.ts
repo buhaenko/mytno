@@ -219,6 +219,7 @@ export default {
   'footer.privacy': 'Sin cuentas y sin cookies de seguimiento. El cálculo se hace en tu navegador; el enlace compartido guarda solo el cálculo que decidiste compartir.',
   'footer.liability': 'Se ofrece tal cual, sin garantía de ningún tipo. Consulta las fuentes oficiales antes de comprar o pagar.',
   'footer.rights': 'Datos abiertos, reutilizados según las condiciones de cada fuente.',
+  'footer.contact': '¿Ha visto un tipo incorrecto, un país que falta o un error? Las correcciones y sugerencias son bienvenidas:',
   'consent.text': 'Queremos medir el uso anónimo con Google Analytics.',
   'consent.accept': 'Aceptar',
   'consent.decline': 'Rechazar',

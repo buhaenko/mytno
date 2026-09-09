@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Ingen konti og ingen sporingscookies. Beregningen kører i din browser; et delt link gemmer kun den beregning, du valgte at dele.',
   'footer.liability': 'Leveres som den er, uden nogen form for garanti. Tjek de officielle kilder, før du køber eller betaler.',
   'footer.rights': 'Åbne data, genbrugt på hver kildes vilkår.',
+  'footer.contact': 'Har du fundet en forkert sats, et manglende land eller en fejl? Rettelser og forslag er velkomne:',
   'consent.text': 'Vi vil gerne måle anonym brug med Google Analytics.',
   'consent.accept': 'Accepter',
   'consent.decline': 'Afvis',

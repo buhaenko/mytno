@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'No accounts and no tracking cookies. The calculation runs in your browser; a share link stores only the calculation you chose to share.',
   'footer.liability': 'Provided as is, without warranty of any kind. Check the official sources before you buy or pay.',
   'footer.rights': 'Open data, reused under the terms of each source.',
+  'footer.contact': 'Spotted a wrong rate, a missing country or a bug? Corrections and suggestions are welcome:',
   'consent.text': 'We would like to measure anonymous usage with Google Analytics.',
   'consent.accept': 'Accept',
   'consent.decline': 'Decline',

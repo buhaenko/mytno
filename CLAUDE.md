@@ -116,7 +116,7 @@ DGT fee, plates, mandatory lighting conversion.
 
 ## Where things stand
 
-Everything above is built, tested and committed locally. HEAD `43f4206`.
+Everything above is built, tested and pushed. HEAD `7b88821`.
 
 **Not done yet:**
 1. ~~Nothing is pushed.~~ Live at **https://buhaenko.github.io/mytno/** — pushed to
@@ -124,13 +124,22 @@ Everything above is built, tested and committed locally. HEAD `43f4206`.
    accounts: `gh` is logged in as **buhaenko** — the personal one, the only one this project goes
    to — while the machine's SSH key belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git
    authenticates through the `gh` credential helper; do not switch it back to SSH.
-2. **No domain bought.** Buy `mytno.io` on Cloudflare Registrar; then set the repository
-   variable `SITE_URL=https://mytno.io` so canonical links and the sitemap are right.
-3. **`config/site.json` has no contact email.** Germany and Austria require an Impressum.
+2. **No domain bought.** Buy `mytno.io` on Cloudflare Registrar; then point Cloudflare Pages at it
+   and set `SITE_URL=https://mytno.io` so canonical links, hreflang and the sitemap stop saying
+   `github.io`.
+3. ~~No contact email.~~ `feedback@mytno.io` — in `config/site.json`, shown in the footer above the
+   copyright line with an invitation to report a wrong rate or a missing country, translated into
+   all 23 languages (`footer.contact`). **The mailbox does not exist yet**: it needs the domain,
+   then a Cloudflare Email Routing rule forwarding it to Serhii's inbox.
 4. **More registration taxes worth computing**, each needs its official table: Netherlands BPM,
    France malus, Ireland VRT, Portugal ISV, Finland autovero.
-5. Hosting recommendation on the table: Cloudflare Pages for the site, Fly.io or Railway for the
-   API, MongoDB Atlas M0 for the database. Sentry and UptimeRobot before launch.
+5. **Cloudflare Pages: the repo is ready, the project is not connected yet.** Build `npm run build`,
+   output `dist`, Node from `.node-version`, env `SITE_URL` (and `VITE_API_URL` once an API exists).
+   `public/_headers` carries the caching and security headers; `VITE_BASE` stays unset — it exists
+   only for GitHub Pages, which serves from `/mytno/`. Unknown paths fall back to the prerendered
+   `404.html`, which boots the app, so `/uk/f4uz` resolves without a rewrite rule.
+   Still to host: the API on Fly.io or Railway with MongoDB Atlas M0. Sentry and UptimeRobot
+   before launch.
 
 ## History
 

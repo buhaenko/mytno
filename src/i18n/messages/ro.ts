@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Fără conturi și fără cookie-uri de urmărire. Calculul rulează în browserul dumneavoastră; linkul partajat păstrează doar calculul pe care l-ați ales.',
   'footer.liability': 'Oferit ca atare, fără nicio garanție. Verificați sursele oficiale înainte de a cumpăra sau de a plăti.',
   'footer.rights': 'Date deschise, reutilizate conform condițiilor fiecărei surse.',
+  'footer.contact': 'Ați observat o cotă greșită, o țară lipsă sau o eroare? Corecturile și sugestiile sunt binevenite:',
   'consent.text': 'Dorim să măsurăm utilizarea anonimă cu Google Analytics.',
   'consent.accept': 'Accept',
   'consent.decline': 'Refuz',

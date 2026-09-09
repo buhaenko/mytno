@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Bez účtů a bez sledovacích cookies. Výpočet běží ve vašem prohlížeči; sdílený odkaz uchová jen ten výpočet, který jste sdíleli.',
   'footer.liability': 'Poskytováno tak, jak je, bez jakékoli záruky. Před nákupem nebo platbou ověřte oficiální zdroje.',
   'footer.rights': 'Otevřená data, použitá za podmínek každého zdroje.',
+  'footer.contact': 'Našli jste špatnou sazbu, chybějící zemi nebo chybu? Opravy a návrhy jsou vítány:',
   'consent.text': 'Rádi bychom měřili anonymní používání pomocí Google Analytics.',
   'consent.accept': 'Přijmout',
   'consent.decline': 'Odmítnout',

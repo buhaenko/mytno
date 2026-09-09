@@ -70,9 +70,29 @@ self-contained share links. That is the static-hosting mode.
   ITV, plates and the mandatory lighting conversion.
 
 ## Deploying
-The API needs Node 24 and a MongoDB. Requests are validated by JSON Schema at the route, and rate limited per IP. The site is static output in `dist/`.
-`docker compose up` runs the whole thing; see the deployment notes in `docs` of the project chat for
-hosting options (Fly.io / Railway / Hetzner + Atlas, Cloudflare Pages or Netlify for the site).
+
+The site is static output in `dist/` and needs no backend. The API (`server/`) needs Node and a
+MongoDB; its requests are validated by JSON Schema at the route and rate limited per IP.
+`docker compose up` runs the whole thing locally in the shape of a production deploy.
+
+**The site on Cloudflare Pages.** Connect the repository and keep the defaults — the build settings
+it needs are in the repository already:
+
+| Setting | Value |
+| --- | --- |
+| Build command | `npm run build` |
+| Output directory | `dist` |
+| Node version | from `.node-version` (22) |
+| `SITE_URL` | `https://mytno.io` — canonical links, hreflang and the sitemap |
+| `VITE_API_URL` | the API's address, only if one is deployed |
+
+`public/_headers` sets the caching and the security headers. Unknown paths fall back to the
+prerendered `404.html`, which boots the app, so share links of the form `/uk/f4uz` resolve.
+Leave `VITE_BASE` unset: it exists for GitHub Pages, which serves the site from a subdirectory.
+
+**The same build also deploys to GitHub Pages** on every push to `main`
+(`.github/workflows/deploy.yml`), which runs the tests first. It is the staging copy;
+Cloudflare is the one that gets the domain.
 
 Analytics is off until configured: set `VITE_PLAUSIBLE_DOMAIN` (cookieless, no banner) or `VITE_GA_ID`
 (Google Analytics 4, loaded only after the visitor accepts in the consent bar).

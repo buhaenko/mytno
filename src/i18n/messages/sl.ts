@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Brez računov in brez sledilnih piškotkov. Izračun teče v vašem brskalniku; deljena povezava hrani le izračun, ki ste ga delili.',
   'footer.liability': 'Na voljo takšno, kot je, brez kakršnega koli jamstva. Pred nakupom ali plačilom preverite uradne vire.',
   'footer.rights': 'Odprti podatki, uporabljeni pod pogoji vsakega vira.',
+  'footer.contact': 'Ste opazili napačno stopnjo, manjkajočo državo ali napako? Popravki in predlogi so dobrodošli:',
   'consent.text': 'Radi bi merili anonimno uporabo z Google Analytics.',
   'consent.accept': 'Sprejmem',
   'consent.decline': 'Zavrnem',

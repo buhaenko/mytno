@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Ei tilejä eikä seurantaevästeitä. Laskenta tapahtuu selaimessasi; jaettu linkki tallentaa vain sen laskelman, jonka valitsit jakaa.',
   'footer.liability': 'Tarjotaan sellaisenaan, ilman minkäänlaista takuuta. Tarkista viralliset lähteet ennen ostoa tai maksua.',
   'footer.rights': 'Avointa dataa, käytetty kunkin lähteen ehdoilla.',
+  'footer.contact': 'Huomasitko väärän verokannan, puuttuvan maan tai virheen? Korjaukset ja ehdotukset ovat tervetulleita:',
   'consent.text': 'Haluaisimme mitata anonyymiä käyttöä Google Analyticsilla.',
   'consent.accept': 'Hyväksy',
   'consent.decline': 'Hylkää',

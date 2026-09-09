@@ -219,6 +219,7 @@ export default {
   'footer.privacy': 'Bez kont i bez plików cookie śledzących. Obliczenia działają w Twojej przeglądarce; link zapisuje tylko to obliczenie, którym się podzieliłeś.',
   'footer.liability': 'Udostępniane w stanie, w jakim jest, bez żadnej gwarancji. Sprawdź oficjalne źródła przed zakupem lub zapłatą.',
   'footer.rights': 'Otwarte dane, wykorzystane na warunkach każdego źródła.',
+  'footer.contact': 'Zauważyłeś błędną stawkę, brakujący kraj lub błąd? Poprawki i sugestie są mile widziane:',
   'consent.text': 'Chcemy mierzyć anonimowe korzystanie za pomocą Google Analytics.',
   'consent.accept': 'Akceptuję',
   'consent.decline': 'Odrzucam',

@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Nincs fiók és nincs nyomkövető süti. A számítás az Ön böngészőjében fut; a megosztott link csak azt a számítást őrzi meg, amelyet megosztott.',
   'footer.liability': 'Adott állapotban, mindenféle garancia nélkül. Vásárlás vagy fizetés előtt ellenőrizze a hivatalos forrásokat.',
   'footer.rights': 'Nyílt adatok, az egyes források feltételei szerint felhasználva.',
+  'footer.contact': 'Hibás kulcsot, hiányzó országot vagy hibát talált? A javításokat és javaslatokat szívesen fogadjuk:',
   'consent.text': 'Szeretnénk anonim használatot mérni a Google Analytics segítségével.',
   'consent.accept': 'Elfogadom',
   'consent.decline': 'Elutasítom',

@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Bez računa i bez kolačića za praćenje. Izračun se izvodi u vašem pregledniku; dijeljena poveznica čuva samo izračun koji ste podijelili.',
   'footer.liability': 'Pruža se kakav jest, bez ikakvog jamstva. Provjerite službene izvore prije kupnje ili plaćanja.',
   'footer.rights': 'Otvoreni podaci, korišteni pod uvjetima svakog izvora.',
+  'footer.contact': 'Uočili ste pogrešnu stopu, državu koja nedostaje ili grešku? Ispravci i prijedlozi su dobrodošli:',
   'consent.text': 'Željeli bismo mjeriti anonimno korištenje putem Google Analyticsa.',
   'consent.accept': 'Prihvaćam',
   'consent.decline': 'Odbijam',

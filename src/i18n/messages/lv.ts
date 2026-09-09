@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Bez kontiem un bez izsekošanas sīkdatnēm. Aprēķins notiek jūsu pārlūkā; koplietotā saite glabā tikai to aprēķinu, kuru izvēlējāties koplietot.',
   'footer.liability': 'Tiek sniegts tāds, kāds ir, bez jebkādas garantijas. Pirms pirkuma vai maksājuma pārbaudiet oficiālos avotus.',
   'footer.rights': 'Atvērtie dati, izmantoti saskaņā ar katra avota nosacījumiem.',
+  'footer.contact': 'Pamanījāt nepareizu likmi, trūkstošu valsti vai kļūdu? Labojumi un ieteikumi ir laipni gaidīti:',
   'consent.text': 'Vēlamies mērīt anonīmu lietojumu ar Google Analytics.',
   'consent.accept': 'Piekrītu',
   'consent.decline': 'Noraidu',

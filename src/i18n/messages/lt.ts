@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Be paskyrų ir be sekimo slapukų. Skaičiavimas vyksta jūsų naršyklėje; bendrinta nuoroda saugo tik tą skaičiavimą, kurį pasirinkote bendrinti.',
   'footer.liability': 'Teikiama tokia, kokia yra, be jokios garantijos. Prieš pirkdami ar mokėdami patikrinkite oficialius šaltinius.',
   'footer.rights': 'Atviri duomenys, naudojami pagal kiekvieno šaltinio sąlygas.',
+  'footer.contact': 'Pastebėjote neteisingą tarifą, trūkstamą šalį ar klaidą? Pataisymai ir pasiūlymai laukiami:',
   'consent.text': 'Norėtume matuoti anoniminį naudojimą su Google Analytics.',
   'consent.accept': 'Sutinku',
   'consent.decline': 'Atsisakau',

@@ -26,9 +26,13 @@ const year = new Date().getFullYear()
       </div>
     </details>
 
+    <p v-if="site.legal.contactEmail" class="footer-contact">
+      {{ t('footer.contact') }}
+      <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>
+    </p>
+
     <p class="footer-rights">
       © {{ year }} {{ site.legal.owner }} · {{ t('footer.rights') }} · {{ site.legal.updated }}
-      <template v-if="site.legal.contactEmail"> · <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a></template>
     </p>
   </footer>
 </template>

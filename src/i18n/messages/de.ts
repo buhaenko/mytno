@@ -219,6 +219,7 @@ export default {
   'footer.privacy': 'Keine Konten und keine Tracking-Cookies. Die Berechnung läuft in Ihrem Browser; ein geteilter Link speichert nur die Berechnung, die Sie teilen wollten.',
   'footer.liability': 'Bereitstellung ohne jede Gewähr. Prüfen Sie die amtlichen Quellen, bevor Sie kaufen oder zahlen.',
   'footer.rights': 'Offene Daten, genutzt zu den Bedingungen der jeweiligen Quelle.',
+  'footer.contact': 'Ein falscher Satz, ein fehlendes Land oder ein Fehler? Korrekturen und Vorschläge sind willkommen:',
   'consent.text': 'Wir möchten die anonyme Nutzung mit Google Analytics messen.',
   'consent.accept': 'Akzeptieren',
   'consent.decline': 'Ablehnen',

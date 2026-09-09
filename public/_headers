@@ -1,0 +1,13 @@
+# Cloudflare Pages reads this file. Hashed asset names never repeat, so they are
+# cached forever; the HTML keeps Cloudflare's default, which revalidates every
+# request, so a new deploy is visible immediately.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/catalog/*
+  Cache-Control: public, max-age=86400
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=()

@@ -227,6 +227,7 @@ export default {
   'footer.privacy': 'Ilma kontode ja jälgimisküpsisteta. Arvutus toimub teie brauseris; jagatud link hoiab ainult seda arvutust, mille jagamise valisite.',
   'footer.liability': 'Pakutakse sellisena, nagu see on, ilma igasuguse garantiita. Kontrollige ametlikke allikaid enne ostmist või maksmist.',
   'footer.rights': 'Avaandmed, kasutatud iga allika tingimustel.',
+  'footer.contact': 'Märkasite vale määra, puuduvat riiki või viga? Parandused ja ettepanekud on teretulnud:',
   'consent.text': 'Sooviksime mõõta anonüümset kasutust Google Analyticsiga.',
   'consent.accept': 'Nõustun',
   'consent.decline': 'Keeldun',
