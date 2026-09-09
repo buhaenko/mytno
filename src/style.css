@@ -50,9 +50,6 @@ p { margin: 0; }
 .langsel select { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; font: inherit; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
 
-/* label */
-.pill { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-.pill .pd { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
 
 /* hero */
 .hero { padding-top: 14vh; transition: padding .5s var(--ease); text-align: center; }
@@ -62,8 +59,6 @@ p { margin: 0; }
 .hero-text h1 .grad { color: var(--accent-strong); }
 .hero-text p { color: var(--muted); font-size: 15.5px; margin: 14px auto 0; max-width: 46ch; }
 .compact .hero-text { max-height: 0; opacity: 0; margin: 0; }
-.hero .pill-row { display: flex; justify-content: center; transition: opacity .25s ease, max-height .35s var(--ease); max-height: 40px; overflow: hidden; }
-.compact .pill-row { max-height: 0; opacity: 0; }
 
 /* route */
 .route { display: flex; align-items: center; gap: 10px; justify-content: center; }

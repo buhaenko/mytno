@@ -186,7 +186,6 @@ onMounted(async () => {
     <div class="hero" :class="{ compact: started }">
       <div class="glow"></div>
       <div class="ring"></div>
-      <div class="pill-row"><span class="pill"><span class="pd"></span>{{ t('app.badge') }}</span></div>
       <div class="hero-text">
         <h1>{{ title.head }} <span class="grad">{{ title.last }}</span>{{ title.tail }}</h1>
         <p>{{ t('app.tagline') }}</p>
