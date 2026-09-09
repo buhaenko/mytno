@@ -31,7 +31,7 @@ const sources = computed<Record<string, { title: string; url: string }>>(() => {
   if (props.trip.destination === 'AT') list.regTax = countries.austria.source
   return list
 })
-const rateSource = ukraine.refs.fx
+const rates = countries.fxSources
 </script>
 
 <template>
@@ -66,8 +66,13 @@ const rateSource = ukraine.refs.fx
         <ul class="disclosure">
           <li v-for="(source, key) in sources" :key="key"><a :href="source.url" target="_blank" rel="noopener noreferrer">{{ source.title }}</a></li>
           <li>
-            <a :href="rateSource.url" target="_blank" rel="noopener noreferrer">
-              {{ t('result.fx', { date: fx.date, usd: fx.usdUah.toFixed(2), eur: fx.eurUah.toFixed(2) }) }}
+            <a :href="rates.ecb.url" target="_blank" rel="noopener noreferrer">
+              {{ t('result.fx.ecb', { date: fx.usd.date, usd: fx.usd.rate.toFixed(4) }) }}
+            </a>
+          </li>
+          <li>
+            <a :href="rates.nbu.url" target="_blank" rel="noopener noreferrer">
+              {{ t('result.fx.nbu', { date: fx.uah.date, uah: fx.uah.rate.toFixed(2) }) }}
             </a>
           </li>
         </ul>

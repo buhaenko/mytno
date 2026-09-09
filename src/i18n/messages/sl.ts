@@ -4,7 +4,7 @@ export default {
   'app.from': 'Iz',
   'app.to': 'Registracija v',
   'app.origin.OTHER': 'Druga država',
-  'app.foot': 'Stopnje iz uradnih nacionalnih virov. Tečaj NBU {date}. Izračun v vašem brskalniku.',
+  'app.foot': 'Stopnje iz uradnih nacionalnih virov. Tečaja ECB in NBU. Izračun v vašem brskalniku.',
   'app.lang': 'Jezik',
   'seo.title': 'mytno.app — Kalkulator davkov pri uvozu avtomobila po VIN — Ukrajina in države EU',
   'seo.description': 'Koliko stane carinjenje in registracija avtomobila: carina, trošarina, DDV in davki ob registraciji po uradnih stopnjah. Iskanje po VIN, celoten katalog modelov, Ukrajina, Španija, Poljska, Nemčija in druge države EU.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'obvezno',
   'result.legend.likely': 'najverjetneje',
   'result.legend.sometimes': 'včasih',
-  'result.fx': 'Tečaj NBU {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Carina {rate}%',
   'line.excise': 'Trošarina',

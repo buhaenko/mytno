@@ -4,7 +4,7 @@ export default {
   'app.from': 'Din',
   'app.to': 'Înmatriculare în',
   'app.origin.OTHER': 'Altă țară',
-  'app.foot': 'Tarife din surse oficiale naționale. Curs de schimb BNU {date}. Calculat în browserul dumneavoastră.',
+  'app.foot': 'Tarife din surse oficiale naționale. Cursuri de schimb BCE și BNU. Calculat în browserul dumneavoastră.',
   'app.lang': 'Limbă',
   'seo.title': 'mytno.app — Calculator taxe import auto după VIN — Ucraina și țările UE',
   'seo.description': 'Cât costă vămuirea și înmatricularea unei mașini: taxe vamale, accize, TVA și taxe de înmatriculare la tarife oficiale. Căutare după VIN, catalog complet de modele, Ucraina, Spania, Polonia, Germania și alte țări UE.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'obligatoriu',
   'result.legend.likely': 'cel mai probabil',
   'result.legend.sometimes': 'uneori',
-  'result.fx': 'Curs BNU {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'BCE, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'BNU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Taxă vamală {rate} %',
   'line.excise': 'Acciză',

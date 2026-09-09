@@ -139,7 +139,7 @@ onMounted(async () => {
       </StepSection>
     </Transition>
 
-    <p v-if="!started" class="page-note">{{ t('app.foot', { date: fx.date }) }}</p>
+    <p v-if="!started" class="page-note">{{ t('app.foot') }}</p>
     <SiteFooter />
     <ConsentBar />
   </div>

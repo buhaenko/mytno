@@ -4,7 +4,7 @@ export default {
   'app.from': 'Odkud',
   'app.to': 'Registrace v',
   'app.origin.OTHER': 'Jiná země',
-  'app.foot': 'Sazby z oficiálních národních zdrojů. Kurz NBU {date}. Výpočet probíhá ve vašem prohlížeči.',
+  'app.foot': 'Sazby z oficiálních národních zdrojů. Kurzy ECB a NBU. Výpočet probíhá ve vašem prohlížeči.',
   'app.lang': 'Jazyk',
   'seo.title': 'mytno.app — Kalkulačka daní při dovozu auta podle VIN — Ukrajina a země EU',
   'seo.description': 'Kolik stojí proclení a registrace auta: clo, spotřební daň, DPH a registrační daně podle oficiálních sazeb. Vyhledání podle VIN, kompletní katalog modelů, Ukrajina, Španělsko, Polsko, Německo a další země EU.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'povinné',
   'result.legend.likely': 'velmi pravděpodobné',
   'result.legend.sometimes': 'někdy',
-  'result.fx': 'Kurz NBU {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Clo {rate} %',
   'line.excise': 'Spotřební daň',

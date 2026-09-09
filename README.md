@@ -46,7 +46,8 @@ both send `access-control-allow-origin: *`, so no proxy is needed:
 | Service | Used for | If it is down |
 | --- | --- | --- |
 | NHTSA vPIC | VIN decoding | the EPA catalogue still identifies the car |
-| National Bank of Ukraine | exchange rates | `config/fx.fallback.json`, marked as a fallback |
+| European Central Bank | the dollar rate | `config/fx.fallback.json`, marked as a fallback |
+| National Bank of Ukraine | the hryvnia rate | `config/fx.fallback.json`, marked as a fallback |
 
 **Sharing is copying the address bar.** The language is a path segment and the calculation is a readable
 query string, rewritten as the numbers change, so any result is a plain URL: nothing is minted, stored

@@ -4,7 +4,7 @@ export default {
   'app.from': 'Kust',
   'app.to': 'Registreerimisriik',
   'app.origin.OTHER': 'Muu riik',
-  'app.foot': 'Määrad riikide ametlikest allikatest. NBU vahetuskurss {date}. Arvutus tehakse Teie brauseris.',
+  'app.foot': 'Määrad riikide ametlikest allikatest. Vahetuskursid EKP-lt ja NBU-lt. Arvutus tehakse Teie brauseris.',
   'app.lang': 'Keel',
   'seo.title': 'mytno.app — Auto impordimaksude kalkulaator VIN-koodi järgi — Ukraina ja ELi riigid',
   'seo.description': 'Mida maksab auto tollivormistus ja registreerimine: tollimaks, aktsiis, käibemaks ja registreerimismaksud ametlike määrade alusel. VIN-päring, täielik mudelikataloog, Ukraina, Hispaania, Poola, Saksamaa ja teised ELi riigid.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'kohustuslik',
   'result.legend.likely': 'tõenäoliselt',
   'result.legend.sometimes': 'mõnikord',
-  'result.fx': 'NBU kurss {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'EKP, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Tollimaks {rate} %',
   'line.excise': 'Aktsiis',

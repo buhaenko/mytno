@@ -1,1 +1,5 @@
-{ "usdUah": 44.47, "eurUah": 51.64, "date": "2026-09-08" }
+{
+  "_note": "Last resort when neither the ECB nor the National Bank answers. Dollars and hryvnia for one euro.",
+  "usd": { "rate": 1.1652, "date": "2026-09-09" },
+  "uah": { "rate": 51.9905, "date": "2026-09-10" }
+}

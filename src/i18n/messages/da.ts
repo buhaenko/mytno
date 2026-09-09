@@ -4,7 +4,7 @@ export default {
   'app.from': 'Fra',
   'app.to': 'Indregistrering i',
   'app.origin.OTHER': 'Andet land',
-  'app.foot': 'Satser fra officielle nationale kilder. NBU-valutakurs {date}. Beregnes i din browser.',
+  'app.foot': 'Satser fra officielle nationale kilder. Valutakurser fra ECB og NBU. Beregnes i din browser.',
   'app.lang': 'Sprog',
   'seo.title': 'mytno.app — Beregner for bilimportafgift via VIN — Ukraine og EU-lande',
   'seo.description': 'Hvad det koster at fortolde og indregistrere en bil: told, punktafgift, moms og registreringsafgifter efter officielle satser. VIN-opslag, komplet modelkatalog, Ukraine, Spanien, Polen, Tyskland og andre EU-lande.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'obligatorisk',
   'result.legend.likely': 'sandsynligvis',
   'result.legend.sometimes': 'undertiden',
-  'result.fx': 'NBU-kurs {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Told {rate} %',
   'line.excise': 'Punktafgift',

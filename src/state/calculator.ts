@@ -1,9 +1,8 @@
 import { computed, reactive, ref, watch } from 'vue'
 import type { Currency, Destination, Estimate, FxRates, Origin, Trip, Vehicle } from '../types'
 import countries from '@config/countries.json'
-import fxFallback from '@config/fx.fallback.json'
 import { estimate } from '../lib/calc'
-import { loadFx } from '../lib/fx'
+import { fallbackRates, loadFx } from '../lib/fx'
 import { ORIGIN_GROUP } from '../lib/origins'
 import { blankVehicle, type Snapshot } from './snapshot'
 
@@ -17,7 +16,7 @@ export const price = ref(0)
 export const currency = ref<Currency>('USD')
 export const hasOriginProof = ref(true)
 export const residenceTransfer = ref(false)
-export const fx = reactive<FxRates>({ ...fxFallback, source: 'fallback' })
+export const fx = reactive<FxRates>(fallbackRates())
 
 /** Customs rules follow a group of countries, not a single one. */
 export const origin = computed<Origin | null>(() => (originCountry.value ? ORIGIN_GROUP[originCountry.value] ?? 'OTHER' : null))

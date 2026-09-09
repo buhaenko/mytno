@@ -28,9 +28,14 @@
       "note": "Vehicle catalogue 1984–2026. US government data, public domain."
     },
     {
+      "name": "European Central Bank",
+      "url": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+      "note": "Euro reference exchange rates. Reuse permitted with attribution."
+    },
+    {
       "name": "National Bank of Ukraine",
       "url": "https://bank.gov.ua/ua/markets/exchangerates",
-      "note": "Exchange rates. Open data."
+      "note": "The hryvnia rate. Open data."
     },
     {
       "name": "Taxes in Europe Database",

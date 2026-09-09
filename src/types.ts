@@ -93,11 +93,17 @@ export interface Estimate {
   meta: Record<string, string | number>
 }
 
-export interface FxRates {
-  usdUah: number
-  eurUah: number
+/** One published rate: what a euro buys, who published it and for which day. */
+export interface Quote {
+  rate: number
   date: string
-  source: 'nbu' | 'fallback'
+  source: 'ecb' | 'nbu' | 'fallback'
+}
+
+/** Each currency from the institution that publishes it, never through a cross rate. */
+export interface FxRates {
+  usd: Quote
+  uah: Quote
 }
 
 export interface CountryInfo {

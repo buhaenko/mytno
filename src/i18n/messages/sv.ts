@@ -4,7 +4,7 @@ export default {
   'app.from': 'Från',
   'app.to': 'Registrering i',
   'app.origin.OTHER': 'Annat land',
-  'app.foot': 'Satser från officiella nationella källor. NBU-växelkurs {date}. Beräknas i din webbläsare.',
+  'app.foot': 'Satser från officiella nationella källor. Växelkurser från ECB och NBU. Beräknas i din webbläsare.',
   'app.lang': 'Språk',
   'seo.title': 'mytno.app — Bilimportskatt-kalkylator via VIN — Ukraina och EU-länder',
   'seo.description': 'Vad det kostar att förtulla och registrera en bil: tull, punktskatt, moms och registreringsskatter enligt officiella satser. VIN-uppslag, komplett modellkatalog, Ukraina, Spanien, Polen, Tyskland och andra EU-länder.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'obligatoriskt',
   'result.legend.likely': 'sannolikt',
   'result.legend.sometimes': 'ibland',
-  'result.fx': 'NBU-kurs {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Tull {rate} %',
   'line.excise': 'Punktskatt',

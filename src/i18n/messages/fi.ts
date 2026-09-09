@@ -4,7 +4,7 @@ export default {
   'app.from': 'Mistä',
   'app.to': 'Rekisteröintimaa',
   'app.origin.OTHER': 'Muu maa',
-  'app.foot': 'Verokannat maiden virallisista lähteistä. NBU:n valuuttakurssi {date}. Laskenta tehdään selaimessanne.',
+  'app.foot': 'Verokannat maiden virallisista lähteistä. Valuuttakurssit EKP:ltä ja NBU:lta. Laskenta tehdään selaimessanne.',
   'app.lang': 'Kieli',
   'seo.title': 'mytno.app — Auton tuontiverolaskuri VIN-koodilla — Ukraina ja EU-maat',
   'seo.description': 'Mitä auton tulliselvitys ja rekisteröinti maksaa: tulli, valmistevero, arvonlisävero ja rekisteröintiverot virallisten verokantojen mukaan. VIN-haku, täydellinen malliluettelo, Ukraina, Espanja, Puola, Saksa ja muut EU-maat.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'pakollinen',
   'result.legend.likely': 'todennäköisesti',
   'result.legend.sometimes': 'joskus',
-  'result.fx': 'NBU:n kurssi {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'EKP, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Tulli {rate} %',
   'line.excise': 'Valmistevero',

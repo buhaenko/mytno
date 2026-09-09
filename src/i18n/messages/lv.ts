@@ -4,7 +4,7 @@ export default {
   'app.from': 'No',
   'app.to': 'Reģistrācijas valsts',
   'app.origin.OTHER': 'Cita valsts',
-  'app.foot': 'Likmes no oficiāliem valstu avotiem. NBU valūtas kurss {date}. Aprēķins tiek veikts Jūsu pārlūkprogrammā.',
+  'app.foot': 'Likmes no oficiāliem valstu avotiem. ECB un NBU valūtas kursi. Aprēķins tiek veikts Jūsu pārlūkprogrammā.',
   'app.lang': 'Valoda',
   'seo.title': 'mytno.app — Automašīnas importa nodokļu kalkulators pēc VIN — Ukraina un ES valstis',
   'seo.description': 'Cik maksā automašīnas muitošana un reģistrācija: muitas nodoklis, akcīzes nodoklis, PVN un reģistrācijas nodokļi pēc oficiālajām likmēm. VIN pārbaude, pilns modeļu katalogs, Ukraina, Spānija, Polija, Vācija un citas ES valstis.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'obligāti',
   'result.legend.likely': 'visticamāk',
   'result.legend.sometimes': 'dažkārt',
-  'result.fx': 'NBU kurss {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Muitas nodoklis {rate} %',
   'line.excise': 'Akcīzes nodoklis',

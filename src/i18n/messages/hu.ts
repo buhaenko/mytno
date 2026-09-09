@@ -4,7 +4,7 @@ export default {
   'app.from': 'Honnan',
   'app.to': 'Forgalomba helyezés itt',
   'app.origin.OTHER': 'Más ország',
-  'app.foot': 'Díjtételek hivatalos nemzeti forrásokból. NBU árfolyam {date}. A számítás az Ön böngészőjében történik.',
+  'app.foot': 'Díjtételek hivatalos nemzeti forrásokból. Árfolyamok az EKB-tól és az NBU-tól. A számítás az Ön böngészőjében történik.',
   'app.lang': 'Nyelv',
   'seo.title': 'mytno.app — Autóimport-adókalkulátor VIN alapján — Ukrajna és az EU országai',
   'seo.description': 'Mennyibe kerül egy autó vámkezelése és forgalomba helyezése: vám, jövedéki adó, áfa és regisztrációs adók hivatalos díjtételek szerint. VIN-keresés, teljes modellkatalógus, Ukrajna, Spanyolország, Lengyelország, Németország és más EU-országok.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'kötelező',
   'result.legend.likely': 'nagy valószínűséggel',
   'result.legend.sometimes': 'esetenként',
-  'result.fx': 'NBU árfolyam {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'EKB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Vám {rate}%',
   'line.excise': 'Jövedéki adó',

@@ -4,7 +4,7 @@ export default {
   'app.from': 'Vanuit',
   'app.to': 'Registratie in',
   'app.origin.OTHER': 'Ander land',
-  'app.foot': 'Tarieven uit officiële nationale bronnen. NBU-wisselkoers {date}. Berekend in uw browser.',
+  'app.foot': 'Tarieven uit officiële nationale bronnen. Wisselkoersen van de ECB en de NBU. Berekend in uw browser.',
   'app.lang': 'Taal',
   'seo.title': 'mytno.app — Autoimportbelasting berekenen op VIN — Oekraïne en EU-landen',
   'seo.description': 'Wat de inklaring en registratie van een auto kost: invoerrechten, accijns, btw en registratiebelastingen tegen officiële tarieven. VIN-opzoeking, volledige modelcatalogus, Oekraïne, Spanje, Polen, Duitsland en andere EU-landen.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'verplicht',
   'result.legend.likely': 'zeer waarschijnlijk',
   'result.legend.sometimes': 'soms',
-  'result.fx': 'NBU-koers {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Invoerrechten {rate} %',
   'line.excise': 'Accijns',

@@ -71,6 +71,10 @@ DGT fee, plates, mandatory lighting conversion.
 ## Facts worth not re-deriving
 
 - **EU VAT rates**: Taxes in Europe Database, as of 1 July 2025; Romania went to 21% on 1 Aug 2025.
+- **The ECB publishes no hryvnia.** `data-api.ecb.europa.eu/service/data/EXR/D.UAH.EUR.SP00.A` is a
+  404 — its reference rates cover about thirty currencies and UAH is not among them. That is why
+  there are two sources rather than one. The ECB's `eurofxref-daily.xml` sends no CORS header;
+  `data-api.ecb.europa.eu` does, which is the one the browser can call.
 - **Duty on cars from outside the EU**: 10%, TARIC heading 8703. Depends on the country of
   *manufacture*, not of purchase.
 - **VIN**: position 9 is a checksum only on North American VINs; VW Group writes `ZZZ` in positions
@@ -91,8 +95,8 @@ DGT fee, plates, mandatory lighting conversion.
 ## Decisions already made
 
 - **There is no backend.** Everything runs in the browser: the rules are bundled JSON, the VIN goes
-  to NHTSA and the rates to the National Bank of Ukraine, both of which answer
-  `access-control-allow-origin: *`; `config/fx.fallback.json` covers the bank being down. Deleted
+  to NHTSA, the dollar rate to the ECB and the hryvnia to the National Bank of Ukraine, all of which
+  answer `access-control-allow-origin: *`; `config/fx.fallback.json` covers either bank being down. Deleted
   along with the Fastify API: share codes, the VIN and rate caches, the geo language guess and
   `docker-compose`. Do not reintroduce a server for caching — it buys nothing a static host and two
   public APIs do not already give.
@@ -106,6 +110,11 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Every amount is held in euro**, and each rate says what one euro buys: the dollar from the ECB
+  (`data-api.ecb.europa.eu`, SDMX-CSV, one observation), the hryvnia from the National Bank of
+  Ukraine. Neither is derived through the other — the old code crossed USD and EUR through the
+  hryvnia, which put a Ukrainian rate inside a Spain→Germany calculation. The two quotes carry their
+  own date and source and are fetched in parallel, so one failing does not cost the other.
 - **Analytics** stays off until an id is set: Plausible (cookieless, no banner) or GA4 behind the
   consent bar. Both configured in `config/site.json` or via env.
 

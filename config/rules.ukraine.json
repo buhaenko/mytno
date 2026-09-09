@@ -122,10 +122,6 @@
     "customs": {
       "title": "State Customs Service of Ukraine (customs.gov.ua)",
       "url": "https://customs.gov.ua/"
-    },
-    "fx": {
-      "title": "NBU — official exchange rates (bank.gov.ua)",
-      "url": "https://bank.gov.ua/ua/markets/exchangerates"
     }
   }
 }

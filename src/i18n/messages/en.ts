@@ -4,7 +4,7 @@ export default {
   'app.from': 'From',
   'app.to': 'Registering in',
   'app.origin.OTHER': 'Other country',
-  'app.foot': 'Rates from official national sources. NBU exchange rate {date}. Calculated in your browser.',
+  'app.foot': 'Rates from official national sources. Exchange rates from the ECB and the NBU. Calculated in your browser.',
   'app.lang': 'Language',
   'seo.title': 'mytno.app — Car import tax calculator by VIN — Ukraine and EU countries',
   'seo.description': 'What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official rates. VIN lookup, full model catalogue, Ukraine, Spain, Poland, Germany and other EU countries.',
@@ -98,7 +98,8 @@ export default {
   'result.legend.always': 'mandatory',
   'result.legend.likely': 'most likely',
   'result.legend.sometimes': 'sometimes',
-  'result.fx': 'NBU rate {date}: $ {usd}, € {eur}',
+  'result.fx.ecb': 'ECB, {date}: €1 = ${usd}',
+  'result.fx.nbu': 'NBU, {date}: €1 = {uah} ₴',
 
   'line.duty': 'Customs duty {rate}%',
   'line.excise': 'Excise',
