@@ -31,12 +31,12 @@ export function nuancesFor(key: string, tier: BrandTier): { list: Nuance[]; mand
   return { list, mandatory: r(min, likely, max) }
 }
 
-export function item(key: string, label: Msg, category: LineItem['category'], range: Range, extra: Partial<Pick<LineItem, 'note' | 'formula' | 'estimate' | 'source'>> = {}): LineItem {
+export function item(key: string, label: Msg, category: LineItem['category'], range: Range, extra: Partial<Pick<LineItem, 'note' | 'formula' | 'estimate' | 'source' | 'unknown'>> = {}): LineItem {
   return { key, label, category, range, ...extra }
 }
 
 export function sumItems(items: LineItem[]): Range {
-  return items.reduce((acc, it) => ({ min: acc.min + it.range.min, likely: acc.likely + it.range.likely, max: acc.max + it.range.max }), { min: 0, likely: 0, max: 0 })
+  return items.filter((i) => !i.unknown).reduce((acc, it) => ({ min: acc.min + it.range.min, likely: acc.likely + it.range.likely, max: acc.max + it.range.max }), { min: 0, likely: 0, max: 0 })
 }
 
 export { span }

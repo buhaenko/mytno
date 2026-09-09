@@ -19,6 +19,8 @@ const error = ref('')
 const ready = computed(() => !!vehicle.value.make && !!vehicle.value.model)
 const vin = computed(() => normalizeVin(vinRaw.value))
 const forSpain = computed(() => props.destination === 'ES')
+// CO₂ drives the registration tax in Spain (IEDMT) and Austria (NoVA)
+const needsCo2 = computed(() => props.destination === 'ES' || props.destination === 'AT')
 const isElectrified = computed(() => vehicle.value.fuel === 'electric' || vehicle.value.fuel === 'phev')
 
 const fuels: Fuel[] = ['petrol', 'diesel', 'hybrid', 'phev', 'electric', 'lpg']
@@ -164,10 +166,10 @@ watch(cVersion, (i) => {
           <div class="f"><label>{{ t('car.fuel') }}</label><select v-model="vehicle.fuel" class="in"><option v-for="f in fuels" :key="f" :value="f">{{ t(`car.fuel.${f}`) }}</option></select></div>
           <div v-if="vehicle.fuel !== 'electric'" class="f"><label>{{ t('car.cc') }} <Help :text="t(destination === 'UA' ? 'car.help.ccUa' : destination === 'PL' ? 'car.help.ccPl' : 'car.help.ccOther')" /></label><input v-model.number="vehicle.engineCc" type="number" class="in" placeholder="1984" /></div>
           <div v-if="isElectrified" class="f"><label>{{ t('car.kwh') }} <Help :text="t('car.help.kwh')" /></label><input v-model.number="vehicle.batteryKwh" type="number" class="in" placeholder="75" /></div>
-          <template v-if="forSpain">
+          <template v-if="needsCo2">
             <div class="f"><label>{{ t('car.co2') }} <Help :text="t('car.help.co2')" :source="{ title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }" /></label><input v-model.number="vehicle.co2Wltp" type="number" class="in" placeholder="168" /></div>
-            <div class="f"><label>{{ t('car.listPrice') }} <Help :text="t('car.help.listPrice')" :source="{ title: 'AEAT — Vehículos', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" /></label><input v-model.number="vehicle.listPriceNewEur" type="number" class="in" placeholder="47150" /></div>
           </template>
+          <div v-if="forSpain" class="f"><label>{{ t('car.listPrice') }} <Help :text="t('car.help.listPrice')" :source="{ title: 'AEAT — Vehículos', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" /></label><input v-model.number="vehicle.listPriceNewEur" type="number" class="in" placeholder="47150" /></div>
           <div class="f span"><label>{{ t('car.market') }} <Help :text="t('car.help.market')" /></label>
             <div class="chips"><button v-for="m in markets" :key="m" type="button" class="chip" :class="{ on: vehicle.marketSpec === m }" @click="vehicle.marketSpec = m">{{ t(`car.market.${m}`) }}</button></div>
           </div>

@@ -16,7 +16,12 @@ import Help from './components/Help.vue'
 
 const { t, locale, region, setLocale } = useI18n()
 // Last word of the headline gets the gradient treatment
-const title = computed(() => { const w = t('app.title').trim().split(' '); return { head: w.slice(0, -1).join(' '), last: w[w.length - 1] ?? '' } })
+const title = computed(() => {
+  const words = t('app.title').trim().split(' ')
+  const last = words[words.length - 1] ?? ''
+  const m = last.match(/^(.*?)([?!.:;»"']*)$/)
+  return { head: words.slice(0, -1).join(' '), last: m?.[1] || last, tail: m?.[2] ?? '' }
+})
 const blankVehicle = (): Vehicle => ({ make: '', model: '', year: new Date().getFullYear() - 5, fuel: 'petrol', marketSpec: 'US', brandTier: 'mass', decodeNotes: [] })
 const vehicle = ref<Vehicle>(blankVehicle())
 const originCountry = ref<string | null>(null)
@@ -94,12 +99,13 @@ function stateQuery(): string {
   const qs = q.toString()
   return qs ? `?${qs}` : ''
 }
+// The address bar always carries the readable query state; the short code stays in the share field only.
 function syncUrl() {
   if (restoring) return
-  const target = shareUrl.value ? shareUrl.value.slice(location.origin.length) : appUrl(locale.value, '', stateQuery()).slice(location.origin.length)
-  if (location.pathname + location.search + location.hash !== target) history.replaceState(null, '', target)
+  const target = appUrl(locale.value, '', stateQuery()).slice(location.origin.length)
+  if (location.pathname + location.search !== target) history.replaceState(null, '', target)
 }
-watch([shareState, shareUrl], syncUrl, { deep: true })
+watch(shareState, syncUrl, { deep: true })
 function applyQuery(q: URLSearchParams) {
   const from = q.get(Q.from), to = q.get(Q.to)
   if (from && ORIGIN_GROUP[from]) originCountry.value = from
@@ -158,7 +164,7 @@ async function changeLocale(l: Locale) {
 onMounted(async () => {
   type Shared = { v?: Vehicle; r?: RouteInput; l?: Locale; oc?: string | null }
   const shared = await readShared<Shared>()
-  if (shared) applyShared(shared)
+  if (shared) { applyShared(shared); history.replaceState(null, '', appUrl(shared.l ?? locale.value, '', '').slice(location.origin.length)) }
   else applyQuery(new URLSearchParams(location.search))
   await nextTick()
   restoring = false
@@ -179,7 +185,7 @@ onMounted(async () => {
       <div class="ring"></div>
       <div class="pill-row"><span class="pill"><span class="pd"></span>{{ t('app.badge') }}</span></div>
       <div class="hero-text">
-        <h1>{{ title.head }} <span class="grad">{{ title.last }}</span></h1>
+        <h1>{{ title.head }} <span class="grad">{{ title.last }}</span>{{ title.tail }}</h1>
         <p>{{ t('app.tagline') }}</p>
       </div>
       <div class="route">

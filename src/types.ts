@@ -53,6 +53,8 @@ export interface LineItem {
   formula?: string
   /** market estimate rather than an official rate */
   estimate?: boolean
+  /** the charge exists but its amount is set by a national formula we do not replicate: shown as — and left out of the total */
+  unknown?: boolean
   source?: { title: string; url: string }
 }
 
@@ -61,7 +63,7 @@ export interface Nuance {
   required: 'always' | 'likely' | 'sometimes'
   cost: Record<BrandTier, [number, number]>
 }
-export interface CountryInfo { eu: boolean; vat: number; registration: 'computed' | 'none' | 'external'; customs: string }
+export interface CountryInfo { eu: boolean; vat: number; regTax: 'computed' | 'none' | 'national'; customs: string }
 
 export interface NotComputed { key: string; source: { title: string; url: string } }
 

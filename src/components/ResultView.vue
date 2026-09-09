@@ -38,11 +38,12 @@ function msg(m?: Msg): string {
   return t(m.key, params)
 }
 const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estimateNote') : ''].filter(Boolean)
+const amount = (it: LineItem) => (it.unknown ? '—' : null)
 </script>
 
 <template>
   <div>
-    <div class="result-dark">
+    <div class="total-box">
       <div class="toolbar">
         <h2>{{ t('result.title') }} <Help :text="t('result.help')" /></h2>
         <div class="chips"><button v-for="c in curOptions" :key="c.value" type="button" class="chip" :class="{ on: cur === c.value }" @click="cur = c.value">{{ c.label }}</button></div>
@@ -58,17 +59,17 @@ const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estim
       <table class="lines">
         <tbody>
           <tr class="cat"><td colspan="3">{{ t('result.taxes') }} <Help :text="t('result.help.taxes')" /></td></tr>
-          <tr v-for="it in taxes" :key="it.key">
-            <td class="l"><span class="dot red"></span>{{ msg(it.label) }} <Help :lines="helpLines(it)" :formula="it.formula" :source="it.source" /></td>
-            <td class="n dim">{{ isRange(it) ? `${money(it.range.min)} – ${money(it.range.max)}` : '' }}</td>
-            <td class="n"><CountUp :value="it.range.likely" :format="money" /></td>
+          <tr v-for="it in taxes" :key="it.key" :class="{ unk: it.unknown }">
+            <td class="l"><span class="dot" :class="it.unknown ? 'hollow' : 'red'"></span>{{ msg(it.label) }} <Help :lines="helpLines(it)" :formula="it.formula" :source="it.source" /></td>
+            <td class="n dim">{{ it.unknown ? t('result.notInTotal') : isRange(it) ? `${money(it.range.min)} – ${money(it.range.max)}` : '' }}</td>
+            <td class="n"><span v-if="amount(it)" class="dim">—</span><CountUp v-else :value="it.range.likely" :format="money" /></td>
           </tr>
           <template v-if="fees.length || result.nuances.length">
             <tr class="cat"><td colspan="3">{{ t('result.fees') }} <Help :text="t('result.help.fees')" /></td></tr>
-            <tr v-for="it in fees" :key="it.key">
-              <td class="l"><span class="dot red"></span>{{ msg(it.label) }} <Help v-if="it.note || it.source || it.estimate" :lines="helpLines(it)" :source="it.source" /></td>
-              <td class="n dim">{{ isRange(it) ? `${money(it.range.min)} – ${money(it.range.max)}` : '' }}</td>
-              <td class="n"><CountUp :value="it.range.likely" :format="money" /></td>
+            <tr v-for="it in fees" :key="it.key" :class="{ unk: it.unknown }">
+              <td class="l"><span class="dot" :class="it.unknown ? 'hollow' : 'red'"></span>{{ msg(it.label) }} <Help v-if="it.note || it.source || it.estimate" :lines="helpLines(it)" :source="it.source" /></td>
+              <td class="n dim">{{ it.unknown ? t('result.notInTotal') : isRange(it) ? `${money(it.range.min)} – ${money(it.range.max)}` : '' }}</td>
+              <td class="n"><span v-if="amount(it)" class="dim">—</span><CountUp v-else :value="it.range.likely" :format="money" /></td>
             </tr>
             <template v-if="conversion">
               <tr>
@@ -87,11 +88,6 @@ const helpLines = (it: LineItem) => [msg(it.note), it.estimate ? t('result.estim
         </tbody>
       </table>
       <p class="tiny">{{ t('result.customsValue', { value: money(result.customsValue) }) }} <Help :text="t(route.destination === 'UA' ? 'result.help.customsValueUa' : 'result.help.customsValueEu')" :source="refs.duty" /></p>
-
-      <div v-if="result.notComputed.length" class="nc">
-        <div class="nc-title">{{ t('result.notComputed') }}</div>
-        <div v-for="n in result.notComputed" :key="n.key" class="nc-row"><span class="dot grey"></span><span>{{ t(`result.notComputed.${n.key}`) }}</span> <a :href="n.source.url" target="_blank" rel="noopener">{{ n.source.title }} ↗</a></div>
-      </div>
 
       <details v-if="result.warnings.length"><summary>{{ t('result.warnings', { n: result.warnings.length }) }}</summary><ul class="body"><li v-for="(w, i) in result.warnings" :key="i">{{ msg(w) }}</li></ul></details>
       <details><summary>{{ t('result.steps') }}</summary><ol class="body"><li v-for="(c, i) in result.checklist" :key="i">{{ msg(c) }}</li></ol></details>

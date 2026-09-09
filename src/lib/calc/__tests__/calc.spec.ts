@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { FxRates, RouteInput, Vehicle } from '../../../types'
 import { ageCoefUa, calcUkraine, exciseUa, pensionRate } from '../ukraine'
 import { calcSpain, depreciation, iedmtRate } from '../spain'
-import { calcEu, polandExciseRate } from '../eu'
+import { austriaNova, calcEu, polandExciseRate } from '../eu'
 import { checkDigitValid, detectMarketSpec, modelYearFromVin } from '../../vin'
 
 const fx: FxRates = { usdUah: 44.4694, eurUah: 51.6383, date: '2026-09-08', source: 'fallback' }
@@ -124,13 +124,32 @@ describe('EU generic 2026', () => {
     expect(excise).toBeCloseTo((res.customsValue + duty) * 0.031, 2)
     expect(vat).toBeCloseTo((res.customsValue + duty + excise) * 0.23, 2)
   })
-  it('EU → DE used: no duty, no VAT, registration tax none; NL external registration tax listed', () => {
+  it('EU → DE used: no duty, no VAT, registration tax is a real zero', () => {
     const de = calcEu({ ...audi, marketSpec: 'EU' }, { ...baseRoute, origin: 'EU', destination: 'DE', purchaseCurrency: 'EUR' }, fx, now)
     expect(de.items.find((i) => i.key === 'duty')).toBeUndefined()
     expect(de.taxesTotal.likely).toBe(0)
-    expect(de.notComputed.some((n) => n.key === 'registrationTax')).toBe(false)
+    const reg = de.items.find((i) => i.key === 'regTax')!
+    expect(reg.unknown).toBeUndefined()
+    expect(reg.range.likely).toBe(0)
+  })
+  it('NL registration tax exists but is not computed, so it stays out of the total', () => {
     const nl = calcEu(audi, { ...baseRoute, destination: 'NL' }, fx, now)
-    expect(nl.notComputed.some((n) => n.key === 'registrationTax')).toBe(true)
+    const reg = nl.items.find((i) => i.key === 'regTax')!
+    expect(reg.unknown).toBe(true)
     expect(nl.items.find((i) => i.key === 'vat')!.range.likely).toBeCloseTo((nl.customsValue * 1.1) * 0.21, 2)
+    expect(nl.total.likely).toBeCloseTo(nl.items.filter((i) => !i.unknown).reduce((a, i) => a + i.range.likely, 0), 6)
+  })
+  it('Austria NoVA 2026: (CO2 − 91) / 5 of the price, minus 350, plus 80 € per gram over 155', () => {
+    const nova = austriaNova(audi, 20000)!
+    expect(nova.rate).toBeCloseTo(0.15, 6)
+    expect(nova.malus).toBe((168 - 155) * 80)
+    expect(nova.total).toBeCloseTo(20000 * 0.15 - 350 + 1040, 6)
+    expect(austriaNova({ ...audi, fuel: 'electric', co2Wltp: undefined }, 20000)!.total).toBe(0)
+    expect(austriaNova({ ...audi, co2Wltp: undefined }, 20000)).toBeNull()
+    expect(austriaNova({ ...audi, co2Wltp: 90 }, 20000)!.total).toBe(0)
+  })
+  it('EU → AT used car: the price still moves the total through NoVA', () => {
+    const at = (price: number) => calcEu({ ...audi, marketSpec: 'EU' }, { ...baseRoute, origin: 'EU', destination: 'AT', purchaseCurrency: 'EUR', purchasePrice: price }, fx, now).total.likely
+    expect(at(20000)).toBeGreaterThan(at(10000))
   })
 })
