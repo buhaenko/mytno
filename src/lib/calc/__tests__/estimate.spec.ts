@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, czechiaEmissionFee, estimateEu, netherlandsBpm, polandExcise, portugalIsv } from '../eu'
+import { austriaNova, czechiaEmissionFee, estimateEu, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { fallbackRates } from '../../fx'
 
@@ -171,6 +171,27 @@ describe('Other EU countries', () => {
     expect(portugalIsv({ ...audi, fuel: 'electric' }, now)!.total).toBe(0)
     expect(portugalIsv({ ...audi, year: 2005, engineCc: 999, co2Wltp: 100 }, now)!.total).toBe(100)
     expect(portugalIsv({ ...audi, co2Wltp: undefined }, now)).toBeNull()
+  })
+
+  it('reads the Lithuanian tax off the CO₂ table, twice as much for a diesel', () => {
+    expect(lithuaniaTax(audi)!.eur).toBe(80.94)
+    expect(lithuaniaTax({ ...audi, fuel: 'diesel' })!.eur).toBe(161.88)
+    expect(lithuaniaTax({ ...audi, co2Wltp: 130 })!.eur).toBe(0)
+    expect(lithuaniaTax({ ...audi, fuel: 'electric' })!.eur).toBe(0)
+    expect(lithuaniaTax({ ...audi, co2Wltp: 400 })!.eur).toBe(364.23)
+    expect(lithuaniaTax({ ...audi, co2Wltp: undefined })).toBeNull()
+  })
+
+  it('multiplies the Slovak power rate by the coefficient of its emission standard', () => {
+    const fee = slovakiaFee(audi, now)!
+    expect(Math.round(fee.kw)).toBe(185)
+    expect(fee.coef).toBe(0.45)
+    expect(fee.eur).toBeCloseTo(900 * 0.45, 6)
+    // Never below the flat €33, and a car past forty pays the veteran coefficient.
+    expect(slovakiaFee({ ...audi, powerHp: 75, year: 2021 }, now)!.eur).toBe(33)
+    expect(slovakiaFee({ ...audi, year: 1980 }, now)!.coef).toBe(0.1)
+    expect(slovakiaFee({ ...audi, fuel: 'electric', powerHp: undefined }, now)!.eur).toBe(33)
+    expect(slovakiaFee({ ...audi, powerHp: undefined }, now)).toBeNull()
   })
 
   it('reads the Czech emission fee off the model year', () => {

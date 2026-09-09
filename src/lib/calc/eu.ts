@@ -2,6 +2,8 @@ import type { CountryInfo, Destination, Estimate, FxRates, Line, Trip, Vehicle }
 import countries from '@config/countries.json'
 import netherlands from '@config/rules.netherlands.json'
 import portugal from '@config/rules.portugal.json'
+import lithuania from '@config/rules.lithuania.json'
+import slovakia from '@config/rules.slovakia.json'
 import { toEur } from '../fx'
 import { exact, money, nothing, percent, plus, times } from '../money'
 import { age, builtInEu, conversion, line, msg, newForVat, totalOf } from './common'
@@ -89,6 +91,38 @@ export function portugalIsv(v: Vehicle, now: Date) {
   return { total: Math.max(portugal.minimumEur, full * (1 - written / 100)), cylinder, environmental, written, phev, ev: false, diesel: v.fuel === 'diesel' }
 }
 
+/**
+ * Lithuania: a flat amount read off the table Regitra publishes, by CO₂ and fuel group.
+ * Nothing is due up to 130 g/km, and the diesel column costs exactly twice the petrol one.
+ */
+export function lithuaniaTax(v: Vehicle) {
+  if (v.fuel === 'electric') return { eur: 0, co2: 0, free: true }
+  if (v.co2Wltp === undefined) return null
+  const co2 = Math.round(v.co2Wltp)
+  if (co2 <= lithuania.freeUpToCo2) return { eur: 0, co2, free: true }
+
+  const band = lithuania.bands.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!
+  const column = v.fuel === 'diesel' ? band.diesel : v.fuel === 'lpg' ? band.gas : band.petrol
+  return { eur: column, co2, free: false }
+}
+
+/**
+ * Slovakia: the rate for the engine power times an ecological coefficient, which the
+ * emission standard sets — and the year of first registration tells us which standard.
+ * Electric cars pay the flat minimum.
+ */
+export function slovakiaFee(v: Vehicle, now: Date) {
+  if (v.fuel === 'electric') return { eur: slovakia.flatEur, kw: 0, coef: 0, flat: true }
+  if (!v.powerHp) return null
+
+  const kw = v.powerHp * slovakia.hpToKw
+  const rate = slovakia.power.find((p) => p.maxKw === null || kw <= p.maxKw)!.eur
+  const coef = now.getFullYear() - v.year >= slovakia.veteranYears ? slovakia.veteranCoef
+    : v.fuel === 'phev' ? slovakia.plugInOrHydrogenCoef
+    : slovakia.eco.find((e) => v.year >= e.fromYear)!.coef
+  return { eur: Math.min(slovakia.maxEur, Math.max(slovakia.flatEur, rate * coef)), kw, coef, flat: false }
+}
+
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
 function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
@@ -104,6 +138,8 @@ function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: nu
 
   if (trip.destination === 'NL') return dutchBpm(v, exempt, now)
   if (trip.destination === 'PT') return portugueseIsv(v, exempt, now)
+  if (trip.destination === 'LT') return lithuanianTax(v, exempt)
+  if (trip.destination === 'SK') return slovakFee(v, exempt, now)
   if (trip.destination === 'CZ') return czechFee(v, fx)
 
   // Austria is the third country in this module with a formula of its own.
@@ -167,6 +203,51 @@ function portugueseIsv(v: Vehicle, exempt: boolean, now: Date): { line: Line; wa
   return {
     line: line('regTax', label, 'tax', exact(isv.total), {
       formula: 'cilindrada + ambiental − tabela D', notes, source,
+    }),
+  }
+}
+
+/** Lithuania: the table amount for the car's CO₂ and fuel. */
+function lithuanianTax(v: Vehicle, exempt: boolean): { line: Line; warning?: ReturnType<typeof msg> } {
+  const source = lithuania.source
+  // Lithuania's tax is called exactly “registration tax”, so naming it again would only stutter.
+  const label = msg('line.regTax')
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  const tax = lithuaniaTax(v)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.ltNoCo2')], source }),
+      warning: msg('warn.ltNeedCo2'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      formula: `CO₂ ${tax.co2} g/km`,
+      notes: [msg(tax.free ? 'note.ltFree' : 'note.ltTax', { co2: tax.co2, free: lithuania.freeUpToCo2 })],
+      source,
+    }),
+  }
+}
+
+/** Slovakia: engine power times the coefficient of its emission standard. */
+function slovakFee(v: Vehicle, exempt: boolean, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+  const source = slovakia.source
+  const label = msg('line.regTaxNamed', { name: 'poplatok za zápis' })
+  if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
+
+  const fee = slovakiaFee(v, now)
+  if (!fee) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.skNoPower')], source }),
+      warning: msg('warn.skNeedPower'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(fee.eur), {
+      formula: fee.flat ? '33 €' : 'kW × ekologický koeficient',
+      notes: [msg(fee.flat ? 'note.skFlat' : 'note.skFee', { kw: Math.round(fee.kw), coef: fee.coef })],
+      source,
     }),
   }
 }

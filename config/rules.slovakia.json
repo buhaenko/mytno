@@ -1,0 +1,35 @@
+{
+  "_note": "The fee for entering a vehicle in the Slovak register, položka 65 of the administrative fees act. Since 1 July 2023 it is the rate for the engine power multiplied by an ecological coefficient tied to the emission standard — the age of the car no longer enters it. The standard is read off the technical certificate; we derive it from the year of first registration, taking the later side of each boundary year so the fee is never understated.",
+  "effective": "2023-07-01",
+  "source": {
+    "title": "Zákon 145/1995 Z. z. o správnych poplatkoch, položka 65 (slov-lex.sk)",
+    "url": "https://static.slov-lex.sk/static/SK/ZZ/1995/145/20260901.html"
+  },
+  "power": [
+    { "maxKw": 80, "eur": 33 },
+    { "maxKw": 90, "eur": 60 },
+    { "maxKw": 100, "eur": 90 },
+    { "maxKw": 110, "eur": 120 },
+    { "maxKw": 125, "eur": 200 },
+    { "maxKw": 140, "eur": 300 },
+    { "maxKw": 155, "eur": 500 },
+    { "maxKw": 170, "eur": 700 },
+    { "maxKw": 210, "eur": 900 },
+    { "maxKw": null, "eur": 1000 }
+  ],
+  "eco": [
+    { "fromYear": 2021, "euro": "6d", "coef": 0.4 },
+    { "fromYear": 2017, "euro": "6a-c", "coef": 0.45 },
+    { "fromYear": 2012, "euro": "5", "coef": 0.5 },
+    { "fromYear": 2007, "euro": "4", "coef": 0.6 },
+    { "fromYear": 2002, "euro": "3", "coef": 0.7 },
+    { "fromYear": 1997, "euro": "2", "coef": 0.8 },
+    { "fromYear": 0, "euro": "1", "coef": 1.0 }
+  ],
+  "plugInOrHydrogenCoef": 0.2,
+  "veteranCoef": 0.1,
+  "veteranYears": 40,
+  "flatEur": 33,
+  "maxEur": 1000,
+  "hpToKw": 0.7355
+}

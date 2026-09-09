@@ -72,8 +72,10 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Netherlands | duty, VAT 21%, **BPM**: the 2026 CO₂ table for the same car new, less the official depreciation table for its age, plus the diesel surcharge. The purchase price never enters it |
 | Portugal | duty, VAT 23%, **ISV**: the cylinder component plus the environmental one, each of them rate × value − deduction, less the table-D reduction for years of use, never below €100 |
 | Czechia | duty, VAT 21%, the one-off **emission fee**: 3 000 CZK for EURO 2, 5 000 for EURO 1, 10 000 for no standard, nothing from EURO 3 up — read off the model year |
+| Lithuania | duty, VAT 21%, the **registration tax** off Regitra's table: nothing to 130 g/km, then a step every 10 g, the diesel column exactly twice the petrol one |
+| Slovakia | duty, VAT 23%, the **registration fee**: the rate for the engine power (€33 to €1 000) times the ecological coefficient of its emission standard, which the year of first registration gives |
 | DE BG RO LU SE LV | duty + national VAT; registration tax a real €0, all six checked against their own authority on 9 Sep 2026 |
-| the other 15 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value or a table we cannot reproduce |
+| the other 13 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value or a table we cannot reproduce |
 
 Market estimates, labelled as such in their “?”: certificate of conformity, homologación, ITV,
 DGT fee, plates, mandatory lighting conversion.
@@ -112,15 +114,47 @@ DGT fee, plates, mandatory lighting conversion.
   already contains the tax, so a price proxy would not be a rough answer but a wrong one.
 - **Italy has no registration tax in the CO₂ sense.** The IPT is a provincial transcription fee on
   engine power: €150.81 up to 53 kW, €3.5119/kW above it (D.M. 435/1998), which each province may
-  raise by up to 30%. Belgium's is three regional taxes, not one; Cyprus abolished its excise duty on
-  1 Jan 2019 and replaced it with an age-and-euro-standard surcharge.
-- **France is one table away from being computed.** The 2026 WLTP barème reads off Légifrance
-  (art. L.421-62): nothing below 108 g/km, €75 at 109, €2 205 at 140, €8 770 at 160, €45 990 at 180,
-  and a flat €80 000 above 191. Art. L.421-60 zeroes the malus for a car first registered before
-  1 January 2015. What blocked it is the décote for a used import — the age-in-months coefficients
-  live in arts. L.421-7-1 to L.421-7-3, which the fetch could not read; without them an imported 2017
-  car would be charged as if new. The malus au poids (€10/kg from 1 500 kg, rising to €30 from 2 000)
-  needs a kerb mass we do not have, and the carte grise needs the region and the fiscal CV.
+  raise by up to 30% — a genuine range, which is exactly what a line's min…max is for.
+- **Belgium is three taxes, and Wallonia's is the one we have.** Wallonia publishes the whole table
+  (valid 1 Jul 2026 – 30 Jun 2027): a base by power — €64.01 to 70 kW, 128.02, 515.20, 902.37,
+  1 289.55, 2 579.10 and €5 159.25 above 155 kW — times CO₂/136 (WLTP), times full mass/1 838, times
+  a fuel coefficient (0.01–0.26 electric, 0.80 hybrid, 1.00 the rest), with an age degression to a
+  flat €61.50 after fifteen years and bounds of €50 and €9 000. Flanders uses its own formula with a
+  yearly technology coefficient (1.245 for 2026) and Brussels charges on fiscal horsepower and age
+  with no CO₂ at all — neither published a numeric table our fetch could read. Nothing can be computed
+  until the visitor says which region, which nobody asks them today.
+- **Hungary's base stopped being displacement.** From 1 March 2025 the regisztrációs adó is engine
+  power times an environmental class: a multiplier from 1 to 216 on 45 000 Ft, less a monthly
+  depreciation (3% in the first two months, 45% at three years, 90% past 169 months). Cars first
+  registered after 2020, and hybrids, sit in the first column, which we could read straight off the
+  year; older ones need the Hungarian class from decree 6/1990 KöHÉM, which is neither CO₂ nor Euro.
+- **Croatia's two tables are in euro and confirmed** (Uredba NN 156/2022): a price component — 0% to
+  €26 544, then 3%, 5%, 7%, 9%, 11%, 13%, 15%, 16% and 17% above €79 634, each with its own base
+  amount — plus a CO₂ component from 95 g/km, €5.97 a gram for petrol against €13.94 for diesel, and
+  a plug-in relief equal in percent to its electric range in km. Missing: the depreciation table of
+  the Pravilnik, of which only points are known (86% at four months, 70.28% at eighteen, 59.32% at
+  thirty).
+- **Slovenia stopped being a percentage of price in 2021.** ZDMV-1 adds three separate tables — CO₂
+  with fuel, engine power, and Euro standard — and multiplies by an age reduction from 100% in the
+  first year to 40% after ten; electric cars pay too, on power alone. Every figure we have comes from
+  the 2020 bill, because pisrs.si and uradni-list.si serve empty shells; the enacted text still has to
+  be read. It also needs kW, the Euro standard and the seat count.
+- **Cyprus abolished its excise duty on 1 Jan 2019** (law 39(I)/2019) and replaced it with a one-off
+  surcharge by euro standard and fuel. No Cypriot government site would answer, so the table itself is
+  still unknown; the CO₂-based charge that is easy to find is the *annual* road tax, a different thing.
+- **France: the décote is found, the old barèmes are not.** The 2026 WLTP barème (art. L.421-62):
+  nothing below 108 g/km, €75 at 109, €2 205 at 140, €8 770 at 160, €45 990 at 180, flat €80 000
+  above 191. The décote is art. **L.421-7-2** — 3% at 1–3 months, 16% at 13–18, 28% at 25–36, 38% at
+  49–60, 64% at 109–120, 82% at 145–156, 100% from 181 — and it applies to the weight malus too
+  (L.421-73). A car first registered before 1 Jan 2015 owes nothing (L.421-60), and an import already
+  registered elsewhere in the EU is liable like any other (L.421-33/36; the only exemption at that
+  slot, L.421-65, is for wheelchair-accessible vehicles). What still blocks it: **the barème of the
+  car's own first-registration year applies, wherever that happened** (L.421-62, L.421-72), and the
+  article carries barèmes only from 2020 — 2015 to 2019 sit in the old Code général des impôts. A car
+  with no European type approval falls to the fiscal-horsepower barème (L.421-64), one approved before
+  WLTP to the NEDC barème (L.421-63); neither has been collected. The malus au poids (€10/kg from
+  1 500 kg to €30 from 2 000, less 100 kg for a hybrid and 200 for a plug-in, capped at 15% of mass)
+  needs a kerb mass we do not have, and L.421-74 caps the two together at the top of the CO₂ barème.
 - **Estonia has charged a registration fee since 1 Jan 2025** — a base part plus CO₂ and mass parts,
   times an age coefficient, collected by Transpordiamet at first registration and separate from the
   annual motor vehicle tax the tax office bills. The config called it €0 until 9 Sep 2026, which was
@@ -129,9 +163,24 @@ DGT fee, plates, mandatory lighting conversion.
   riigiteataja.ee, which did not render. The fee is real and one-off — a base part, a CO₂ part and a
   until those figures come from the law itself it stays linked, not computed. Its own calculation API
   also wants a kerb mass, which we do not have.
-- **Registration taxes were the weak spot.** Seven are now computed from official tables
-  (UA ES PL AT CZ NL PT), six are a zero each country's own authority confirms, and fifteen are a
-  link. Estonia proved the risk: a country's answer can change under a config that nobody revisits.
+- **Lithuania is a lookup, not a formula** (checked 9 Sep 2026). Regitra publishes the whole table:
+  nothing up to 130 g/km, then €20.23 for petrol at 131–140 g/km rising to €364.23 above 300, with
+  diesel exactly double and the gas column about nine tenths of petrol. The columns are fuel *groups* —
+  the diesel one also covers diesel+gas and diesel+electric — and the amounts are indexed yearly, so
+  the table wants re-reading each January.
+- **The Slovak fee ignores CO₂ entirely** (checked 9 Sep 2026, zákon 145/1995 Z. z., položka 65).
+  Since 1 July 2023 it is the rate for engine power — €33 up to 80 kW, then 60, 90, 120, 200, 300,
+  500, 700, 900 and €1 000 above 210 kW — times an ecological coefficient the emission standard sets:
+  0.40 for Euro 6d, 0.45, 0.50, 0.60, 0.70, 0.80 and 1.00 for Euro 1, plus 0.20 for plug-ins and
+  hydrogen and 0.10 for a car past forty. The age of the car stopped mattering in 2023. We take the
+  later side of each boundary year so the fee is never understated, and convert `powerHp` at 0.7355.
+- **Registration taxes were the weak spot.** Nine are now computed from official tables
+  (UA ES PL AT CZ LT NL PT SK), six are a zero each country's own authority confirms, and thirteen
+  are a link. Estonia proved the risk: a country's answer can change under a config that nobody revisits.
+- **The CO₂ field follows the tax, not Spain.** It was shown only for Spain and Austria, so a reader
+  choosing the Netherlands, Portugal or Lithuania had nowhere to type the one number their tax needs.
+  It now appears for all five, its “?” no longer cites a Spanish law at readers of the other four, and
+  Slovakia gets a power field of its own for the same reason.
 - **Bulgaria joined the euro on 1 Jan 2026.** The ECB's last lev observation is 2025-12-31, so there
   is no BGN in the app and `BG` maps to the euro. AE, GE, MD and RS map to the euro too: no bank
   reachable from a browser publishes their currencies.
@@ -286,17 +335,29 @@ nothing.** A page that reproduces a law is not the law.
 6. Check it in the browser before pushing (see **Working rules**), and record the date and the source
    in this file under **Facts worth not re-deriving**.
 
-**What is left, in order.** The Netherlands and Portugal are done, and the three doubtful zeros hold.
-1. **France** — one fetch away: the décote coefficients of arts. L.421-7-1 to L.421-7-3 on Légifrance.
-   The 2026 barème is already written down above; add the décote and the CO₂ malus can be computed,
-   with the weight malus and the carte grise named as extras we do not have the inputs for.
-2. **Estonia** — the CO₂ bands and the mass part, from riigiteataja.ee rather than from a summary.
-3. **Slovenia, Lithuania, Croatia** — a CO₂ percentage of the price, a CO₂ threshold, a CO₂-and-price
-   table: all three are shaped like something we could compute if the official table can be read.
-4. **Hungary and Slovakia** need engine power in kW, which the catalogue sometimes gives as `powerHp`;
-   Italy's IPT needs kW too, and would be a range because the province adds up to 30%.
-5. **Denmark, Finland, Ireland, Malta** are not worth attempting: their base is the country's own
-   valuation of the car, and a foreign purchase price is not a proxy for it.
+**What is left, in order.** Every one of the 28 has now been read twice; the numbers each country
+still owes us are in **Facts worth not re-deriving** above.
+1. **Croatia** — one table: the Pravilnik's depreciation schedule. Everything else is in euro and
+   confirmed, so this is the shortest path to a tenth computed country.
+2. **France** — the barèmes for 2015–2019 from the old Code général des impôts, and a decision about
+   cars with no WLTP figure. Worth doing even partially: the décote makes most older imports cheap or
+   free, which is itself the answer people are looking for.
+3. **Slovenia** — read the enacted ZDMV-1, then it needs only kW and the Euro standard.
+4. **Estonia** — before rebuilding its formula, try whether `apimsm.transpordiamet.ee/msm/regTasu/`
+   answers a browser. An official calculation API beats any table we could copy, and no other country
+   offers one.
+5. **Hungary, Italy, Belgium** — all three wait on a new input: the Hungarian environmental class,
+   the Italian province (a range, not a number), the Belgian region. Ask for the input or leave them
+   linked; do not guess one.
+6. **Denmark, Finland, Ireland, Malta** are settled as not computable. Their rates are written down
+   above and could be *shown* — “your car falls in the 29.7% band” — but never totalled, because the
+   base is that country's own valuation and their law says so outright.
+
+**The real next step is not a country, it is four fields.** Engine power in kW unlocks Slovakia (done),
+Hungary, Slovenia, Italy and Belgium; mass unlocks France, Belgium and Estonia; the *month* of first
+registration sharpens the Dutch, French, Hungarian and Croatian tables, which are all monthly while we
+still count from the middle of a model year; and the region of registration is the only thing standing
+between us and Belgium.
 
 ## History
 
@@ -323,3 +384,7 @@ nothing.** A page that reproduces a law is not the law.
     authority that levies it. Three moved into the computed column — the Dutch BPM, the Portuguese
     ISV and the Czech emission fee — the three unverified zeros were confirmed, and every country
     that stays “not in total” now links to its own tax office instead of to its customs service.
+  - **Then read the remaining fifteen a second time, deeper**, and added Lithuania and Slovakia, which
+    turned out to need nothing we did not already have. Fixed a real hole while doing it: the CO₂
+    field only appeared for Spain and Austria, so three of the computed countries had no way to
+    receive the number their tax is made of.

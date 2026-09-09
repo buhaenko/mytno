@@ -211,9 +211,9 @@
       "eu": true,
       "vat": 0.21,
       "customs": "https://www.lrmuitine.lt/",
-      "regTax": "national",
+      "regTax": "computed",
       "regTaxSource": {
-        "title": "Regitra — vehicle registration tax fee (regitra.lt)",
+        "title": "Regitra — registration tax fee (regitra.lt)",
         "url": "https://www.regitra.lt/en/services/vehicle-registration/registration-tax-fee/"
       }
     },
@@ -267,10 +267,10 @@
       "eu": true,
       "vat": 0.23,
       "customs": "https://www.financnasprava.sk/",
-      "regTax": "national",
+      "regTax": "computed",
       "regTaxSource": {
-        "title": "Slov-Lex — zákon 145/1995 Z. z. o správnych poplatkoch, položka za zápis vozidla",
-        "url": "https://static.slov-lex.sk/static/SK/ZZ/1995/145/20240601.html"
+        "title": "Zákon 145/1995 Z. z., položka 65 — zápis vozidla do evidencie (slov-lex.sk)",
+        "url": "https://static.slov-lex.sk/static/SK/ZZ/1995/145/20260901.html"
       }
     },
     "SI": {

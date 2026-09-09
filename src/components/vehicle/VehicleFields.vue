@@ -14,9 +14,12 @@ const FUELS: Fuel[] = ['petrol', 'diesel', 'hybrid', 'phev', 'electric', 'lpg']
 const MARKETS: Market[] = ['US', 'EU', 'JP', 'KR', 'OTHER']
 
 const electrified = computed(() => vehicle.value.fuel === 'electric' || vehicle.value.fuel === 'phev')
-/** CO₂ sets the registration tax in Spain and Austria; the new price only in Spain. */
-const needsCo2 = computed(() => props.destination === 'ES' || props.destination === 'AT')
+/** CO₂ sets the registration tax in six countries; the new price only in Spain, the power only in Slovakia. */
+const CO2_COUNTRIES: Destination[] = ['ES', 'AT', 'NL', 'PT', 'LT']
+const needsCo2 = computed(() => CO2_COUNTRIES.includes(props.destination))
 const needsListPrice = computed(() => props.destination === 'ES')
+const needsPower = computed(() => props.destination === 'SK')
+const spainCo2Source = { title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }
 const displacementHelp = computed(() =>
   props.destination === 'UA' ? 'car.help.ccUa' : props.destination === 'PL' ? 'car.help.ccPl' : 'car.help.ccOther')
 
@@ -51,9 +54,14 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
     <label v-if="needsCo2" class="field">
       <span class="field-label">
         {{ t('car.co2') }}
-        <HelpTip :text="t('car.help.co2')" :source="{ title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }" />
+        <HelpTip :text="t('car.help.co2')" :source="destination === 'ES' ? spainCo2Source : undefined" />
       </span>
       <input v-model.number="vehicle.co2Wltp" type="number" class="input" placeholder="168" />
+    </label>
+
+    <label v-if="needsPower" class="field">
+      <span class="field-label">{{ t('car.power') }} <HelpTip :text="t('car.help.power')" /></span>
+      <input v-model.number="vehicle.powerHp" type="number" class="input" placeholder="252" />
     </label>
 
     <label v-if="needsListPrice" class="field">

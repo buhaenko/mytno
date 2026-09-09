@@ -1,0 +1,33 @@
+{
+  "_note": "Registration tax on the first Lithuanian registration, from the table Regitra publishes. Nothing is due up to 130 g/km; above it the scale steps every 10 g. The three columns are fuel groups, not fuels: the diesel column also covers diesel+gas and diesel+electric, the petrol column covers petrol and petrol+electric, and the gas column covers petrol+gas, ethanol and the like. The amounts are indexed yearly; these are the ones on regitra.lt today.",
+  "effective": "2026-01-01",
+  "source": {
+    "title": "Regitra — registration tax fee (regitra.lt)",
+    "url": "https://www.regitra.lt/en/services/vehicle-registration/registration-tax-fee/"
+  },
+  "law": {
+    "title": "Law on the registration tax of motor vehicles, XIII-2690 (e-seimas.lrs.lt)",
+    "url": "https://e-seimas.lrs.lt/portal/legalAct/lt/TAD/1cf36232227211eab86ff95170e24944/asr"
+  },
+  "freeUpToCo2": 130,
+  "bands": [
+    { "maxCo2": 140, "diesel": 40.47, "petrol": 20.23, "gas": 18.21 },
+    { "maxCo2": 150, "diesel": 80.94, "petrol": 40.47, "gas": 36.42 },
+    { "maxCo2": 160, "diesel": 121.41, "petrol": 60.70, "gas": 54.63 },
+    { "maxCo2": 170, "diesel": 161.88, "petrol": 80.94, "gas": 72.85 },
+    { "maxCo2": 180, "diesel": 202.35, "petrol": 101.17, "gas": 91.06 },
+    { "maxCo2": 190, "diesel": 242.82, "petrol": 121.41, "gas": 109.27 },
+    { "maxCo2": 200, "diesel": 283.29, "petrol": 141.64, "gas": 127.48 },
+    { "maxCo2": 210, "diesel": 323.76, "petrol": 161.88, "gas": 145.69 },
+    { "maxCo2": 220, "diesel": 364.23, "petrol": 182.11, "gas": 163.90 },
+    { "maxCo2": 230, "diesel": 404.70, "petrol": 202.35, "gas": 182.11 },
+    { "maxCo2": 240, "diesel": 445.17, "petrol": 222.58, "gas": 200.33 },
+    { "maxCo2": 250, "diesel": 485.64, "petrol": 242.82, "gas": 218.54 },
+    { "maxCo2": 260, "diesel": 526.11, "petrol": 263.05, "gas": 236.75 },
+    { "maxCo2": 270, "diesel": 566.58, "petrol": 283.29, "gas": 254.96 },
+    { "maxCo2": 280, "diesel": 607.05, "petrol": 303.52, "gas": 273.17 },
+    { "maxCo2": 290, "diesel": 647.52, "petrol": 323.76, "gas": 291.38 },
+    { "maxCo2": 300, "diesel": 687.99, "petrol": 343.99, "gas": 309.60 },
+    { "maxCo2": null, "diesel": 728.46, "petrol": 364.23, "gas": 327.81 }
+  ]
+}
