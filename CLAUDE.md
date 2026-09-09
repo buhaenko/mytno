@@ -484,5 +484,5 @@ honest answer where the law itself leaves one.
     disagrees with its own bill in almost every number.
   - **A fourth pass finished it**: Estonia is asked of its own register, Belgium asks the visitor
     which region they live in and computes two of the three, Cyprus turned out to charge nothing at
-    all, and Ireland and Croatia say what is known where the amount cannot be. Twenty-one of the
-    twenty-eight destinations now end in a number.
+    all, and Ireland and Croatia say what is known where the amount cannot be. Twenty-two of the
+    twenty-eight destinations now end in a number — Belgium once its region is named, Brussels apart.
