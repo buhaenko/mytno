@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useI18n } from '../../i18n'
 
 /** The question, then the two answers it needs. It shrinks to a route bar once both are given. */
-const props = defineProps<{ compact: boolean; title?: string; tagline?: string }>()
+const props = defineProps<{ compact: boolean; title?: string; tagline?: string; flag?: string }>()
 const { t } = useI18n()
 
 /** The closing word carries the accent; punctuation stays plain. */
@@ -18,6 +18,7 @@ const headline = computed(() => {
 <template>
   <div class="hero" :class="{ compact }">
     <div class="hero-text">
+      <span v-if="flag" class="hero-flag" :class="`fi fi-${flag}`"></span>
       <h1>{{ headline.lead }} <span class="accent">{{ headline.word }}</span>{{ headline.punctuation }}</h1>
       <p>{{ tagline ?? t('app.tagline') }}</p>
     </div>

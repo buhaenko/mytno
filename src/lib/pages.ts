@@ -17,6 +17,8 @@ export interface Destination {
   vat: number
   customs: string
   regTax: 'computed' | 'none' | 'national'
+  /** The authority behind this country's registration tax, where it is not the customs service. */
+  regTaxSource?: Source
 }
 
 export interface BriefRow {
@@ -73,7 +75,7 @@ export interface SourceConfig {
 }
 
 export function sourcesFor(code: string, info: Destination, config: SourceConfig) {
-  const precise = config.precise[code]
+  const precise = config.precise[code] ?? info.regTaxSource
   return {
     duty: code === 'UA' ? config.precise.UA_DUTY! : config.euDuty,
     vat: code === 'UA' ? config.precise.UA_VAT! : config.vat,

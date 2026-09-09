@@ -30,17 +30,25 @@ const { vehicle, originCountry, destination, price, currency, hasOriginProof, re
 const PINNED_ORIGINS = ['US', 'DE', 'PL', 'LT', 'UA', 'JP', 'KR']
 const PINNED_DESTINATIONS = ['UA', 'ES', 'PL', 'DE']
 
-/** `/uk/import/es/` is Spain's page: the country is fixed and the page speaks about it. */
-const pageCountry = countryFromPath(location.pathname, import.meta.env.BASE_URL, (code) => code in DESTINATION_INFO)
+/**
+ * `/uk/import/es/` is Spain's page. It stays a country page afterwards: change the
+ * destination in the selector and the heading, the text and the address follow it,
+ * because a page about Ireland that calculates Poland would be a lie.
+ */
+const arrivedOnCountryPage = countryFromPath(location.pathname, import.meta.env.BASE_URL, (code) => code in DESTINATION_INFO)
+const pageCountry = computed(() =>
+  arrivedOnCountryPage && destination.value && destination.value in DESTINATION_INFO ? destination.value : null)
+
 const page = computed(() => {
-  if (!pageCountry) return null
-  const info = DESTINATION_INFO[pageCountry]!
-  return countryBrief(region(pageCountry), info, sourcesFor(pageCountry, info), t)
+  const code = pageCountry.value
+  if (!code) return null
+  const info = DESTINATION_INFO[code]!
+  return countryBrief(region(code), info, sourcesFor(code, info), t)
 })
 
 /** The address bar keeps whichever page it is on, and only the query moves. */
 const pathFor = (next: Locale) =>
-  pageCountry ? countryPath(import.meta.env.BASE_URL, next, pageCountry) : appPath(next)
+  pageCountry.value ? countryPath(import.meta.env.BASE_URL, next, pageCountry.value) : appPath(next)
 
 const priceText = ref('')
 const resultStep = ref<{ root: HTMLElement | null } | null>(null)
@@ -87,12 +95,11 @@ const showResidenceRelief = computed(() => destination.value !== 'UA' && calc.or
  */
 function writeUrl() {
   const state = snapshot.value
-  if (!state) return
-  const target = pathFor(locale.value) + toQuery(state)
+  const target = pathFor(locale.value) + (state ? toQuery(state) : '')
   if (location.pathname + location.search !== target) history.replaceState(null, '', target)
 }
 
-watch(snapshot, () => { if (!restoring.value) writeUrl() }, { deep: true })
+watch([snapshot, pageCountry], () => { if (!restoring.value) writeUrl() }, { deep: true })
 
 watch(calc.routeChosen, (chosen) => { if (chosen) setTimeout(() => (started.value = true), 250) })
 
@@ -111,7 +118,7 @@ async function changeLocale(next: Locale) {
 onMounted(async () => {
   const query = new URLSearchParams(location.search)
   calc.apply(fromQuery(query, DESTINATIONS))
-  if (pageCountry && !query.get('to')) destination.value = pageCountry as typeof destination.value
+  if (arrivedOnCountryPage && !query.get('to')) destination.value = arrivedOnCountryPage as typeof destination.value
   priceText.value = price.value ? String(price.value) : ''
   started.value = calc.routeChosen.value
 
@@ -126,7 +133,7 @@ onMounted(async () => {
   <div class="page">
     <TopBar :model-value="locale" :label="t('app.lang')" @update:model-value="changeLocale" />
 
-    <Hero :compact="started" :title="page?.h1" :tagline="page?.lead">
+    <Hero :compact="started" :title="page?.h1" :tagline="page?.lead" :flag="pageCountry?.toLowerCase()">
       <CountrySelect v-model="originCountry" :options="origins" :placeholder="t('app.from')" />
       <span class="route-arrow" aria-hidden="true">
         <svg viewBox="0 0 24 12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" /></svg>

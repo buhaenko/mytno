@@ -69,8 +69,8 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Spain | arancel 10%, IVA 21%, IEDMT by CO₂ (0 / 4.75 / 9.75 / 14.75%) on the Hacienda table price × age coefficient |
 | Poland | duty, akcyza 3.1% / 18.6% (reliefs for hybrids and EVs), VAT 23% |
 | Austria | duty, VAT 20%, **NoVA**: `(CO₂ − 91) / 5` of the price, max 80%, minus €350, plus €80 per gram above 155 g/km. Verified against bmf.gv.at, rates in force from 1 Jan 2026 |
-| DE SE CZ BG RO LU EE LV | duty + national VAT; registration tax is a real €0 (only fixed admin fees) |
-| the rest of the EU | duty 10% + national VAT; registration tax shown as “not in total” with a link to that country's customs |
+| DE BG LU RO SE LV | duty + national VAT; registration tax declared a real €0 — **only DE, RO and BG re-checked; LU, SE and LV are inherited and unverified** |
+| the other 18 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority, because it needs an official table we have not built |
 
 Market estimates, labelled as such in their “?”: certificate of conformity, homologación, ITV,
 DGT fee, plates, mandatory lighting conversion.
@@ -78,6 +78,16 @@ DGT fee, plates, mandatory lighting conversion.
 ## Facts worth not re-deriving
 
 - **EU VAT rates**: Taxes in Europe Database, as of 1 July 2025; Romania went to 21% on 1 Aug 2025.
+- **Estonia has charged a registration fee since 1 Jan 2025** — a base part plus CO₂ and mass parts,
+  administered by Transpordiamet, rising again in 2028 and 2031. The config called it €0 until
+  9 Sep 2026, which was simply wrong; it is `national` now.
+- **Czechia charges an emission fee once**, on the first registration of an import: 3 000 CZK for
+  EURO 2, 5 000 for EURO 1, 10 000 for no standard, nothing from EURO 3 up (Act 542/2020 Sb.). It is
+  derivable from the model year — EURO 3 from January 2001 — so it could be computed rather than
+  merely linked, and that is worth doing.
+- **Registration taxes are the weak spot.** Four are computed from official tables (UA ES PL AT).
+  The rest is either a declared zero or a link, and only some of the zeros have been re-checked.
+  Estonia proved the risk: a country's answer can change under a config that nobody revisits.
 - **Bulgaria joined the euro on 1 Jan 2026.** The ECB's last lev observation is 2025-12-31, so there
   is no BGN in the app and `BG` maps to the euro. AE, GE, MD and RS map to the euro too: no bank
   reachable from a browser publishes their currencies.

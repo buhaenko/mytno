@@ -140,7 +140,7 @@ for (const locale of LOCALES) {
           acceptedAnswer: { '@type': 'Answer', text: item.a },
         })),
       })}</script>`],
-      body: `<h1>${escape(brief.h1)}</h1><p>${escape(brief.lead)}</p><dl>${rows}</dl>${faq}${countryLinks(locale, t)}`,
+      body: `<span class="hero-flag fi fi-${code.toLowerCase()}"></span><h1>${escape(brief.h1)}</h1><p>${escape(brief.lead)}</p><dl>${rows}</dl>${faq}${countryLinks(locale, t)}`,
     }))
   }
 }

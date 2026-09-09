@@ -95,24 +95,14 @@
       "customs": "https://www.mof.gov.cy/ce",
       "regTax": "national"
     },
-    "CZ": {
-      "eu": true,
-      "vat": 0.21,
-      "customs": "https://www.celnisprava.gov.cz/",
-      "regTax": "none"
-    },
+    "CZ": {"eu": true, "vat": 0.21, "customs": "https://www.celnisprava.gov.cz/", "regTax": "national", "regTaxSource": {"title": "gov.cz — emission fee on registration, Act 542/2020 Sb. (portal.gov.cz)", "url": "https://portal.gov.cz/sluzby-vs/platba-emisniho-poplatku-ekologicka-dan-S20943"}},
     "DK": {
       "eu": true,
       "vat": 0.25,
       "customs": "https://www.toldst.dk/",
       "regTax": "national"
     },
-    "EE": {
-      "eu": true,
-      "vat": 0.24,
-      "customs": "https://www.emta.ee",
-      "regTax": "none"
-    },
+    "EE": {"eu": true, "vat": 0.24, "customs": "https://www.emta.ee", "regTax": "national", "regTaxSource": {"title": "Transpordiamet — motor vehicle tax and registration fee (transpordiamet.ee)", "url": "https://www.transpordiamet.ee/en/motor-vehicle-tax"}},
     "FI": {
       "eu": true,
       "vat": 0.255,

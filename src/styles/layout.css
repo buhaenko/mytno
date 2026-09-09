@@ -39,6 +39,14 @@
 .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
+/* A country page names its country twice: once in the heading, once in colour. */
+.hero-flag {
+  display: block; width: 36px; height: 26px; margin: 0 auto 16px;
+  border-radius: 3px; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1);
+  background-size: cover; background-position: center;
+}
+.hero.compact .hero-flag { display: none; }
+
 /* A country page: the rates that apply there, then the questions they raise. */
 .brief { margin-top: 40px; }
 .brief-rows { display: grid; grid-template-columns: max-content 1fr; gap: 8px 18px; margin: 0; }
