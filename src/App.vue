@@ -105,13 +105,13 @@ onMounted(async () => {
     </Hero>
 
     <Transition name="rise">
-      <StepSection v-if="started && calc.routeChosen.value" number="01" :title="t('step.car')">
+      <StepSection v-if="started && calc.routeChosen.value" :title="t('step.car')">
         <VehicleStep v-model="vehicle" :destination="destination!" :origin="calc.origin.value!" />
       </StepSection>
     </Transition>
 
     <Transition name="rise">
-      <StepSection v-if="started && calc.vehicleReady.value" number="02" :title="t('step.price')">
+      <StepSection v-if="started && calc.vehicleReady.value" :title="t('step.price')">
         <div class="grid grid-3">
           <label class="field">
             <span class="field-label">{{ t('price.label') }} <HelpTip :text="t('price.help')" /></span>
@@ -134,7 +134,7 @@ onMounted(async () => {
     </Transition>
 
     <Transition name="rise">
-      <StepSection v-if="calc.result.value && calc.trip.value" ref="resultStep" number="03" :title="t('step.result')" plain>
+      <StepSection v-if="calc.result.value && calc.trip.value" ref="resultStep" :title="t('step.result')" plain>
         <ResultView :estimate="calc.result.value" :vehicle="vehicle" :trip="calc.trip.value" :fx="fx" />
       </StepSection>
     </Transition>

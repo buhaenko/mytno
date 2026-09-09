@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import site from '@config/site.json'
 import { useI18n } from '../../i18n'
 
 /** What the numbers are, what they are not, and where every one of them came from. */
 const { t } = useI18n()
 const year = new Date().getFullYear()
+
+/** The disclaimer names the site; the name is set in type, so it is a slot, not a word. */
+const disclaimer = computed(() => t('footer.disclaimer').split('{brand}'))
 </script>
 
 <template>
   <footer class="footer">
-    <p class="footer-lead">{{ t('footer.disclaimer') }}</p>
+    <p class="footer-lead">{{ disclaimer[0] }}<strong>{{ site.brand }}</strong>{{ disclaimer[1] }}</p>
 
     <details>
       <summary>{{ t('footer.legal') }}</summary>
@@ -32,7 +36,7 @@ const year = new Date().getFullYear()
     </p>
 
     <p class="footer-rights">
-      © {{ year }} {{ site.legal.owner }} · {{ t('footer.rights') }} · {{ site.legal.updated }}
+      © {{ year }} <strong>{{ site.legal.owner }}</strong> · {{ t('footer.rights') }} · {{ site.legal.updated }}
     </p>
   </footer>
 </template>
