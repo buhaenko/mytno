@@ -88,8 +88,6 @@ export default {
   'result.tier.luxury': 'luksusowa',
   'result.steps': 'Kolejne kroki',
   'result.sources': 'Źródła',
-  'result.share': 'Udostępnij obliczenie',
-  'result.copied': 'Link skopiowany',
   'result.estimateNote': 'Cena rynkowa usługi, nie stawka urzędowa.',
   'result.notComputed': 'Nieuwzględnione w obliczeniu',
   'result.notComputed.registrationTax': 'Krajowy podatek rejestracyjny — liczony według formuły krajowej, zob. oficjalne źródło.',

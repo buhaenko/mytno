@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luxus',
   'result.steps': 'Lépések',
   'result.sources': 'Források',
-  'result.share': 'Számítás megosztása',
-  'result.copied': 'Link kimásolva',
   'result.estimateNote': 'A szolgáltatás piaci ára, nem állami díjtétel.',
   'result.notComputed': 'A számításban nem szerepel',
   'result.notComputed.registrationTax': 'Nemzeti regisztrációs adó — a nemzeti képlet szerint számítandó, lásd a hivatalos forrást.',

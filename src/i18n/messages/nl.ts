@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luxe',
   'result.steps': 'Stappen',
   'result.sources': 'Bronnen',
-  'result.share': 'Berekening delen',
-  'result.copied': 'Link gekopieerd',
   'result.estimateNote': 'Marktprijs van de dienst, geen officieel tarief.',
   'result.notComputed': 'Niet in de berekening opgenomen',
   'result.notComputed.registrationTax': 'Nationale registratiebelasting — berekend volgens de nationale formule, zie de officiële bron.',

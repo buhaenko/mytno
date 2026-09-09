@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luksus',
   'result.steps': 'Vaiheet',
   'result.sources': 'Lähteet',
-  'result.share': 'Jaa tämä laskelma',
-  'result.copied': 'Linkki kopioitu',
   'result.estimateNote': 'Palvelun markkinahinta, ei valtion maksu.',
   'result.notComputed': 'Ei sisälly laskelmaan',
   'result.notComputed.registrationTax': 'Kansallinen rekisteröintivero — lasketaan kansallisella kaavalla, ks. virallinen lähde.',

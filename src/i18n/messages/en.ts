@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luxury',
   'result.steps': 'Steps',
   'result.sources': 'Sources',
-  'result.share': 'Share this calculation',
-  'result.copied': 'Link copied',
   'result.estimateNote': 'Market price of the service, not a state rate.',
   'result.notComputed': 'Not included in the calculation',
   'result.notComputed.registrationTax': 'National registration tax — calculated by the national formula, see the official source.',

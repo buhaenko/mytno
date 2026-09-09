@@ -8,36 +8,29 @@ rates, plus the mandatory registration costs. Route: any of 43 purchase countrie
 
 ```sh
 npm install
-npm run dev          # API on :8787 (embedded MongoDB) + site on :5173
+npm run dev          # the site on :5173
 ```
 
-One command is enough: with no `MONGO_URL` the API starts an embedded MongoDB and keeps its files in
-`server/.data/mongo`, so nothing has to be installed. Copy `.env.example` to `.env` to change anything.
+That is the whole setup. There is no server and no database to run: the calculator is a static site
+that talks to two public APIs from the browser. `.env` is optional — `.env.example` holds the two
+analytics ids and the canonical `SITE_URL`.
 
 ```sh
 npm test             # calculation tests
 npm run build        # site build + a prerendered page per language, sitemap.xml, robots.txt
 npm run catalog      # rebuild the vehicle catalogue from the EPA dataset
-docker compose up    # MongoDB + API + nginx, the shape of a production deploy
 ```
 
 ## How it is put together
 
 ```
 config/                    the single source of truth — rules, rates, sources (plain JSON)
-server/src/                Fastify + Mongoose
-  config.js                every setting and every upstream URL, in one file
-  app.js                   the API in one readable list of registrations
-  db.js                    connection (embedded MongoDB in development)
-  models/                  ShareLink · VinDecode · ExchangeRate, with their indexes and TTLs
-  routes/                  health · config · rates · vin · share · geo
-  services/                codes (share links) · rates (National Bank) · vin (NHTSA)
 src/
   types.ts                 the vocabulary: Vehicle, Trip, Money, Line, Estimate
-  state/                   calculator (the seven values everything derives from) · snapshot · share
+  state/                   calculator (the seven values everything derives from) · snapshot
   lib/calc/                ukraine · spain · eu (generic, plus Austria and Poland)
   lib/vehicle/             vin · decode · catalog · reference · identify
-  lib/                     money · fx · api · shareLink · analytics · origins
+  lib/                     money · fx · url · analytics · origins
   components/              layout · controls · vehicle · result · icons
   styles/                  tokens · base · layout · controls · result · footer · motion
   i18n/                    locales.ts and one message file per language
@@ -45,19 +38,19 @@ scripts/                   prerender (SEO) and the catalogue builder
 ```
 
 **`config/` is the point.** Every rate, threshold, source link and reference table lives there as JSON,
-not in code. The API serves the same files at `/api/config`, so what the site calculates with can be read
-and audited without a build. Editing a rate is editing one JSON file.
+not in code, and it is bundled straight into the app. Editing a rate is editing one JSON file.
 
-**External services are optional.** The tax rules are local files. Only two things come from outside, both
-proxied and cached by our API so the site keeps working when they do not:
+**No backend.** The rules are local files and the browser talks to the two public services itself —
+both send `access-control-allow-origin: *`, so no proxy is needed:
 
 | Service | Used for | If it is down |
 | --- | --- | --- |
-| NHTSA vPIC | VIN decoding | cached decodes are reused; the catalogue still works |
-| National Bank of Ukraine | exchange rates | last good rate, then `config/fx.fallback.json` |
+| NHTSA vPIC | VIN decoding | the EPA catalogue still identifies the car |
+| National Bank of Ukraine | exchange rates | `config/fx.fallback.json`, marked as a fallback |
 
-Without `VITE_API_URL` the site runs with no backend at all: it calls those services directly and makes
-self-contained share links. That is the static-hosting mode.
+**Sharing is copying the address bar.** The language is a path segment and the calculation is a readable
+query string, rewritten as the numbers change, so any result is a plain URL: nothing is minted, stored
+or shortened.
 
 ## What is calculated and what is not
 - **Fully computed:** Ukraine (duty, excise, VAT, pension levy), Spain (arancel, IVA, IEDMT by CO₂ with
@@ -71,11 +64,9 @@ self-contained share links. That is the static-hosting mode.
 
 ## Deploying
 
-The site is static output in `dist/` and needs no backend. The API (`server/`) needs Node and a
-MongoDB; its requests are validated by JSON Schema at the route and rate limited per IP.
-`docker compose up` runs the whole thing locally in the shape of a production deploy.
+The site is static output in `dist/`: any file host will serve it.
 
-**The site on Cloudflare Pages.** Connect the repository and keep the defaults — the build settings
+**Cloudflare Pages.** Connect the repository and keep the defaults — the build settings
 it needs are in the repository already:
 
 | Setting | Value |
@@ -84,10 +75,9 @@ it needs are in the repository already:
 | Output directory | `dist` |
 | Node version | from `.node-version` (22) |
 | `SITE_URL` | `https://mytno.app` — canonical links, hreflang and the sitemap |
-| `VITE_API_URL` | the API's address, only if one is deployed |
 
 `public/_headers` sets the caching and the security headers. Unknown paths fall back to the
-prerendered `404.html`, which boots the app, so share links of the form `/uk/f4uz` resolve.
+prerendered `404.html`, which boots the app.
 Leave `VITE_BASE` unset: it exists for GitHub Pages, which serves the site from a subdirectory.
 
 **The same build also deploys to GitHub Pages** on every push to `main`

@@ -88,8 +88,6 @@ export default {
   'result.tier.luxury': 'Luxus',
   'result.steps': 'Ablauf',
   'result.sources': 'Quellen',
-  'result.share': 'Berechnung teilen',
-  'result.copied': 'Link kopiert',
   'result.estimateNote': 'Marktpreis der Dienstleistung, kein amtlicher Satz.',
   'result.notComputed': 'Nicht in der Berechnung enthalten',
   'result.notComputed.registrationTax': 'Nationale Zulassungssteuer — wird nach nationaler Formel berechnet, siehe amtliche Quelle.',

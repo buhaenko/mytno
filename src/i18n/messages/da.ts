@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luksus',
   'result.steps': 'Trin',
   'result.sources': 'Kilder',
-  'result.share': 'Del beregningen',
-  'result.copied': 'Link kopieret',
   'result.estimateNote': 'Markedspris for ydelsen, ikke en statslig sats.',
   'result.notComputed': 'Ikke medregnet i beregningen',
   'result.notComputed.registrationTax': 'National registreringsafgift — beregnes efter den nationale formel, se den officielle kilde.',

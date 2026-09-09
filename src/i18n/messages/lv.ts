@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luksusa',
   'result.steps': 'Soļi',
   'result.sources': 'Avoti',
-  'result.share': 'Kopīgot šo aprēķinu',
-  'result.copied': 'Saite nokopēta',
   'result.estimateNote': 'Pakalpojuma tirgus cena, nevis valsts noteikta likme.',
   'result.notComputed': 'Aprēķinā nav iekļauts',
   'result.notComputed.registrationTax': 'Nacionālais reģistrācijas nodoklis — aprēķina pēc nacionālās formulas, sk. oficiālo avotu.',

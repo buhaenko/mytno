@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'люкс',
   'result.steps': 'Порядок дій',
   'result.sources': 'Джерела',
-  'result.share': 'Поділитися розрахунком',
-  'result.copied': 'Посилання скопійовано',
   'result.estimateNote': 'Ринкова ціна послуги, не державна ставка.',
   'result.notComputed': 'Не входить у розрахунок',
   'result.notComputed.registrationTax': 'Реєстраційний податок країни — рахується за національною формулою, див. офіційне джерело.',

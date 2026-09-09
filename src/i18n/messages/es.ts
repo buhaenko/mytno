@@ -88,8 +88,6 @@ export default {
   'result.tier.luxury': 'lujo',
   'result.steps': 'Pasos',
   'result.sources': 'Fuentes',
-  'result.share': 'Compartir el cálculo',
-  'result.copied': 'Enlace copiado',
   'result.estimateNote': 'Precio de mercado del servicio, no una tasa oficial.',
   'result.notComputed': 'No incluido en el cálculo',
   'result.notComputed.registrationTax': 'Impuesto de matriculación nacional — se calcula con la fórmula nacional, véase la fuente oficial.',

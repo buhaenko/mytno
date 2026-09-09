@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'πολυτελείας',
   'result.steps': 'Βήματα',
   'result.sources': 'Πηγές',
-  'result.share': 'Κοινοποίηση υπολογισμού',
-  'result.copied': 'Ο σύνδεσμος αντιγράφηκε',
   'result.estimateNote': 'Τιμή αγοράς της υπηρεσίας, όχι κρατικός συντελεστής.',
   'result.notComputed': 'Δεν περιλαμβάνεται στον υπολογισμό',
   'result.notComputed.registrationTax': 'Εθνικός φόρος ταξινόμησης — υπολογίζεται με τον εθνικό τύπο, βλ. επίσημη πηγή.',

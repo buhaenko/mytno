@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luksuzni',
   'result.steps': 'Koraki',
   'result.sources': 'Viri',
-  'result.share': 'Deli ta izračun',
-  'result.copied': 'Povezava kopirana',
   'result.estimateNote': 'Tržna cena storitve, ne državna tarifa.',
   'result.notComputed': 'Ni vključeno v izračun',
   'result.notComputed.registrationTax': 'Nacionalni davek ob registraciji — izračunan po nacionalni formuli, glejte uradni vir.',

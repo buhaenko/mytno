@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luksuzna',
   'result.steps': 'Koraci',
   'result.sources': 'Izvori',
-  'result.share': 'Podijeli ovaj izračun',
-  'result.copied': 'Poveznica kopirana',
   'result.estimateNote': 'Tržišna cijena usluge, ne državna tarifa.',
   'result.notComputed': 'Nije uključeno u izračun',
   'result.notComputed.registrationTax': 'Nacionalni porez na registraciju — računa se po nacionalnoj formuli, vidi službeni izvor.',

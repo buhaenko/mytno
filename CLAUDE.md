@@ -29,34 +29,25 @@ import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over wou
 
 ```sh
 npm install
-npm run dev          # API on :8787 (embedded MongoDB) + site on :5173
+npm run dev          # the site on :5173, nothing else to start
 npm test             # 15 calculation tests
 npm run build        # vite build + a prerendered page per language, sitemap, robots
 npm run catalog      # rebuild public/catalog from the EPA dataset
-docker compose up    # mongo + api + nginx, the shape of a production deploy
 ```
 
-`npm run dev` needs nothing installed: with no `MONGO_URL` the API starts a real MongoDB in-process
-(`mongodb-memory-server`) and keeps its files in `server/.data/mongo`. Copy `.env.example` to `.env`
-to change anything. `.env.development` already points the site at `http://localhost:8787`.
+There is no server, no database and no `.env` to fill in. `.env.example` holds two analytics ids
+and `SITE_URL`, all optional.
 
 ## Layout
 
 ```
 config/                    single source of truth — rules, rates, sources, site settings
-server/src/                Fastify + Mongoose
-  config.js                every setting and every upstream URL
-  app.js                   the API as one list of registrations
-  db.js                    connection (embedded MongoDB in dev)
-  models/                  ShareLink · VinDecode · ExchangeRate (schemas, indexes, TTLs)
-  routes/                  health · config · rates · vin · share · geo
-  services/                codes · rates · vin
 src/
   types.ts                 Vehicle · Trip · Money · Line · Estimate · Msg
-  state/                   calculator (7 values, everything else derives) · snapshot · share
+  state/                   calculator (7 values, everything else derives) · snapshot
   lib/calc/                ukraine · spain · eu (generic + Austria + Poland) · common
   lib/vehicle/             vin · decode · catalog · reference · identify
-  lib/                     money · fx · api · shareLink · analytics · origins
+  lib/                     money · fx · url · analytics · origins
   components/              layout · controls · vehicle · result · icons
   styles/                  tokens · base · layout · controls · result · footer · motion
   i18n/                    locales.ts + one message file per language (225 keys each)
@@ -99,16 +90,16 @@ DGT fee, plates, mandatory lighting conversion.
 
 ## Decisions already made
 
-- **State lives in the URL only**, never in localStorage: readable query before a result
-  (`?from=LT&to=ES&vin=…&price=…`), and the address bar keeps that form even after a share code is
-  minted. The short code (`/uk/f4uz`) appears only in the share field.
-- **Share links** are generated automatically, half a second after the numbers settle; the field is
-  click-to-copy. Identical calculations get one code (hash dedupe).
-- **Without the API the site still shares.** `hasApi` is just `!!VITE_API_URL`; with no backend the
-  link degrades to a self-contained `#s=<base64 snapshot>` instead of `/uk/f4uz`, VIN decoding calls
-  NHTSA straight from the browser and the rates come from the bundled `config/fx.fallback.json`.
-  That is what GitHub Pages serves today — Pages is static, the Fastify API is deployed nowhere.
-  Set the repository variable `VITE_API_URL` once the API has a host and the short codes come back.
+- **There is no backend.** Everything runs in the browser: the rules are bundled JSON, the VIN goes
+  to NHTSA and the rates to the National Bank of Ukraine, both of which answer
+  `access-control-allow-origin: *`; `config/fx.fallback.json` covers the bank being down. Deleted
+  along with the Fastify API: share codes, the VIN and rate caches, the geo language guess and
+  `docker-compose`. Do not reintroduce a server for caching — it buys nothing a static host and two
+  public APIs do not already give.
+- **The address bar is the share link.** State lives in the URL and nowhere else — no localStorage,
+  no share codes: the language is a path segment (`/uk/`), the calculation is a readable query
+  (`?from=US&to=UA&vin=…&price=…`), rewritten with `history.replaceState` as the numbers change.
+  Copying the address is the whole sharing mechanism, which is why there is no share button.
 - **Design**: soft off-white canvas `#F4F4F6`, near-white surfaces, hairline borders, no shadows on
   cards, Inter only (no display serif), JetBrains Mono for the small labels, one warm orange accent
   `#E2662A` used sparingly. Everything explanatory hides behind a “?”.
@@ -128,9 +119,9 @@ Everything above is built, tested and pushed. HEAD `7b88821`.
    accounts: `gh` is logged in as **buhaenko** — the personal one, the only one this project goes
    to — while the machine's SSH key belongs to `SerhiiBuhaenko`. So the remote is HTTPS and git
    authenticates through the `gh` credential helper; do not switch it back to SSH.
-2. **No domain bought.** Buy `mytno.app` on Cloudflare Registrar ($14.20/year); then point it at
-   and set `SITE_URL=https://mytno.app` so canonical links, hreflang and the sitemap stop saying
-   `github.io`.
+2. **No domain bought.** Buy `mytno.app` on Cloudflare Registrar ($14.20/year); then point
+   Cloudflare Pages at it and set `SITE_URL=https://mytno.app` so canonical links, hreflang and the
+   sitemap stop saying `github.io`.
 3. ~~No contact email.~~ `feedback@mytno.app` — in `config/site.json`, shown in the footer above the
    copyright line with an invitation to report a wrong rate or a missing country, translated into
    all 23 languages (`footer.contact`). **The mailbox does not exist yet**: it needs the domain,
@@ -138,12 +129,10 @@ Everything above is built, tested and pushed. HEAD `7b88821`.
 4. **More registration taxes worth computing**, each needs its official table: Netherlands BPM,
    France malus, Ireland VRT, Portugal ISV, Finland autovero.
 5. **Cloudflare Pages: the repo is ready, the project is not connected yet.** Build `npm run build`,
-   output `dist`, Node from `.node-version`, env `SITE_URL` (and `VITE_API_URL` once an API exists).
-   `public/_headers` carries the caching and security headers; `VITE_BASE` stays unset — it exists
-   only for GitHub Pages, which serves from `/mytno/`. Unknown paths fall back to the prerendered
-   `404.html`, which boots the app, so `/uk/f4uz` resolves without a rewrite rule.
-   Still to host: the API on Fly.io or Railway with MongoDB Atlas M0. Sentry and UptimeRobot
-   before launch.
+   output `dist`, Node from `.node-version`, one env var: `SITE_URL`. `public/_headers` carries the
+   caching and security headers; `VITE_BASE` stays unset — it exists only for GitHub Pages, which
+   serves from `/mytno/`. Unknown paths fall back to the prerendered `404.html`, which boots the
+   app. There is nothing else to host.
 
 ## History
 
@@ -157,4 +146,11 @@ Everything above is built, tested and pushed. HEAD `7b88821`.
   database stay plain `mytno`. It was `mytno.io` for a few hours until the price came up: `.io`
   costs $50 a year against $14.20 for `.app`, so only the TLD moved. Pushed to `buhaenko/mytno`, deployed to GitHub Pages, and the working directory
   moved to `~/homeprojects/mytno`. The deploy workflow was passing `VITE_SHARE_API`, a name nothing
-  reads; it now passes `VITE_API_URL`, the one `src/lib/api.ts` actually looks at.
+  reads; it was corrected, and then removed with the rest of the backend.
+  **Deleted the backend entirely.** `server/`, `docker-compose.yml`, `Dockerfile.web`, `nginx.conf`,
+  `src/lib/api.ts`, `src/lib/shareLink.ts`, `src/state/share.ts` and `ShareField.vue` are gone, and
+  with them Fastify, Mongoose and `mongodb-memory-server` — five runtime dependencies down to two.
+  Share codes went with them: the address bar carries the calculation, so people copy that. Checked
+  the result in headless Chrome against the built site: a query-string URL restores the car and the
+  price, the National Bank answers the browser directly (the total moved by €7 when the live rate
+  replaced the bundled one), NHTSA decodes the Audi cross-origin, and the page logs no errors.

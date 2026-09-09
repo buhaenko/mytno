@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luxusná',
   'result.steps': 'Postup',
   'result.sources': 'Zdroje',
-  'result.share': 'Zdieľať výpočet',
-  'result.copied': 'Odkaz skopírovaný',
   'result.estimateNote': 'Trhová cena služby, nie štátna sadzba.',
   'result.notComputed': 'Nezahrnuté vo výpočte',
   'result.notComputed.registrationTax': 'Národná registračná daň — počíta sa podľa národného vzorca, pozri oficiálny zdroj.',

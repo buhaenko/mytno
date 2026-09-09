@@ -1,5 +1,4 @@
 import type { Fuel } from '../../types'
-import { api, hasApi } from '../api'
 
 export interface Decoded {
   make?: string
@@ -19,14 +18,11 @@ export interface Decoded {
   errorText: string
 }
 
-const DIRECT = 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/'
+const NHTSA = 'https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValuesExtended/'
 
-/** Our API caches decodes; without it we ask NHTSA straight away. */
+/** NHTSA answers cross-origin, so the browser asks it itself. */
 async function fetchRaw(vin: string, signal?: AbortSignal): Promise<Record<string, string>> {
-  if (hasApi) {
-    try { return await api<Record<string, string>>(`/api/vin/${encodeURIComponent(vin)}`) } catch { /* fall through */ }
-  }
-  const res = await fetch(`${DIRECT}${encodeURIComponent(vin)}?format=json`, { signal })
+  const res = await fetch(`${NHTSA}${encodeURIComponent(vin)}?format=json`, { signal })
   if (!res.ok) throw new Error(`NHTSA ${res.status}`)
   const json = (await res.json()) as { Results: Record<string, string>[] }
   return json.Results?.[0] ?? {}

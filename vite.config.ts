@@ -6,6 +6,6 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   base: process.env.VITE_BASE ?? '/',
-  // The tax rules live in one shared folder: the API serves them, the app bundles them.
+  // The tax rules live in one folder of plain JSON, bundled straight into the app.
   resolve: { alias: { '@config': fileURLToPath(new URL('./config', import.meta.url)) } },
 })

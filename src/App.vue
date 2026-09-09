@@ -3,9 +3,8 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useI18n, type Locale } from './i18n'
 import * as calc from './state/calculator'
 import { DESTINATIONS } from './state/calculator'
-import { fromQuery, fromWire, toQuery, type Snapshot } from './state/snapshot'
-import { useShareLink } from './state/share'
-import { appUrl, readShared } from './lib/shareLink'
+import { fromQuery, toQuery, type Snapshot } from './state/snapshot'
+import { appPath } from './lib/url'
 import { ORIGIN_COUNTRIES } from './lib/origins'
 import type { Currency } from './types'
 
@@ -19,7 +18,6 @@ import HelpTip from './components/controls/HelpTip.vue'
 import AmountField from './components/controls/AmountField.vue'
 import VehicleStep from './components/vehicle/VehicleStep.vue'
 import ResultView from './components/result/ResultView.vue'
-import ShareField from './components/result/ShareField.vue'
 
 const { t, locale, region, setLocale } = useI18n()
 const { vehicle, originCountry, destination, price, currency, hasOriginProof, residenceTransfer, fx } = calc
@@ -59,12 +57,13 @@ const snapshot = computed<Snapshot | null>(() =>
 const showOriginProof = computed(() => destination.value === 'UA' && calc.origin.value === 'EU')
 const showResidenceRelief = computed(() => destination.value !== 'UA' && calc.origin.value !== 'EU')
 
-const share = useShareLink(() => (calc.result.value ? snapshot.value : null), () => locale.value)
-
-/** The address bar always shows the readable state; the short code lives in the share field. */
+/**
+ * The address bar is the state. It is rewritten as the numbers change, so copying
+ * it is all sharing takes — no code to mint, nothing kept on a server.
+ */
 watch(snapshot, (state) => {
   if (restoring.value || !state) return
-  const target = appUrl(locale.value, '', toQuery(state)).slice(location.origin.length)
+  const target = appPath(locale.value, toQuery(state))
   if (location.pathname + location.search !== target) history.replaceState(null, '', target)
 }, { deep: true })
 
@@ -79,23 +78,16 @@ watch(calc.result, async (now, before) => {
 
 async function changeLocale(next: Locale) {
   await setLocale(next)
-  history.replaceState(null, '', `${appUrl(next, '', location.search).slice(location.origin.length)}${location.hash}`)
+  history.replaceState(null, '', appPath(next, location.search))
 }
 
 onMounted(async () => {
-  const shared = fromWire((await readShared()) ?? {})
-  if (shared) {
-    calc.apply(shared)
-    history.replaceState(null, '', appUrl(shared.locale ?? locale.value).slice(location.origin.length))
-  } else {
-    calc.apply(fromQuery(new URLSearchParams(location.search), DESTINATIONS))
-  }
+  calc.apply(fromQuery(new URLSearchParams(location.search), DESTINATIONS))
   priceText.value = price.value ? String(price.value) : ''
   started.value = calc.routeChosen.value
 
   await nextTick()
   restoring.value = false
-  share.refresh(0)
   await calc.refreshRates()
 })
 </script>
@@ -143,11 +135,7 @@ onMounted(async () => {
 
     <Transition name="rise">
       <StepSection v-if="calc.result.value && calc.trip.value" ref="resultStep" number="03" :title="t('step.result')" plain>
-        <ResultView :estimate="calc.result.value" :vehicle="vehicle" :trip="calc.trip.value" :fx="fx">
-          <template #share>
-            <ShareField :url="share.url.value" :copied="!!share.copied.value" @copy="share.copy" />
-          </template>
-        </ResultView>
+        <ResultView :estimate="calc.result.value" :vehicle="vehicle" :trip="calc.trip.value" :fx="fx" />
       </StepSection>
     </Transition>
 

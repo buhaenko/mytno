@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'лукс',
   'result.steps': 'Стъпки',
   'result.sources': 'Източници',
-  'result.share': 'Споделете изчислението',
-  'result.copied': 'Линкът е копиран',
   'result.estimateNote': 'Пазарна цена на услугата, а не държавна ставка.',
   'result.notComputed': 'Не е включено в изчислението',
   'result.notComputed.registrationTax': 'Национален регистрационен данък — изчислява се по националната формула, вижте официалния източник.',

@@ -5,7 +5,7 @@ import { tierForMake } from '../lib/vehicle/reference'
 
 /**
  * Everything the app needs to reproduce a screen, in one plain object.
- * It is what a share code stores and what the address bar carries.
+ * It becomes the query string in the address bar, and nothing else.
  */
 export interface Snapshot {
   vehicle: Vehicle
@@ -19,20 +19,6 @@ export const blankVehicle = (): Vehicle => ({
   make: '', model: '', year: new Date().getFullYear() - 5, fuel: 'petrol', market: 'US', brandTier: 'mass', notes: [],
 })
 
-/** Short keys keep the fallback link short when there is no backend. */
-type Wire = { v: Vehicle; r: Trip; oc: string | null; l: Locale }
-
-export const toWire = (s: Snapshot): Wire => ({ v: { ...s.vehicle, notes: [] }, r: s.trip, oc: s.originCountry, l: s.locale })
-
-export function fromWire(w: Partial<Wire>): Partial<Snapshot> | null {
-  if (!w.v || !w.r) return null
-  return {
-    vehicle: { ...blankVehicle(), ...w.v },
-    trip: w.r,
-    originCountry: w.oc ?? (w.r.origin === 'EU' ? 'DE' : w.r.origin === 'OTHER' ? 'GB' : w.r.origin),
-    locale: w.l,
-  }
-}
 
 /** The readable form: `?from=LT&to=ES&vin=…&price=…`. Only what differs from the defaults is written. */
 export function toQuery(s: Snapshot): string {

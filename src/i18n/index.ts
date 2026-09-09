@@ -1,5 +1,5 @@
 import { computed, ref } from 'vue'
-import { COUNTRY_LOCALE, isLocale, type Locale } from './locales'
+import { isLocale, type Locale } from './locales'
 
 export { LOCALES, LOCALE_NAMES, isLocale, type Locale } from './locales'
 
@@ -18,7 +18,7 @@ const messages = ref<Messages>({})
 const english = ref<Messages>({})
 
 /** Where to look for the visitor's language, in order of how deliberate the choice is. */
-export async function detectLocale(geoCountry?: () => Promise<string | null>): Promise<Locale> {
+export function detectLocale(): Locale {
   const fromPath = location.pathname.slice(import.meta.env.BASE_URL.length).split('/').filter(Boolean)[0]
   if (isLocale(fromPath)) return fromPath
 
@@ -30,13 +30,6 @@ export async function detectLocale(geoCountry?: () => Promise<string | null>): P
     if (isLocale(short)) return short
   }
 
-  if (geoCountry) {
-    try {
-      const country = await geoCountry()
-      const guess = country ? COUNTRY_LOCALE[country.toUpperCase()] : undefined
-      if (guess) return guess
-    } catch { /* geo is a nicety, never a requirement */ }
-  }
   return 'en'
 }
 

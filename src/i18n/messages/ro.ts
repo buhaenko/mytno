@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'lux',
   'result.steps': 'Etape',
   'result.sources': 'Surse',
-  'result.share': 'Distribuiți acest calcul',
-  'result.copied': 'Link copiat',
   'result.estimateNote': 'Preț de piață al serviciului, nu tarif de stat.',
   'result.notComputed': 'Neinclus în calcul',
   'result.notComputed.registrationTax': 'Taxa națională de înmatriculare — calculată după formula națională, consultați sursa oficială.',

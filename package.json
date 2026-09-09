@@ -4,27 +4,20 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -n api,web -c yellow,cyan \"npm:server\" \"vite\"",
-    "server": "node server/src/index.js",
+    "dev": "vite",
     "build": "vue-tsc -b && vite build && node scripts/prerender.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "catalog": "node scripts/build-catalog.mjs"
   },
   "dependencies": {
-    "@fastify/cors": "^11.3.0",
-    "@fastify/rate-limit": "^11.2.0",
-    "fastify": "^5.12.3",
     "flag-icons": "^7.5.0",
-    "mongoose": "^9.9.5",
     "vue": "^3.5.41"
   },
   "devDependencies": {
     "@types/node": "^24.13.3",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/tsconfig": "^0.9.1",
-    "concurrently": "^10.0.5",
-    "mongodb-memory-server": "^11.2.0",
     "typescript": "~6.0.2",
     "vite": "^8.2.2",
     "vitest": "^5.0.0",

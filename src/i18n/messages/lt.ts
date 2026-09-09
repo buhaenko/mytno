@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'prabangi',
   'result.steps': 'Žingsniai',
   'result.sources': 'Šaltiniai',
-  'result.share': 'Bendrinti šį skaičiavimą',
-  'result.copied': 'Nuoroda nukopijuota',
   'result.estimateNote': 'Rinkos kaina už paslaugą, ne valstybinis tarifas.',
   'result.notComputed': 'Neįtraukta į skaičiavimą',
   'result.notComputed.registrationTax': 'Nacionalinis registracijos mokestis — skaičiuojamas pagal nacionalinę formulę, žr. oficialų šaltinį.',

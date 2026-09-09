@@ -88,8 +88,6 @@ export default {
   'result.tier.luxury': 'lusso',
   'result.steps': 'Passaggi',
   'result.sources': 'Fonti',
-  'result.share': 'Condividi il calcolo',
-  'result.copied': 'Link copiato',
   'result.estimateNote': 'Prezzo di mercato del servizio, non un’aliquota ufficiale.',
   'result.notComputed': 'Non incluso nel calcolo',
   'result.notComputed.registrationTax': 'Tassa di immatricolazione nazionale — calcolata con la formula nazionale, vedi la fonte ufficiale.',

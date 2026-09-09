@@ -26,6 +26,4 @@ dist-ssr
 # wrangler local state
 worker/.wrangler
 
-server/data
 
-server/.data

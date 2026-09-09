@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'luksus',
   'result.steps': 'Sammud',
   'result.sources': 'Allikad',
-  'result.share': 'Jaga seda arvutust',
-  'result.copied': 'Link kopeeritud',
   'result.estimateNote': 'Teenuse turuhind, mitte riiklik määr.',
   'result.notComputed': 'Arvutusse ei kuulu',
   'result.notComputed.registrationTax': 'Riiklik registreerimismaks — arvutatakse riikliku valemi järgi, vt ametlikku allikat.',

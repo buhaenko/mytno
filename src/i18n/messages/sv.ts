@@ -91,8 +91,6 @@ export default {
   'result.tier.luxury': 'lyx',
   'result.steps': 'Steg',
   'result.sources': 'Källor',
-  'result.share': 'Dela beräkningen',
-  'result.copied': 'Länk kopierad',
   'result.estimateNote': 'Marknadspris för tjänsten, inte en statlig avgift.',
   'result.notComputed': 'Ingår inte i beräkningen',
   'result.notComputed.registrationTax': 'Nationell registreringsskatt — beräknas enligt nationell formel, se den officiella källan.',

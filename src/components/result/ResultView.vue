@@ -73,7 +73,5 @@ const rateSource = ukraine.refs.fx
         </ul>
       </details>
     </div>
-
-    <slot name="share" />
   </div>
 </template>
