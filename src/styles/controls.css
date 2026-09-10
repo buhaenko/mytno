@@ -151,3 +151,6 @@ select.input {
   font-family: var(--mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint);
   border: 1px solid var(--line); border-radius: 6px;
 }
+
+/* A field that has plainly been given the wrong number says so under itself. */
+.field-warn { display: block; margin-top: 5px; color: var(--due); font-size: 12px; line-height: 1.45; }

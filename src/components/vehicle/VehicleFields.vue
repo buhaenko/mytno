@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { Destination, Fuel, Market, Vehicle } from '../../types'
 import { useI18n } from '../../i18n'
 import HelpTip from '../controls/HelpTip.vue'
+import { price } from '../../state/calculator'
 import ChoiceChips from '../controls/ChoiceChips.vue'
 
 /** Whatever the lookup could not tell us, or got wrong, is editable here. */
@@ -22,6 +23,9 @@ const POWER_COUNTRIES: Destination[] = ['SK', 'IT', 'SI', 'HU', 'BE']
 const needsMass = computed(() => props.destination === 'EE' || props.destination === 'BE')
 const needsLength = computed(() => props.destination === 'MT')
 const needsPower = computed(() => POWER_COUNTRIES.includes(props.destination))
+/** A car cannot have cost less when new than it did second-hand: that is the purchase price in the wrong field. */
+const listPriceTooLow = computed(() =>
+  !!vehicle.value.listPriceEur && price.value > 0 && vehicle.value.listPriceEur <= price.value)
 const spainCo2Source = { title: 'Ley 38/1992, art. 70 (boe.es)', url: 'https://www.boe.es/buscar/act.php?id=BOE-A-1992-28741' }
 const displacementHelp = computed(() =>
   props.destination === 'UA' ? 'car.help.ccUa' : props.destination === 'PL' ? 'car.help.ccPl' : 'car.help.ccOther')
@@ -83,6 +87,7 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
         <HelpTip :text="t('car.help.listPrice')" :source="{ title: 'AEAT — Vehículos', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" />
       </span>
       <input v-model.number="vehicle.listPriceEur" type="number" class="input" placeholder="47150" />
+      <span v-if="listPriceTooLow" class="field-warn">{{ t('car.listPriceTooLow') }}</span>
     </label>
 
     <div class="field field-wide">

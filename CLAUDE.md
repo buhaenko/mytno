@@ -331,6 +331,15 @@ DGT fee, plates, mandatory lighting conversion.
 - **There is a copy button after all.** The address bar is still the share link and still carries
   every value — but nobody copies an address bar on a phone, and that was costing us the sharing the
   design was built around. The button copies exactly that address and nothing else.
+- **Two money fields is one too many for a reader, and neither can go.** The purchase price is the
+  base of duty, VAT and excise; Spain's IEDMT is charged on the tax office's own table of new prices
+  times an age coefficient, so a cheap purchase does not make it cheap. They cannot be merged without
+  breaking Spain — but the field was called “New list price” and sat directly above “Car price”, so
+  people typed what they paid into both and quietly halved the Spanish tax. It is now “Price when new
+  (Spain)”, its help begins “Not what you paid”, and if the number is at or below the purchase price
+  the field says so in red. The catalogue had it right all along: `findEngine` matches the NHTSA decode
+  “Audi A4 quattro Premium” to the B9 2.0 TFSI quattro and fills €47 150 — a reader had to overwrite
+  a correct value to get the wrong answer, which is a labelling failure, not a user's.
 - **The same car, everywhere else.** Under every result sits the one answer a calculator that knows
   28 countries can give and a calculator that knows one cannot: the same car priced in each of them,
   cheapest first, with this route's own place marked. A country whose registration tax cannot be
