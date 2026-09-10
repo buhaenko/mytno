@@ -11,8 +11,10 @@ import france from '@config/rules.france.json'
 import ireland from '@config/rules.ireland.json'
 import croatia from '@config/rules.croatia.json'
 import belgium from '@config/rules.belgium.json'
+import denmark from '@config/rules.denmark.json'
+import malta from '@config/rules.malta.json'
 import { ESTONIA_SOURCE, type EstonianFee } from '../estonia'
-import { toEur } from '../fx'
+import { fromEur, toEur } from '../fx'
 import { exact, money, nothing, percent, plus, times } from '../money'
 import { age, builtInEu, conversion, line, msg, newForVat, totalOf } from './common'
 
@@ -259,6 +261,89 @@ export function walloniaTmc(v: Vehicle, now: Date) {
   return { total: Math.min(wa.maxEur, Math.max(wa.minEur, raw)), flat: false }
 }
 
+/**
+ * Denmark, Ireland and Croatia each tax a value their own authority assigns, and each says in as
+ * many words that the invoice is not it. The rates below are exact; the base is the purchase price
+ * standing in for a valuation we cannot make, which is why every one of these lines carries a
+ * warning in red. The local value is normally the higher of the two, so these read as floors.
+ */
+export function denmarkTax(v: Vehicle, priceEur: number, fx: FxRates) {
+  if (v.co2Wltp === undefined && v.fuel !== 'electric') return null
+  const value = fromEur(priceEur, 'DKK', fx)
+  const co2 = v.fuel === 'electric' ? 0 : Math.round(v.co2Wltp!)
+
+  let onValue = 0
+  let taken = 0
+  for (const b of denmark.brackets) {
+    const top = b.upToDkk ?? Infinity
+    onValue += Math.max(0, Math.min(value, top) - taken) * b.rate
+    taken = top
+  }
+  let surcharge = 0
+  let grams = 0
+  for (const b of denmark.co2) {
+    const top = b.maxGkm ?? Infinity
+    surcharge += Math.max(0, Math.min(co2, top) - grams) * b.perGramDkk
+    grams = top
+  }
+
+  const relief = v.fuel === 'electric' ? denmark.electric : v.fuel === 'phev' ? denmark.plugIn : null
+  const share = relief?.share ?? 1
+  const deduction = relief?.deductionDkk ?? denmark.deductionDkk
+  const dkk = Math.max(0, (onValue + surcharge) * share - deduction)
+  return { eur: toEur(dkk, 'DKK', fx), dkk, value, surcharge, deduction }
+}
+
+/** Ireland: the published band, taken on the purchase price because the OMSP is Revenue's to set. */
+export function irelandVrt(v: Vehicle, priceEur: number) {
+  if (v.co2Wltp === undefined && v.fuel !== 'electric') return null
+  const co2 = v.fuel === 'electric' ? 0 : Math.round(v.co2Wltp!)
+  const band = ireland.bands.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!
+  return { eur: Math.max(band.minEur, (band.rate / 100) * priceEur), co2, rate: band.rate, min: band.minEur }
+}
+
+/**
+ * Croatia: the tax is worked out as if the car were new and then cut to what its age leaves. We do
+ * not know the Croatian list price of the new car, so we read it back out of the same table — the
+ * purchase price divided by the residual percentage — which is the law's own model run backwards.
+ */
+export function croatiaTax(v: Vehicle, priceEur: number, now: Date) {
+  if (v.fuel === 'electric') return { eur: 0, ev: true, newPrice: 0, asNew: 0, pct: 0 }
+  if (v.co2Wltp === undefined) return null
+  if (now.getFullYear() - v.year >= 30) return { eur: croatia.over30YearsEur, ev: false, newPrice: 0, asNew: 0, pct: 0 }
+
+  const months = Math.round(age(v, now) * 12)
+  const row = croatia.depreciation.find((d) => months <= d.maxMonths)
+  const pct = row ? row.pct : Math.max(1, 19.32 - croatia.depreciationBeyond.perYearDrop * Math.floor((months - 180) / 12))
+  const newPrice = priceEur / (pct / 100)
+
+  const bracket = [...croatia.priceBrackets].reverse().find((b) => newPrice >= b.from)!
+  const onPrice = bracket.base + bracket.rate * (newPrice - bracket.from)
+
+  const co2 = Math.round(v.co2Wltp)
+  const table = v.fuel === 'diesel' ? croatia.co2.diesel : croatia.co2.petrol
+  const band = [...table].reverse().find((b) => co2 >= b.from)
+  const emissions = band ? band.base + band.perGram * (co2 - band.from) : 0
+
+  const asNew = onPrice + emissions
+  return { eur: asNew * (pct / 100), ev: false, newPrice, asNew, pct }
+}
+
+/** Malta: the registration value multiplied once by the CO₂ and once by the length of the car. */
+export function maltaTax(v: Vehicle, priceEur: number) {
+  if (v.co2Wltp === undefined && v.fuel !== 'electric') return null
+  if (!v.lengthMm) return null
+
+  const raw = v.fuel === 'electric' ? 0 : Math.round(v.co2Wltp!)
+  const co2 = v.fuel === 'hybrid' || v.fuel === 'phev' ? Math.round(raw * (1 - malta.hybridCo2Reduction)) : raw
+  const onCo2 = malta.co2Wltp.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!
+  const onLength = malta.length.find((b) => b.maxMm === null || v.lengthMm! <= b.maxMm)!
+
+  const emissions = co2 * priceEur * (onCo2.pct / 100)
+  const size = v.lengthMm * priceEur * (onLength.pct / 100)
+  return { eur: emissions + size, co2, emissions, size }
+}
+
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
 function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date, estonia?: EstonianFee | null): { line: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
@@ -268,8 +353,10 @@ function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: nu
   }
   if (trip.destination === 'BE') return belgianTax(v, trip.region, exempt, now)
   if (trip.destination === 'EE') return estonianFee(v, exempt, estonia)
-  if (trip.destination === 'IE' && v.co2Wltp !== undefined) return irishBand(v)
-  if (trip.destination === 'HR' && v.co2Wltp !== undefined) return croatianHalf(v)
+  if (trip.destination === 'IE') return irishVrt(v, price)
+  if (trip.destination === 'HR') return croatianTax(v, price, now)
+  if (trip.destination === 'DK') return danishTax(v, price, fx)
+  if (trip.destination === 'MT') return malteseTax(v, price)
   if (country.regTax === 'national') {
     // Point at the authority that levies it where the country names one, not at customs.
     const source = (country as { regTaxSource?: { title: string; url: string } }).regTaxSource ?? customsLink
@@ -492,40 +579,6 @@ function frenchMalus(v: Vehicle, exempt: boolean, now: Date): { line: Line; warn
   }
 }
 
-/**
- * Ireland: the amount is a share of a value Revenue assigns to that exact car, so it is never in
- * the total — but the share itself is published, and naming the band is more use than a shrug.
- */
-function irishBand(v: Vehicle): { line: Line } {
-  const co2 = Math.round(v.co2Wltp!)
-  const band = ireland.bands.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!
-  return {
-    line: line('regTax', msg('line.regTaxNamed', { name: 'VRT' }), 'tax', nothing, {
-      unknown: true,
-      notes: [msg('note.ieBand', { co2, rate: band.rate, min: band.minEur }), msg('note.ieNox')],
-      source: ireland.source,
-    }),
-  }
-}
-
-/**
- * Croatia: half the tax is a CO₂ table we have, the other half runs off the Croatian list price of
- * the equivalent new car, which customs keep and nobody publishes. So the line names the half it can.
- */
-function croatianHalf(v: Vehicle): { line: Line } {
-  const co2 = Math.round(v.co2Wltp!)
-  const table = v.fuel === 'diesel' ? croatia.co2.diesel : croatia.co2.petrol
-  const band = [...table].reverse().find((b) => co2 >= b.from)
-  const emissions = band ? band.base + band.perGram * (co2 - band.from) : 0
-  return {
-    line: line('regTax', msg('line.regTaxNamed', { name: 'poseban porez' }), 'tax', nothing, {
-      unknown: true,
-      notes: [msg(v.fuel === 'electric' ? 'note.hrEv' : 'note.hrHalf', { co2, emissions: Math.round(emissions) })],
-      source: croatia.source,
-    }),
-  }
-}
-
 /** Belgium: three regional taxes, and the owner's own address decides which one is theirs. */
 function belgianTax(v: Vehicle, region: Trip['region'], exempt: boolean, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
   const label = msg('line.regTaxNamed', { name: region === 'FL' ? 'BIV' : 'TMC' })
@@ -554,6 +607,91 @@ function belgianTax(v: Vehicle, region: Trip['region'], exempt: boolean, now: Da
       formula: region === 'FL' ? '((CO₂ · f · q) / 246)⁶ · 4500 + c' : 'MB · CO₂/136 · MMA/1838 · C',
       notes: [msg(region === 'FL' ? 'note.beFlanders' : 'note.beWallonia')],
       source,
+    }),
+  }
+}
+
+/** Ireland: the published CO₂ band, on a value Revenue would set for itself. */
+function irishVrt(v: Vehicle, price: number): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'VRT' })
+  const vrt = irelandVrt(v, price)
+  if (!vrt) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.ptIsvNoCo2')], source: ireland.source }),
+      warning: msg('warn.ieNeedCo2'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(vrt.eur), {
+      estimate: true,
+      formula: `${vrt.rate}% × OMSP`,
+      notes: [msg('note.ieVrt', { co2: vrt.co2, rate: vrt.rate, min: vrt.min }), msg('note.ieNox')],
+      caution: msg('caution.ieBase'),
+      source: ireland.source,
+    }),
+  }
+}
+
+/** Croatia: the law's own model, run backwards to reach the new-car price it needs. */
+function croatianTax(v: Vehicle, price: number, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'poseban porez' })
+  const tax = croatiaTax(v, price, now)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.hrNoCo2')], source: croatia.source }),
+      warning: msg('warn.hrNeedCo2'),
+    }
+  }
+  if (tax.ev) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.hrEv')], source: croatia.source }) }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      estimate: true,
+      formula: 'porez kao za novo vozilo × preostala vrijednost',
+      notes: [msg('note.hrTax', { newPrice: Math.round(tax.newPrice), asNew: Math.round(tax.asNew), pct: Math.round(tax.pct) })],
+      caution: msg('caution.hrBase'),
+      source: croatia.source,
+    }),
+  }
+}
+
+/** Denmark: the brackets and the CO₂ surcharge, on the price paid rather than the Danish valuation. */
+function danishTax(v: Vehicle, price: number, fx: FxRates): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'registreringsafgift' })
+  const tax = denmarkTax(v, price, fx)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.dkNoCo2')], source: denmark.source }),
+      warning: msg('warn.dkNeedCo2'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      estimate: true,
+      formula: '25 / 85 / 150% + CO₂ − bundfradrag',
+      notes: [msg('note.dkTax', { value: Math.round(tax.value), surcharge: Math.round(tax.surcharge), deduction: Math.round(tax.deduction) })],
+      caution: msg('caution.dkBase'),
+      source: denmark.source,
+    }),
+  }
+}
+
+/** Malta: both halves of the tax, on a value Transport Malta would assess for itself. */
+function malteseTax(v: Vehicle, price: number): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'registration tax' })
+  const tax = maltaTax(v, price)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.mtNeedData')], source: malta.source }),
+      warning: msg('warn.mtNeedData'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      estimate: true,
+      formula: 'CO₂ × RV × % + length × RV × %',
+      notes: [msg('note.mtTax', { co2: Math.round(tax.emissions), size: Math.round(tax.size) })],
+      caution: msg('caution.mtBase'),
+      source: malta.source,
     }),
   }
 }
@@ -654,7 +792,7 @@ export function estimateEu(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()
   if (trip.destination === 'DE') warnings.push(msg('warn.deNoRegTax'))
 
   // When nothing in the total depends on the price, say so instead of leaving the user guessing.
-  const priceIsIrrelevant = !fromOutsideEu && !isNew && country.regTax !== 'computed' && country.regTax !== 'api'
+  const priceIsIrrelevant = !fromOutsideEu && !isNew && (country.regTax === 'none' || country.regTax === 'national')
   const notice = priceIsIrrelevant ? msg(country.regTax === 'none' ? 'notice.intraEuNoTax' : 'notice.intraEuUsed')
     : exempt ? msg('notice.relocation') : undefined
 

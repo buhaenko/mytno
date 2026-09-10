@@ -1,0 +1,30 @@
+{
+  "_note": "Registration tax under the Motor Vehicles Registration and Licensing Act, Cap. 368, Second Schedule, consolidated to 1 January 2026. The tax is two products of the registration value: one with the CO2 figure, one with the length of the car in millimetres. The registration value of a used import is defined by art. 9 as the average market value of an equivalent car on the Maltese market, arrived at by depreciating the manufacturer's invoice — so the purchase price stands in for it here, and the line says so in red. The WLTP table is used; where the older NEDC calculation would give more, the Act takes the higher, which we do not attempt.",
+  "effective": "2026-01-01",
+  "source": {
+    "title": "Motor Vehicles Registration and Licensing Act, Cap. 368, Second Schedule (legislation.mt)",
+    "url": "https://legislation.mt/eli/cap/368/eng/pdf"
+  },
+  "co2Wltp": [
+    { "maxCo2": 120, "pct": 0.040 },
+    { "maxCo2": 140, "pct": 0.045 },
+    { "maxCo2": 150, "pct": 0.050 },
+    { "maxCo2": 160, "pct": 0.060 },
+    { "maxCo2": 190, "pct": 0.070 },
+    { "maxCo2": 230, "pct": 0.100 },
+    { "maxCo2": 260, "pct": 0.110 },
+    { "maxCo2": null, "pct": 0.143 }
+  ],
+  "length": [
+    { "maxMm": 3450, "pct": 0.0020 },
+    { "maxMm": 3640, "pct": 0.0022 },
+    { "maxMm": 3770, "pct": 0.0024 },
+    { "maxMm": 4030, "pct": 0.0026 },
+    { "maxMm": 4370, "pct": 0.0028 },
+    { "maxMm": 4570, "pct": 0.0030 },
+    { "maxMm": 4770, "pct": 0.0032 },
+    { "maxMm": null, "pct": 0.0034 }
+  ],
+  "hybridCo2Reduction": 0.3,
+  "minimumNote": "A used M1 brought in from outside the EU has a floor by CO2 band and age — €800 for the cleanest new car up to €37 437 for the dirtiest at fourteen years — which we do not reproduce."
+}

@@ -16,7 +16,7 @@ export interface Destination {
   eu: boolean
   vat: number
   customs: string
-  regTax: 'computed' | 'api' | 'regional' | 'none' | 'national'
+  regTax: 'computed' | 'estimated' | 'api' | 'regional' | 'none' | 'national'
   /** The authority behind this country's registration tax, where it is not the customs service. */
   regTaxSource?: Source
 }

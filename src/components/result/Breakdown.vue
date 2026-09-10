@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { BrandTier, Estimate, Msg, Nuance } from '../../types'
+import { isRange } from '../../lib/money'
 import CountUp from './CountUp.vue'
 import BreakdownRow from './BreakdownRow.vue'
 import HelpTip from '../controls/HelpTip.vue'
@@ -61,7 +62,9 @@ const dotOf = (n: Nuance) => (n.required === 'always' ? 'due' : n.required === '
 
       <tr class="total">
         <td>{{ t('result.total') }}</td>
-        <td class="cell-range">{{ format(estimate.total.min) }} – {{ format(estimate.total.max) }}</td>
+        <td class="cell-range">
+          <template v-if="isRange(estimate.total)">{{ format(estimate.total.min) }} – {{ format(estimate.total.max) }}</template>
+        </td>
         <td class="cell-amount"><CountUp :value="estimate.total.likely" :format="format" /></td>
       </tr>
     </tbody>

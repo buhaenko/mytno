@@ -11,23 +11,357 @@
   },
   "co2": {
     "petrol": [
-      { "from": 95, "base": 3.32, "perGram": 5.97 },
-      { "from": 125, "base": 182.42, "perGram": 18.58 },
-      { "from": 155, "base": 739.82, "perGram": 73.66 },
-      { "from": 175, "base": 2213.02, "perGram": 96.22 },
-      { "from": 200, "base": 4618.52, "perGram": 129.40 },
-      { "from": 240, "base": 9794.52, "perGram": 218.99 }
+      {
+        "from": 95,
+        "base": 3.32,
+        "perGram": 5.97
+      },
+      {
+        "from": 125,
+        "base": 182.42,
+        "perGram": 18.58
+      },
+      {
+        "from": 155,
+        "base": 739.82,
+        "perGram": 73.66
+      },
+      {
+        "from": 175,
+        "base": 2213.02,
+        "perGram": 96.22
+      },
+      {
+        "from": 200,
+        "base": 4618.52,
+        "perGram": 129.4
+      },
+      {
+        "from": 240,
+        "base": 9794.52,
+        "perGram": 218.99
+      }
     ],
     "diesel": [
-      { "from": 95, "base": 11.28, "perGram": 13.94 },
-      { "from": 125, "base": 429.48, "perGram": 24.55 },
-      { "from": 155, "base": 1165.98, "perGram": 146.00 },
-      { "from": 190, "base": 6275.98, "perGram": 165.90 },
-      { "from": 215, "base": 10423.48, "perGram": 179.18 },
-      { "from": 255, "base": 17590.68, "perGram": 205.72 }
+      {
+        "from": 95,
+        "base": 11.28,
+        "perGram": 13.94
+      },
+      {
+        "from": 125,
+        "base": 429.48,
+        "perGram": 24.55
+      },
+      {
+        "from": 155,
+        "base": 1165.98,
+        "perGram": 146
+      },
+      {
+        "from": 190,
+        "base": 6275.98,
+        "perGram": 165.9
+      },
+      {
+        "from": 215,
+        "base": 10423.48,
+        "perGram": 179.18
+      },
+      {
+        "from": 255,
+        "base": 17590.68,
+        "perGram": 205.72
+      }
     ]
   },
   "unknownCo2Gkm": 401,
   "electricExempt": true,
-  "over30YearsEur": 265.45
+  "over30YearsEur": 265.45,
+  "priceBrackets": [
+    {
+      "from": 0,
+      "base": 0,
+      "rate": 0
+    },
+    {
+      "from": 26544.57,
+      "base": 398.17,
+      "rate": 0.03
+    },
+    {
+      "from": 33180.71,
+      "base": 597.25,
+      "rate": 0.05
+    },
+    {
+      "from": 39816.85,
+      "base": 929.06,
+      "rate": 0.07
+    },
+    {
+      "from": 46452.99,
+      "base": 1393.59,
+      "rate": 0.09
+    },
+    {
+      "from": 53089.13,
+      "base": 1990.84,
+      "rate": 0.11
+    },
+    {
+      "from": 59725.27,
+      "base": 2720.82,
+      "rate": 0.13
+    },
+    {
+      "from": 66361.41,
+      "base": 3583.51,
+      "rate": 0.15
+    },
+    {
+      "from": 72997.55,
+      "base": 4578.93,
+      "rate": 0.16
+    },
+    {
+      "from": 79633.7,
+      "base": 5640.71,
+      "rate": 0.17
+    }
+  ],
+  "depreciation": [
+    {
+      "maxMonths": 1,
+      "pct": 96
+    },
+    {
+      "maxMonths": 2,
+      "pct": 93
+    },
+    {
+      "maxMonths": 3,
+      "pct": 90
+    },
+    {
+      "maxMonths": 4,
+      "pct": 88
+    },
+    {
+      "maxMonths": 5,
+      "pct": 86
+    },
+    {
+      "maxMonths": 6,
+      "pct": 84
+    },
+    {
+      "maxMonths": 7,
+      "pct": 82
+    },
+    {
+      "maxMonths": 8,
+      "pct": 81
+    },
+    {
+      "maxMonths": 9,
+      "pct": 80
+    },
+    {
+      "maxMonths": 10,
+      "pct": 79
+    },
+    {
+      "maxMonths": 11,
+      "pct": 78
+    },
+    {
+      "maxMonths": 12,
+      "pct": 77
+    },
+    {
+      "maxMonths": 13,
+      "pct": 76.04
+    },
+    {
+      "maxMonths": 14,
+      "pct": 75.08
+    },
+    {
+      "maxMonths": 15,
+      "pct": 74.12
+    },
+    {
+      "maxMonths": 16,
+      "pct": 73.16
+    },
+    {
+      "maxMonths": 17,
+      "pct": 72.2
+    },
+    {
+      "maxMonths": 18,
+      "pct": 71.24
+    },
+    {
+      "maxMonths": 19,
+      "pct": 70.28
+    },
+    {
+      "maxMonths": 20,
+      "pct": 69.32
+    },
+    {
+      "maxMonths": 21,
+      "pct": 68.36
+    },
+    {
+      "maxMonths": 22,
+      "pct": 67.4
+    },
+    {
+      "maxMonths": 23,
+      "pct": 66.44
+    },
+    {
+      "maxMonths": 24,
+      "pct": 65
+    },
+    {
+      "maxMonths": 26,
+      "pct": 63.58
+    },
+    {
+      "maxMonths": 28,
+      "pct": 62.16
+    },
+    {
+      "maxMonths": 30,
+      "pct": 60.74
+    },
+    {
+      "maxMonths": 32,
+      "pct": 59.32
+    },
+    {
+      "maxMonths": 34,
+      "pct": 57.9
+    },
+    {
+      "maxMonths": 36,
+      "pct": 56.48
+    },
+    {
+      "maxMonths": 38,
+      "pct": 55.06
+    },
+    {
+      "maxMonths": 40,
+      "pct": 53.64
+    },
+    {
+      "maxMonths": 42,
+      "pct": 52.22
+    },
+    {
+      "maxMonths": 44,
+      "pct": 50.8
+    },
+    {
+      "maxMonths": 46,
+      "pct": 49.38
+    },
+    {
+      "maxMonths": 48,
+      "pct": 47.96
+    },
+    {
+      "maxMonths": 51,
+      "pct": 46.36
+    },
+    {
+      "maxMonths": 54,
+      "pct": 44.76
+    },
+    {
+      "maxMonths": 57,
+      "pct": 43.16
+    },
+    {
+      "maxMonths": 60,
+      "pct": 41.56
+    },
+    {
+      "maxMonths": 64,
+      "pct": 40.06
+    },
+    {
+      "maxMonths": 68,
+      "pct": 38.56
+    },
+    {
+      "maxMonths": 72,
+      "pct": 37.06
+    },
+    {
+      "maxMonths": 78,
+      "pct": 35.26
+    },
+    {
+      "maxMonths": 84,
+      "pct": 33.46
+    },
+    {
+      "maxMonths": 90,
+      "pct": 31.66
+    },
+    {
+      "maxMonths": 96,
+      "pct": 29.86
+    },
+    {
+      "maxMonths": 102,
+      "pct": 28.06
+    },
+    {
+      "maxMonths": 108,
+      "pct": 26.26
+    },
+    {
+      "maxMonths": 114,
+      "pct": 24.46
+    },
+    {
+      "maxMonths": 120,
+      "pct": 22.66
+    },
+    {
+      "maxMonths": 132,
+      "pct": 21.72
+    },
+    {
+      "maxMonths": 144,
+      "pct": 21.12
+    },
+    {
+      "maxMonths": 156,
+      "pct": 20.52
+    },
+    {
+      "maxMonths": 168,
+      "pct": 19.92
+    },
+    {
+      "maxMonths": 180,
+      "pct": 19.32
+    }
+  ],
+  "depreciationBeyond": {
+    "perYearDrop": 0.6,
+    "untilMonths": 360
+  },
+  "depreciationSource": {
+    "title": "Pravilnik o posebnom porezu na motorna vozila, Tablica 1 (carina.gov.hr)",
+    "url": "https://carina.gov.hr/"
+  }
 }

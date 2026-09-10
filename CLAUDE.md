@@ -79,6 +79,7 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Hungary | duty, VAT 27%, **regisztrációs adó**: a multiplier from engine power on 47 000 Ft, less the monthly reduction for age — for cars first registered from 2021 and for hybrids of any age |
 | Italy | duty, VAT 22%, **IPT**: €150.81 up to 53 kW, then €3.5119/kW, shown as a range because the province may add up to 30% |
 | Estonia | duty, VAT 24%, and the **registration fee the register itself works out** — the browser asks Transpordiamet's own API and puts its answer in the total |
+| DK IE HR MT | duty + national VAT, and the registration tax **at the official rates but on the price paid**, because each of these countries values the car itself. Every one of those lines carries a warning in red saying so |
 | Belgium | duty, VAT 21%, and the tax of the **region the owner lives in**: Flanders' BIV and Wallonia's TMC are computed once the region is chosen, Brussels is shown and not counted |
 | DE BG RO LU SE LV CY | duty + national VAT; registration tax a real €0, every one checked against its own authority on 9 Sep 2026 |
 | the other 7 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value we cannot reproduce or a table nobody publishes. Ireland and Croatia at least name what *is* known — the CO₂ band, the emissions half — instead of shrugging |
@@ -254,6 +255,16 @@ DGT fee, plates, mandatory lighting conversion.
   since riigiteataja.ee serves an Angular shell and the ministry's draft figures do not match what the
   API returns. It needs a gross mass, which nothing in our data carries and which every European
   registration certificate prints.
+- **Four countries are computed on an assumption, and the assumption is printed in red.** Denmark,
+  Ireland, Croatia and Malta all charge on a value their own authority assigns — a Danish appraisal
+  against comparable cars, Revenue's OMSP, a Croatian new-car list price, Transport Malta's
+  registration value — and each says outright that the invoice is not it. Serhii asked for numbers
+  anyway, so the price paid stands in for that value and the line carries a `caution`, a new field on
+  `Line` rendered in `--due` red across the full width beneath the amount. Since the local valuation
+  is normally the higher of the two, these read as floors. The country pages call this state
+  `estimated`, not `computed`, so nobody reads it as a table lookup. Croatia is the neat one: its tax
+  is worked out as if the car were new and then cut to the residual percentage, so the new-car price
+  is recovered by dividing the price paid by that same percentage — the law's own model run backwards.
 - **Where the amount cannot be honest, the note can still be useful.** Ireland's line names the band
   the car falls into — “CO₂ 168 g/km puts it in the 30% band, or €600, whichever is greater” — and
   says the percentage is of a value Revenue assigns, not of the invoice. Croatia's names the emissions
@@ -436,11 +447,12 @@ specific, written down above.
    has applied every July since 2024. Its grid is already in the config.
 2. **Greece and Malta** are blocked on their own governments — the Greek coefficients sit behind
    twenty-five unconsolidated amendments, and Malta's base is a value Transport Malta assigns.
-3. **Croatia, Denmark, Finland, Ireland, Greece, Malta** are settled as *not computable*, for one
-   reason each says out loud: the base is that country's own valuation of the car, and the invoice is
-   not it. Ireland and Croatia already say what they can; Denmark and Finland could do the same —
-   Denmark's CO₂ surcharge (294 / 587 / 1 115 kr a gram) and Finland's per-gram rate table are both
-   published, and naming the band is more use than a shrug.
+3. **Denmark, Ireland, Croatia and Malta** are computed on the price paid with a red warning, which
+   is as far as honesty allows: their rates are exact and their bases are not ours to know.
+4. **Finland and Greece** are the last two linked. Finland needs its per-gram rate table off vero.fi;
+   Greece needs something harder — a dated, official statement of which basis is even in force, since
+   the 2001 law charges cylinder capacity by emission Directive and everything since suggests a value
+   scale replaced it, with no consolidated text reachable to settle it.
 
 **The remaining inputs, and what each would unlock.** The *month* of first registration would sharpen
 the Dutch, French and Hungarian tables, which are monthly while we still count from the middle of a

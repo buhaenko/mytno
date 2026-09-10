@@ -31,4 +31,7 @@ const notes = () => [
       <CountUp v-else :value="line.amount.likely" :format="format" />
     </td>
   </tr>
+  <tr v-if="line.caution" class="caution-row">
+    <td colspan="3">{{ translate(line.caution) }}</td>
+  </tr>
 </template>

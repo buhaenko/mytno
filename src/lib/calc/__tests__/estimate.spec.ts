@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, czechiaEmissionFee, estimateEu, flandersBiv, franceMalus, hungaryTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
+import { austriaNova, croatiaTax, czechiaEmissionFee, denmarkTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { fallbackRates } from '../../fx'
 
@@ -136,10 +136,10 @@ describe('Other EU countries', () => {
     expect(lineOf(e, 'regTax').amount.likely).toBe(0)
   })
 
-  it('keeps a national registration tax out of the total but on the page', () => {
-    const e = estimateEu(audi, { ...trip, destination: 'DK' }, fx, now)
+  it('keeps a line that cannot be counted out of the total but on the page', () => {
+    // Brussels indexes its grid every July and does not publish the index, so its amount is not ours to give.
+    const e = estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'BE', region: 'BR', currency: 'EUR' }, fx, now)
     expect(lineOf(e, 'regTax').unknown).toBe(true)
-    expect(lineOf(e, 'vat').amount.likely).toBeCloseTo(e.customsValue * 1.1 * 0.25, 2)
     expect(e.total.likely).toBeCloseTo(e.lines.filter((l) => !l.unknown).reduce((a, l) => a + l.amount.likely, 0), 6)
   })
 
@@ -283,6 +283,37 @@ describe('Other EU countries', () => {
     // Brussels is shown but never totalled: its published amounts are indexed and the index is not.
     expect(lineOf(estimateEu(car, { ...be, region: 'BR' }, fx, now), 'regTax').unknown).toBe(true)
     expect(lineOf(estimateEu(car, { ...be, region: 'FL' }, fx, now), 'regTax').amount.likely).toBeCloseTo(flanders.total, 6)
+  })
+
+  it('counts the four valuation countries from the price, and says so in red', () => {
+    const car = { ...audi, market: 'EU' as const, lengthMm: 4726 }
+    const eu = { ...trip, origin: 'EU' as const, currency: 'EUR' as const }
+
+    // Ireland: 168 g/km is the 30% band, and the band minimum wins on a cheap car.
+    expect(irelandVrt(car, 20000)!.eur).toBeCloseTo(6000, 6)
+    expect(irelandVrt(car, 1000)!.eur).toBe(600)
+    // Malta charges once on CO₂ and once on length, both as a share of the value.
+    const mt = maltaTax(car, 20000)!
+    expect(mt.emissions).toBeCloseTo(168 * 20000 * 0.0007, 6)
+    expect(mt.size).toBeCloseTo(4726 * 20000 * 0.000032, 6)
+    expect(maltaTax({ ...car, lengthMm: undefined }, 20000)).toBeNull()
+    // Denmark's brackets bite hard, and an electric car pays a fraction of them.
+    const dk = denmarkTax(car, 20000, fx)!
+    expect(dk.eur).toBeGreaterThan(10000)
+    expect(denmarkTax({ ...car, fuel: 'electric' }, 20000, fx)!.eur).toBeLessThan(dk.eur)
+    // Croatia works the new-car price back out of its own residual table.
+    const hr = croatiaTax(car, 20000, now)!
+    expect(hr.newPrice).toBeGreaterThan(20000)
+    expect(hr.eur).toBeGreaterThan(0)
+    expect(croatiaTax({ ...car, fuel: 'electric' }, 20000, now)!.eur).toBe(0)
+
+    // Every one of them carries the warning, and none of them hides behind “not in total”.
+    for (const destination of ['DK', 'IE', 'HR', 'MT'] as const) {
+      const regTax = lineOf(estimateEu(car, { ...eu, destination }, fx, now), 'regTax')
+      expect(regTax.unknown).toBeUndefined()
+      expect(regTax.estimate).toBe(true)
+      expect(regTax.caution).toBeDefined()
+    }
   })
 
   it('reads the Czech emission fee off the model year', () => {

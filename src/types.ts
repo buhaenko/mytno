@@ -53,6 +53,8 @@ export interface Vehicle {
   co2Wltp?: number
   /** Gross mass in kilograms, field F.1 of a European registration certificate: the Estonian fee needs it. */
   grossMassKg?: number
+  /** Overall length in millimetres: half of the Maltese tax is charged on it. */
+  lengthMm?: number
   /** List price when new, in the destination country: the base of the Spanish registration tax. */
   listPriceEur?: number
   mileageKm?: number
@@ -100,6 +102,8 @@ export interface Line {
   estimate?: boolean
   /** The charge exists but its amount follows a national formula we do not replicate. */
   unknown?: boolean
+  /** Said in red beside the line: the amount rests on an assumption the reader has to weigh. */
+  caution?: Msg
   source?: Source
 }
 
@@ -136,6 +140,6 @@ export type FxRates = Record<Foreign, Quote>
 export interface CountryInfo {
   eu: boolean
   vat: number
-  regTax: 'computed' | 'api' | 'regional' | 'none' | 'national'
+  regTax: 'computed' | 'estimated' | 'api' | 'regional' | 'none' | 'national'
   customs: string
 }

@@ -91,7 +91,7 @@
       "eu": true,
       "vat": 0.25,
       "customs": "https://carina.gov.hr/",
-      "regTax": "national",
+      "regTax": "estimated",
       "regTaxSource": {
         "title": "Zakon o posebnom porezu na motorna vozila (zakon.hr)",
         "url": "https://www.zakon.hr/z/561/Zakon-o-posebnom-porezu-na-motorna-vozila"
@@ -121,7 +121,7 @@
       "eu": true,
       "vat": 0.25,
       "customs": "https://www.toldst.dk/",
-      "regTax": "national",
+      "regTax": "estimated",
       "regTaxSource": {
         "title": "Motorstyrelsen — registreringsafgift, satser (motorst.dk)",
         "url": "https://motorst.dk/erhverv/motorafgifter/registreringsafgift/betaling-af-og-satser-for-registreringsafgift"
@@ -181,7 +181,7 @@
       "eu": true,
       "vat": 0.23,
       "customs": "https://www.revenue.ie/",
-      "regTax": "national",
+      "regTax": "estimated",
       "regTaxSource": {
         "title": "Revenue — calculating Vehicle Registration Tax (revenue.ie)",
         "url": "https://www.revenue.ie/en/vrt/calculating-vrt/applying-tax.aspx"
@@ -231,10 +231,10 @@
       "eu": true,
       "vat": 0.18,
       "customs": "https://customs.gov.mt/",
-      "regTax": "national",
+      "regTax": "estimated",
       "regTaxSource": {
-        "title": "Transport Malta — registering a vehicle imported from an EU state (transport.gov.mt)",
-        "url": "https://www.transport.gov.mt/land/vehicles/registering-and-licensing-a-motor-vehicle/registering-and-licensing-a-motor-vehicle-imported-from-an-eu-state-804"
+        "title": "Motor Vehicles Registration and Licensing Act, Cap. 368, Second Schedule (legislation.mt)",
+        "url": "https://legislation.mt/eli/cap/368/eng/pdf"
       }
     },
     "NL": {

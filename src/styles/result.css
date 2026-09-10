@@ -50,6 +50,11 @@
 .dot.hollow { background: transparent; box-shadow: inset 0 0 0 1.5px var(--maybe); }
 .breakdown tr.sub .dot { width: 5px; height: 5px; }
 
+/* An amount that rests on an assumption says so in the open, not behind the “?”. */
+.breakdown tr.caution-row td { padding-top: 0; padding-bottom: 9px; border-top: 0; padding-left: 22px; max-width: 0; }
+.breakdown tr.caution-row td { color: var(--due); font-size: 12px; line-height: 1.5; white-space: normal; }
+.breakdown tr.caution-row + tr td { border-top: 1px solid var(--line); }
+
 @media (max-width: 560px) {
   .total-panel { padding: 16px 14px; }
   .cell-range { display: none; }

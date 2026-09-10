@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Currency, Estimate } from '../../types'
+import { isRange } from '../../lib/money'
 import { CURRENCIES } from '../../types'
 import CountUp from './CountUp.vue'
 import HelpTip from '../controls/HelpTip.vue'
@@ -21,7 +22,7 @@ const { t } = useI18n()
     </div>
     <p class="total-figure">
       <CountUp class="total-value" :value="estimate.total.likely" :format="format" />
-      <span class="total-range">
+      <span v-if="isRange(estimate.total)" class="total-range">
         <CountUp :value="estimate.total.min" :format="format" /> – <CountUp :value="estimate.total.max" :format="format" />
       </span>
     </p>

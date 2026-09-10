@@ -1,0 +1,22 @@
+{
+  "_note": "Registreringsafgift. The rates are exact — Motorstyrelsen publishes them — but the base is not ours to know: the law values a used import against comparable cars on the Danish market, and Motorstyrelsen appraises each one individually. We put the purchase price in that place and say so in red, because the Danish market value of the same car is normally higher, which makes our figure a floor rather than a forecast.",
+  "effective": "2026-01-01",
+  "currency": "DKK",
+  "source": {
+    "title": "Motorstyrelsen — registreringsafgift, satser (motorst.dk)",
+    "url": "https://motorst.dk/erhverv/motorafgifter/registreringsafgift/betaling-af-og-satser-for-registreringsafgift"
+  },
+  "brackets": [
+    { "upToDkk": 76400, "rate": 0.25 },
+    { "upToDkk": 237400, "rate": 0.85 },
+    { "upToDkk": null, "rate": 1.5 }
+  ],
+  "co2": [
+    { "maxGkm": 107, "perGramDkk": 294 },
+    { "maxGkm": 137, "perGramDkk": 587 },
+    { "maxGkm": null, "perGramDkk": 1115 }
+  ],
+  "deductionDkk": 25500,
+  "electric": { "share": 0.4, "deductionDkk": 161300 },
+  "plugIn": { "share": 0.68, "deductionDkk": 43000 }
+}
