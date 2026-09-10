@@ -16,6 +16,13 @@ const CHROME = process.env.CHROME
 const OUT = 'public/og'
 const WORK = join(process.env.TMPDIR ?? '/tmp', 'mytno-og')
 
+const { routes: ROUTES, example: EXAMPLE } = JSON.parse(readFileSync('config/routes.json', 'utf8'))
+const { estimate, fallbackRates, format, ORIGIN_GROUP } = await import('../.cache/calc.mjs')
+const fx = fallbackRates()
+
+/** 🇺🇸 from US: the two letters of a country code are the two letters of its flag. */
+const flag = (code) => String.fromCodePoint(...[...code.toUpperCase()].map((c) => 0x1f1a5 + c.charCodeAt(0)))
+
 const countries = JSON.parse(readFileSync('config/countries.json', 'utf8'))
 const origins = JSON.parse(readFileSync('config/origins.json', 'utf8'))
 const DESTINATIONS = Object.keys(countries.destinations).length
@@ -78,6 +85,41 @@ function card({ title, tagline, footer }) {
 </body></html>`
 }
 
+/**
+ * A route card says the one thing that earns the click: the number. Flags and a price
+ * need no translation, so thirty cards serve all twenty-three languages.
+ */
+function routeCard({ from, to, total, car, price }) {
+  return `<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1200px; height: 630px; display: flex; flex-direction: column; justify-content: space-between;
+    padding: 68px 72px; background: #F4F4F6; color: #1C1C20;
+    font-family: 'Inter', system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .mark { font-family: 'JetBrains Mono', monospace; font-size: 21px; letter-spacing: .01em; color: #55565D; }
+  .route { font-size: 82px; line-height: 1; letter-spacing: .04em; }
+  .route span { color: #7A7B83; font-size: 54px; vertical-align: 14px; padding: 0 18px; }
+  .total { font-size: 108px; font-weight: 600; letter-spacing: -.03em; font-variant-numeric: tabular-nums; margin-top: 18px; }
+  .car { margin-top: 14px; font-size: 26px; color: #55565D; }
+  .foot { display: flex; align-items: center; gap: 14px; border-top: 1px solid #D3D4D9; padding-top: 20px; }
+  .foot b { width: 10px; height: 10px; border-radius: 50%; background: #E2662A; }
+  .foot span { font-family: 'JetBrains Mono', monospace; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: #7A7B83; }
+</style></head>
+<body>
+  <div class="mark">mytno.app</div>
+  <div>
+    <div class="route">${flag(from)}<span>→</span>${flag(to)}</div>
+    <div class="total">${escape(total)}</div>
+    <div class="car">${escape(car)} · ${escape(price)}</div>
+  </div>
+  <div class="foot"><b></b><span>${escape(from)} → ${escape(to)} · mytno.app</span></div>
+</body></html>`
+}
+
 rmSync(WORK, { recursive: true, force: true })
 mkdirSync(WORK, { recursive: true })
 mkdirSync(OUT, { recursive: true })
@@ -102,4 +144,26 @@ for (const locale of LOCALES) {
   ], { stdio: 'ignore' })
 }
 
-console.log(`share cards → ${OUT}/ (${LOCALES.length} languages, 1200×630)`)
+mkdirSync(join(OUT, 'route'), { recursive: true })
+for (const route of ROUTES) {
+  const origin = ORIGIN_GROUP[route.from] ?? 'OTHER'
+  const market = origin === 'US' || origin === 'JP' || origin === 'KR' ? origin : 'EU'
+  const result = estimate({ ...EXAMPLE, market, notes: [] }, {
+    origin, destination: route.to, price: EXAMPLE.priceEur, currency: 'EUR',
+    hasOriginProof: true, residenceTransfer: false, region: EXAMPLE.region,
+  }, fx)
+  const page = join(WORK, `route-${route.from}-${route.to}.html`)
+  writeFileSync(page, routeCard({
+    from: route.from, to: route.to,
+    total: format(result.total.likely, 'EUR', fx, 'en'),
+    car: `${EXAMPLE.make} ${EXAMPLE.model} ${EXAMPLE.year}`,
+    price: format(EXAMPLE.priceEur, 'EUR', fx, 'en'),
+  }))
+  execFileSync(CHROME, [
+    '--headless', '--disable-gpu', '--hide-scrollbars', '--virtual-time-budget=4000',
+    '--window-size=1200,630', `--screenshot=${join(OUT, 'route', `${route.from.toLowerCase()}-${route.to.toLowerCase()}.png`)}`,
+    `file://${page}`,
+  ], { stdio: 'ignore' })
+}
+
+console.log(`share cards → ${OUT}/ (${LOCALES.length} languages + ${ROUTES.length} routes, 1200×630)`)

@@ -4,6 +4,7 @@ import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
 import { austriaNova, croatiaTax, czechiaEmissionFee, denmarkTax, finlandTax, greeceTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
+import { countryFromPath, routeFromPath, routePath } from '../../pages'
 import { fallbackRates } from '../../fx'
 
 /** The bundled rates, with the two the assertions below reason about pinned. */
@@ -27,6 +28,19 @@ describe('VIN', () => {
     expect(modelYearFromVin('WAUANAF42HN008179')).toBe(2017)
     expect(detectMarket('WAUANAF42HN008179', true).market).toBe('US')
     expect(detectMarket('WAUZZZF49HA000001', false).market).toBe('EU')
+  })
+})
+
+describe('Pages', () => {
+  it('tells a route page from a country page and back again', () => {
+    expect(routePath('/', 'uk', 'US', 'UA')).toBe('/uk/import/us-ua/')
+    expect(routePath('/', 'en', 'DE', 'PL')).toBe('/import/de-pl/')
+    expect(routeFromPath('/uk/import/us-ua/', '/')).toEqual({ from: 'US', to: 'UA' })
+    expect(routeFromPath('/import/de-pl/', '/')).toEqual({ from: 'DE', to: 'PL' })
+    // A country page is not a route, and neither is anything else.
+    expect(routeFromPath('/uk/import/es/', '/')).toBeNull()
+    expect(routeFromPath('/uk/', '/')).toBeNull()
+    expect(countryFromPath('/uk/import/us-ua/', '/', (code) => code === 'ES')).toBeNull()
   })
 })
 

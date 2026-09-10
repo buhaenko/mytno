@@ -328,12 +328,33 @@ DGT fee, plates, mandatory lighting conversion.
   `config/fx.fallback.json` covers any of them being down. Deleted along with the Fastify API: share
   codes, the VIN and rate caches, the geo language guess and `docker-compose`. Do not reintroduce a
   server for caching — it buys nothing a static host and public APIs do not already give.
+- **There is a copy button after all.** The address bar is still the share link and still carries
+  every value — but nobody copies an address bar on a phone, and that was costing us the sharing the
+  design was built around. The button copies exactly that address and nothing else.
+- **The same car, everywhere else.** Under every result sits the one answer a calculator that knows
+  28 countries can give and a calculator that knows one cannot: the same car priced in each of them,
+  cheapest first, with this route's own place marked. A country whose registration tax cannot be
+  reduced to a number is left out rather than shown cheap — otherwise the table would recommend
+  exactly the countries we know least about.
+- **The catalogue is the first question now, the VIN the second.** A stranger from a search result
+  will not go and find a VIN to learn a rough number; a make and a model they can answer from memory.
 - **The address bar is the share link.** State lives in the URL and nowhere else — no localStorage,
   no share codes: the language is a path segment (`/uk/`), the calculation is a readable query
   (`?from=US&to=UA&vin=…&price=20000&cur=USD&show=EUR`), written once the first screen is restored
   and again on every change. Every value on screen is in it, the currency the total is *read* in
   (`show`) included, so copying the address reproduces the screen exactly. That is the whole sharing
   mechanism, which is why there is no share button.
+- **A page per route, and the route is what people type — 1 357 pages in all.** A country page is
+  half a question; “Germany → Poland” is the whole one. Thirty routes, chosen for the traffic rather
+  than the grid, in 23 languages, at `/uk/import/de-pl/`. Each carries a **worked example computed by
+  the calculator itself**: the build bundles `src/lib/calc` for Node with esbuild
+  (`npm run calc` → `.cache/calc.mjs`, aliasing `@config`), so a page and the app can never quote
+  different numbers for the same car. The heading is `{from} → {to}` with an arrow, for the same
+  reason the country name leads on a country page: no language then has to decline anything. Arriving
+  on one opens the calculator with both ends already chosen.
+- **The home page used to be 349 characters of text.** It now carries the question, what the tool
+  does, and the thirty routes each with its own number — which is both the content a crawler needed
+  and the internal links the route pages needed.
 - **A page per country, in every language — 667 in all.** `/uk/import/es/`, `/de/import/se/`: the
   place a car is registered, its rates, the official source behind each one and the two questions
   people ask, with the calculator underneath and the destination already chosen. The text is built
@@ -389,11 +410,13 @@ DGT fee, plates, mandatory lighting conversion.
   `google-site-verification=8_Cttd0PYtM6uevwYA08MGx6drWxQEn24W2Ppsfi8GI`, which covers `www` and every
   path. Nothing about it lives in the repository. The sitemap is listed in `robots.txt`, so Google
   finds it either way; submitting it in the Search Console interface only makes it faster.
-- **The share card is a real image now**, one per language in `public/og/`, 1200×630, drawn by
-  `npm run og` with headless Chrome from the site's own type and palette: the wheel mark, the question
-  the site opens with, and the three numbers — 43 countries of purchase, 28 destinations, 23 languages
-  — labelled with strings the app already had translated. The PNGs are committed, so a build needs no
-  browser. Re-run it when the tagline or those numbers change.
+- **The share card is a real image now**, drawn by `npm run og` with headless Chrome from the site's
+  own type and palette. Two kinds: one per language in `public/og/` — the wheel mark, the question the
+  site opens with, and the three numbers, labelled with strings the app already had translated — and
+  one per route in `public/og/route/`, which carries the thing that earns a click: two flag emoji, the
+  total, and the car it belongs to. The route card needs no translation, so thirty of them serve all
+  twenty-three languages. The PNGs are committed, so a build needs no browser; re-run `npm run og`
+  when a rate, the tagline or the example car changes.
 - **IndexNow** pings Bing, Yandex and Seznam on every deploy: the key file is in `public/`, the poster
   is `scripts/indexnow.mjs`, and CI runs it after the upload with `continue-on-error`, because a
   search engine being down is not a broken build. Google ignores IndexNow — that is what the sitemap

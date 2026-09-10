@@ -13,7 +13,7 @@ const vehicle = defineModel<Vehicle>({ required: true })
 const props = defineProps<{ destination: Destination; origin: Origin }>()
 const { t } = useI18n()
 
-const mode = ref<'vin' | 'catalog'>('vin')
+const mode = ref<'vin' | 'catalog'>('catalog')
 const busy = ref(false)
 const error = ref('')
 
@@ -45,8 +45,8 @@ function pickFromCatalog(p: { make: string; model: string; year: number; version
   <div>
     <div class="modes">
       <div class="segmented">
-        <button type="button" class="segment" :class="{ on: mode === 'vin' }" @click="mode = 'vin'">{{ t('car.byVin') }}</button>
         <button type="button" class="segment" :class="{ on: mode === 'catalog' }" @click="mode = 'catalog'">{{ t('car.catalog') }}</button>
+        <button type="button" class="segment" :class="{ on: mode === 'vin' }" @click="mode = 'vin'">{{ t('car.byVin') }}</button>
       </div>
       <HelpTip
         :text="t(mode === 'vin' ? 'car.help.vin' : 'car.help.catalog')"

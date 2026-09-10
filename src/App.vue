@@ -5,7 +5,7 @@ import * as calc from './state/calculator'
 import { DESTINATIONS } from './state/calculator'
 import { fromQuery, toQuery, type Snapshot } from './state/snapshot'
 import { appPath } from './lib/url'
-import { countryBrief, countryFromPath, countryPath } from './lib/pages'
+import { countryBrief, countryFromPath, countryPath, routeFromPath, routePath } from './lib/pages'
 import { DESTINATION_INFO, sourcesFor } from './lib/countrySources'
 import { ORIGIN_COUNTRIES } from './lib/origins'
 import { CURRENCIES } from './types'
@@ -38,6 +38,8 @@ const PINNED_DESTINATIONS = ['UA', 'ES', 'PL', 'DE']
  * because a page about Ireland that calculates Poland would be a lie.
  */
 const arrivedOnCountryPage = countryFromPath(location.pathname, import.meta.env.BASE_URL, (code) => code in DESTINATION_INFO)
+/** `/uk/import/us-ua/` is a route page: it opens with both ends already chosen. */
+const arrivedOnRoutePage = routeFromPath(location.pathname, import.meta.env.BASE_URL)
 const pageCountry = computed(() =>
   arrivedOnCountryPage && destination.value && destination.value in DESTINATION_INFO ? destination.value : null)
 
@@ -50,7 +52,9 @@ const page = computed(() => {
 
 /** The address bar keeps whichever page it is on, and only the query moves. */
 const pathFor = (next: Locale) =>
-  pageCountry.value ? countryPath(import.meta.env.BASE_URL, next, pageCountry.value) : appPath(next)
+  arrivedOnRoutePage ? routePath(import.meta.env.BASE_URL, next, arrivedOnRoutePage.from, arrivedOnRoutePage.to)
+    : pageCountry.value ? countryPath(import.meta.env.BASE_URL, next, pageCountry.value)
+    : appPath(next)
 
 const priceText = ref('')
 const resultStep = ref<{ root: HTMLElement | null } | null>(null)
@@ -123,6 +127,10 @@ onMounted(async () => {
   const query = new URLSearchParams(location.search)
   calc.apply(fromQuery(query, DESTINATIONS))
   if (arrivedOnCountryPage && !query.get('to')) destination.value = arrivedOnCountryPage as typeof destination.value
+  if (arrivedOnRoutePage) {
+    if (!query.get('from')) originCountry.value = arrivedOnRoutePage.from
+    if (!query.get('to')) destination.value = arrivedOnRoutePage.to as typeof destination.value
+  }
   priceText.value = price.value ? String(price.value) : ''
   started.value = calc.routeChosen.value
 

@@ -1,0 +1,23 @@
+{
+  "_note": "The routes people actually search for, one page each in every language. A route page is the query typed into a search box — “bringing a car from Germany to Poland” — where a country page is only half of it. Thirty is deliberate: the grid allows 1204, and most of them nobody looks for. The example car is the one this project started with, priced round so the arithmetic can be followed by eye; it carries every field any destination needs — power, mass, length — so that no route falls back to “not in total”.",
+  "example": {
+    "make": "Audi", "model": "A4", "year": 2017, "fuel": "petrol",
+    "engineCc": 1984, "powerHp": 252, "co2Wltp": 168, "grossMassKg": 2000, "lengthMm": 4726,
+    "brandTier": "premium", "priceEur": 20000, "region": "FL"
+  },
+  "routes": [
+    { "from": "US", "to": "UA" }, { "from": "DE", "to": "UA" }, { "from": "PL", "to": "UA" },
+    { "from": "LT", "to": "UA" }, { "from": "JP", "to": "UA" }, { "from": "KR", "to": "UA" },
+    { "from": "DE", "to": "PL" }, { "from": "US", "to": "PL" }, { "from": "FR", "to": "PL" },
+    { "from": "IT", "to": "PL" },
+    { "from": "US", "to": "DE" }, { "from": "JP", "to": "DE" }, { "from": "PL", "to": "DE" },
+    { "from": "DE", "to": "ES" }, { "from": "FR", "to": "ES" }, { "from": "US", "to": "ES" },
+    { "from": "DE", "to": "CZ" }, { "from": "US", "to": "CZ" },
+    { "from": "DE", "to": "RO" }, { "from": "IT", "to": "RO" },
+    { "from": "DE", "to": "BG" }, { "from": "IT", "to": "BG" },
+    { "from": "DE", "to": "LT" }, { "from": "US", "to": "LT" },
+    { "from": "DE", "to": "NL" }, { "from": "US", "to": "NL" },
+    { "from": "DE", "to": "PT" }, { "from": "FR", "to": "PT" },
+    { "from": "DE", "to": "IT" }, { "from": "US", "to": "IT" }
+  ]
+}

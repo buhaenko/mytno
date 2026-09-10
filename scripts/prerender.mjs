@@ -11,7 +11,11 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { LOCALES } from '../src/i18n/locales.ts'
-import { countryBrief, countryPath, sourcesFor } from '../src/lib/pages.ts'
+import { countryBrief, countryPath, routeBrief, routePath, sourcesFor } from '../src/lib/pages.ts'
+
+// The worked examples are computed by the calculator itself, bundled for Node by the build,
+// so a route page and the app can never quote different numbers for the same car.
+const { estimate, fallbackRates, format, ORIGIN_GROUP } = await import('../.cache/calc.mjs')
 
 const SITE = (process.env.SITE_URL ?? 'https://mytno.app').replace(/\/$/, '')
 const DIST = 'dist'
@@ -23,6 +27,20 @@ const countries = config('countries.json')
 const ukraine = config('rules.ukraine.json')
 const spain = config('rules.spain.json')
 const DESTINATIONS = Object.keys(countries.destinations)
+const { routes: ROUTES, example: EXAMPLE } = config('routes.json')
+const fx = fallbackRates()
+
+/** One route, priced once: the numbers are the same in every language, only the words differ. */
+const priced = ROUTES.map((route) => {
+  const origin = ORIGIN_GROUP[route.from] ?? 'OTHER'
+  const market = origin === 'US' || origin === 'JP' || origin === 'KR' ? origin : 'EU'
+  const car = { ...EXAMPLE, market, notes: [] }
+  const trip = {
+    origin, destination: route.to, price: EXAMPLE.priceEur, currency: 'EUR',
+    hasOriginProof: true, residenceTransfer: false, region: EXAMPLE.region,
+  }
+  return { ...route, estimate: estimate(car, trip, fx) }
+})
 
 const SOURCE_CONFIG = {
   euDuty: countries.euDutySource,
@@ -64,7 +82,7 @@ const alternates = (path) => [
 ].join('\n    ')
 
 /** One page: the shell with its head filled in, and whatever body a crawler should see. */
-function render({ locale, path, title, description, head, body }) {
+function render({ locale, path, title, description, head, body, image }) {
   return shell
     .replace('<html lang="en">', `<html lang="${locale}">`)
     .replace(/<title>.*?<\/title>/, `<title>${escape(title)}</title>`)
@@ -77,10 +95,10 @@ function render({ locale, path, title, description, head, body }) {
       `<meta property="og:url" content="${abs(path)}" />`,
       `<meta property="og:locale" content="${locale}" />`,
       `<meta property="og:site_name" content="${BRAND}" />`,
-      `<meta property="og:image" content="${abs(`/og/${locale}.png`)}" />`,
+      `<meta property="og:image" content="${abs(image ?? `/og/${locale}.png`)}" />`,
       '<meta property="og:image:width" content="1200" />',
       '<meta property="og:image:height" content="630" />',
-      `<meta name="twitter:image" content="${abs(`/og/${locale}.png`)}" />`,
+      `<meta name="twitter:image" content="${abs(image ?? `/og/${locale}.png`)}" />`,
       ...head,
     ].join('\n    '))
     .replace('<div id="app"></div>', `<div id="app">${body}</div>`)
@@ -94,6 +112,13 @@ function write(path, html) {
 }
 
 const urls = []
+
+/** The route index: the queries people actually type, and how a crawler reaches those pages. */
+function routeLinks(locale, t) {
+  const links = priced.map(({ from, to }) =>
+    `<a href="${routePath('/', locale, from, to)}">${escape(countryName(from, locale))} → ${escape(countryName(to, locale))}</a>`)
+  return `<nav>${escape(t('page.routes'))} ${links.join(' ')}</nav>`
+}
 
 /** The country index, as plain links: how a crawler walks from any page to all of them. */
 function countryLinks(locale, t) {
@@ -119,7 +144,15 @@ for (const locale of LOCALES) {
       applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     })}</script>`],
-    body: `<noscript><h1>${escape(t('app.title'))}</h1><p>${escape(t('app.tagline'))}</p></noscript>${countryLinks(locale, t)}`,
+    body: [
+      `<h1>${escape(t('app.title'))}</h1>`,
+      `<p>${escape(t('app.tagline'))}</p>`,
+      `<p>${escape(t('page.home.about'))}</p>`,
+      `<h2>${escape(t('page.routes'))}</h2>`,
+      `<ul>${priced.map(({ from, to, estimate: e }) =>
+        `<li><a href="${routePath('/', locale, from, to)}">${escape(countryName(from, locale))} → ${escape(countryName(to, locale))}</a> — ${escape(format(e.total.likely, 'EUR', fx, locale))}</li>`).join('')}</ul>`,
+      countryLinks(locale, t),
+    ].join(''),
   }))
 
   // One page per country a car can be registered in.
@@ -145,7 +178,47 @@ for (const locale of LOCALES) {
           acceptedAnswer: { '@type': 'Answer', text: item.a },
         })),
       })}</script>`],
-      body: `<span class="hero-flag fi fi-${code.toLowerCase()}"></span><h1>${escape(brief.h1)}</h1><p>${escape(brief.lead)}</p><dl>${rows}</dl>${faq}${countryLinks(locale, t)}`,
+      body: `<span class="hero-flag fi fi-${code.toLowerCase()}"></span><h1>${escape(brief.h1)}</h1><p>${escape(brief.lead)}</p><dl>${rows}</dl>${faq}${routeLinks(locale, t)}${countryLinks(locale, t)}`,
+    }))
+  }
+
+  // One page per route: the question as people ask it, answered with a worked example.
+  for (const { from, to, estimate: e } of priced) {
+    const path = (l) => routePath('/', l, from, to)
+    const here = path(locale)
+    urls.push({ loc: here, alt: path })
+
+    const car = `${EXAMPLE.make} ${EXAMPLE.model} ${EXAMPLE.year}`
+    const price = format(EXAMPLE.priceEur, 'EUR', fx, locale)
+    const total = format(e.total.likely, 'EUR', fx, locale)
+    const brief = routeBrief(countryName(from, locale), countryName(to, locale), { car, price, total }, t)
+
+    const lines = e.lines.filter((l) => !l.unknown && l.amount.likely > 0)
+      .map((l) => `<dt>${escape(t(l.label.key, l.label.params))}</dt><dd>${escape(format(l.amount.likely, 'EUR', fx, locale))}</dd>`).join('')
+    const faq = brief.faq.map((item) => `<h2>${escape(item.q)}</h2><p>${escape(item.a)}</p>`).join('')
+
+    write(here, render({
+      locale, path: here,
+      title: `${brief.h1} — ${BRAND}`,
+      description: `${brief.h1}. ${brief.lead}`,
+      // The route card carries the number, and needs no translation to do it.
+      image: `/og/route/${from.toLowerCase()}-${to.toLowerCase()}.png`,
+      head: [alternates(path), `<script type="application/ld+json">${JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: locale,
+        mainEntity: brief.faq.map((item) => ({
+          '@type': 'Question', name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a },
+        })),
+      })}</script>`],
+      body: [
+        `<span class="hero-flag fi fi-${from.toLowerCase()}"></span><span class="hero-flag fi fi-${to.toLowerCase()}"></span>`,
+        `<h1>${escape(brief.h1)}</h1><p>${escape(brief.lead)}</p>`,
+        `<h2>${escape(brief.exampleTitle)}</h2><dl>${lines}<dt>${escape(brief.totalLabel)}</dt><dd>${escape(total)}</dd></dl>`,
+        `<p>${escape(brief.exampleNote)}</p>`,
+        faq,
+        `<nav><a href="${countryPath('/', locale, to)}">${escape(countryName(to, locale))}</a> <a href="${countryPath('/', locale, from)}">${escape(countryName(from, locale))}</a></nav>`,
+        routeLinks(locale, t),
+      ].join(''),
     }))
   }
 }
@@ -164,4 +237,4 @@ writeFileSync(join(DIST, 'sitemap.xml'), [
 writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`)
 writeFileSync(join(DIST, '404.html'), shell.replace('<!--seo-->', '<meta name="robots" content="noindex" />'))
 
-console.log(`prerendered ${urls.length} pages (${LOCALES.length} languages × ${DESTINATIONS.length + 1}) → ${SITE}`)
+console.log(`prerendered ${urls.length} pages (${LOCALES.length} languages × ${DESTINATIONS.length + 1} countries + ${priced.length} routes) → ${SITE}`)

@@ -15,6 +15,7 @@ import france from '@config/rules.france.json'
 import { format as formatMoney } from '../../lib/money'
 import { useI18n } from '../../i18n'
 import TotalPanel from './TotalPanel.vue'
+import Compare from './Compare.vue'
 import Breakdown from './Breakdown.vue'
 import HelpTip from '../controls/HelpTip.vue'
 
@@ -67,6 +68,8 @@ const used = computed(() =>
 
     <div class="card breakdown-card">
       <Breakdown :estimate="estimate" :tier="vehicle.brandTier" :format="format" :translate="translate" />
+
+      <Compare :vehicle="vehicle" :trip="trip" :fx="fx" :currency="currency" />
 
       <p class="hint">
         {{ t('result.customsValue', { value: format(estimate.customsValue) }) }}

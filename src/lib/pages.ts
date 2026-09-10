@@ -65,6 +65,49 @@ export function countryBrief(
   }
 }
 
+/** A route is the question people actually type: not a country, but a country to a country. */
+export interface RouteBrief {
+  h1: string
+  lead: string
+  exampleTitle: string
+  exampleNote: string
+  totalLabel: string
+  faq: { q: string; a: string }[]
+}
+
+export function routeBrief(
+  from: string,
+  to: string,
+  example: { car: string; price: string; total: string },
+  t: Translate,
+): RouteBrief {
+  // The arrow keeps both country names in the nominative, so no language has to decline them.
+  const params = { from, to, ...example }
+  return {
+    h1: t('page.route.h1', params),
+    lead: t('page.route.lead', params),
+    exampleTitle: t('page.route.example', params),
+    exampleNote: t('page.route.exampleNote'),
+    totalLabel: t('page.route.total'),
+    faq: [
+      { q: t('page.route.faq.cost.q', params), a: t('page.route.faq.cost.a', params) },
+      { q: t('page.route.faq.cheaper.q', params), a: t('page.route.faq.cheaper.a', params) },
+    ],
+  }
+}
+
+export const routePath = (base: string, locale: string, from: string, to: string) =>
+  `${base}${locale === 'en' ? '' : `${locale}/`}import/${from.toLowerCase()}-${to.toLowerCase()}/`
+
+/** `/uk/import/us-ua/` names a route; `/uk/import/es/` a country; anything else neither. */
+export function routeFromPath(pathname: string, base: string): { from: string; to: string } | null {
+  const parts = pathname.slice(base.length).split('/').filter(Boolean)
+  const index = parts.indexOf('import')
+  const slug = index >= 0 ? parts[index + 1] : undefined
+  const match = slug?.match(/^([a-z]{2})-([a-z]{2})$/)
+  return match ? { from: match[1]!.toUpperCase(), to: match[2]!.toUpperCase() } : null
+}
+
 /** The official page behind each line, given the few links the config holds. */
 export interface SourceConfig {
   euDuty: Source
