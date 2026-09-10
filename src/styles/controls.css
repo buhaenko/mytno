@@ -121,7 +121,8 @@ select.input {
 /* The circle stays 16 pixels; the finger gets 36. */
 .tip-toggle::after { content: ''; position: absolute; inset: -10px; border-radius: 50%; }
 .tip-body {
-  position: absolute; z-index: 20; top: 22px; left: 0;
+  /* Placed by HelpTip against the window, never against the page — see the file. */
+  position: fixed; z-index: 20;
   width: min(340px, 82vw); padding: 12px 13px;
   display: flex; flex-direction: column; gap: 6px;
   font-family: var(--sans); font-size: 13px; font-weight: 400; line-height: 1.5;

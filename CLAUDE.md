@@ -419,6 +419,20 @@ DGT fee, plates, mandatory lighting conversion.
   on the right in quiet mono — USA, EUROPE, UKRAINE, JAPAN, KOREA, OTHER — in the list and on the
   closed button, because that group, not the country, decides the rules; the label is the same
   `car.market.*` string the vehicle step uses, and Ukraine borrows the country name.
+- **A tip hangs off the window, not off the page.** The “?” panel was absolutely positioned
+  under its mark, which broke twice on a phone. The footer's mark sits near the right
+  border, so the panel ran off the screen: half the legal text was unreadable and the page
+  grew a sideways scroll. Worse, an absolutely positioned panel still counts toward how far
+  the document scrolls, so opening the last tip on the page stretched the document — and
+  Chrome answered that by throwing the reader back to the top. That was reproduced with a
+  plain `<span>` inserted by hand into the footer, so it is the browser reacting to the
+  scrollable area growing, not anything Vue did; it was on production too, unnoticed. Both
+  faults are the same one: a panel that belongs to the page. `.tip-body` is `position:
+  fixed` now and `HelpTip` places it against the viewport from the mark's own rect, turning
+  upwards when there is no room below and sliding sideways rather than leaving the screen.
+  It re-places on scroll, which is free because a fixed panel can never change the document.
+  Measured at 320, 360, 390 and 1280: nothing clipped, no sideways scroll, the document
+  unchanged and the scroll position untouched.
 - **The footer is centred and has no date.** It used to end with the build date, which said nothing
   to a reader and aged badly the moment a deploy did not happen.
 - **The footer is one line**: `© year mytno.app · Legal and data ? · feedback@mytno.app · updated`.
