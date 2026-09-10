@@ -7,8 +7,8 @@ every session and do not create notes, docs folders or summaries anywhere else.
 
 **mytno.app** — a free calculator for what it costs to clear customs and register a car:
 duty, excise, VAT, registration taxes and the mandatory registration costs, at official rates.
-Route: any of 43 purchase countries → Ukraine or any of the 27 EU countries. 23 languages,
-19 currencies, 667 prerendered pages. **Live at https://mytno.app.**
+Route: any of 43 purchase countries → Ukraine or any of the 27 EU countries. 5 languages,
+19 currencies, 295 prerendered pages. **Live at https://mytno.app.**
 
 It grew out of a real question: Serhii lives in Spain, a friend in Ukraine has an Audi A4 (US
 import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over would actually cost.
@@ -353,7 +353,19 @@ DGT fee, plates, mandatory lighting conversion.
   and again on every change. Every value on screen is in it, the currency the total is *read* in
   (`show`) included, so copying the address reproduces the screen exactly. That is the whole sharing
   mechanism, which is why there is no share button.
-- **A page per route, and the route is what people type — 1 357 pages in all.** A country page is
+- **Five languages on show, eighteen kept in a drawer.** `LOCALES` lists uk, en, es, de and fr;
+  everything else moved to `src/i18n/messages/hidden/`, translations intact, out of the glob so the
+  build stops emitting chunks for them. Every new string was costing three agents and twenty minutes
+  in twenty-three languages, which had become the slowest part of any change. Bringing one back is a
+  file move, a line in `locales.ts` and a rebuild — the README in that folder says so, and warns to
+  check the key set against `en.ts` first, because nothing has been written into them meanwhile.
+- **The first paint no longer flashes the crawler's copy of the page.** A prerendered page carries
+  plain markup for a robot without JavaScript, and a browser used to show it for an instant before Vue
+  replaced it with the app. An inline script marks the document `js`, an inline style hides that
+  markup and turns a ring in its place, and `main.ts` clears it the moment the app mounts — inline,
+  because it has to work before any stylesheet loads. A crawler without JavaScript never gets the
+  class, so it still reads everything.
+- **A page per route, and the route is what people type — 295 pages in all.** A country page is
   half a question; “Germany → Poland” is the whole one. Thirty routes, chosen for the traffic rather
   than the grid, in 23 languages, at `/uk/import/de-pl/`. Each carries a **worked example computed by
   the calculator itself**: the build bundles `src/lib/calc` for Node with esbuild
@@ -398,6 +410,8 @@ DGT fee, plates, mandatory lighting conversion.
   on the right in quiet mono — USA, EUROPE, UKRAINE, JAPAN, KOREA, OTHER — in the list and on the
   closed button, because that group, not the country, decides the rules; the label is the same
   `car.market.*` string the vehicle step uses, and Ukraine borrows the country name.
+- **The footer is centred and has no date.** It used to end with the build date, which said nothing
+  to a reader and aged badly the moment a deploy did not happen.
 - **The footer is one line**: `© year mytno.app · Legal and data ? · feedback@mytno.app · updated`.
   Everything legal lives in that single tip — the disclaimer, what “official source” means, the data,
   privacy and liability notes, and three official sources as examples. It was four stacked paragraphs

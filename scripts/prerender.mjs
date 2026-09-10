@@ -101,7 +101,7 @@ function render({ locale, path, title, description, head, body, image }) {
       `<meta name="twitter:image" content="${abs(image ?? `/og/${locale}.png`)}" />`,
       ...head,
     ].join('\n    '))
-    .replace('<div id="app"></div>', `<div id="app">${body}</div>`)
+    .replace('<div id="app" class="pending"></div>', `<div id="app" class="pending">${body}</div>`)
 }
 
 function write(path, html) {

@@ -4,7 +4,7 @@
   border-top: 1px solid var(--line);
 }
 .footer strong { font-weight: 600; color: var(--ink); }
-.footer-line { display: flex; align-items: center; flex-wrap: wrap; gap: 2px 0; }
+.footer-line { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 2px 0; text-align: center; }
 .footer-legal { display: inline-flex; align-items: center; gap: 6px; }
 .footer-dot { margin: 0 8px; color: var(--ink-faint); opacity: .45; }
 /* The one tip carries the whole legal notice, so it may be taller than a hint. */

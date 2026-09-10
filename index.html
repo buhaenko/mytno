@@ -21,9 +21,29 @@
     <link rel="icon" href="/favicon-32.png" sizes="32x32" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <!--seo-->
+    <script>document.documentElement.className = 'js'</script>
+    <style>
+      /* The prerendered text is for crawlers without JavaScript. A browser gets the app
+         instead — and, until it arrives, a turning ring rather than a flash of the other
+         layout. Inline, because it has to work before any stylesheet has loaded. */
+      .js #app.pending > * { display: none; }
+      .js #app.pending { min-height: 58vh; display: grid; place-items: center; }
+      .js #app.pending::after {
+        content: ''; width: 26px; height: 26px; border-radius: 50%;
+        border: 2px solid #E3E3E7; border-top-color: #E2662A;
+        animation: mytno-turn .8s linear infinite;
+      }
+      .js #app.ready { animation: mytno-in .28s cubic-bezier(.2, .8, .2, 1); }
+      @keyframes mytno-turn { to { transform: rotate(1turn); } }
+      @keyframes mytno-in { from { opacity: 0; transform: translateY(4px); } }
+      @media (prefers-reduced-motion: reduce) {
+        .js #app.pending::after { animation: none; }
+        .js #app.ready { animation: none; }
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app" class="pending"></div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

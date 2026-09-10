@@ -31,7 +31,6 @@ async function copy() {
       <select v-model="currency" class="total-currency" :aria-label="t('result.currency')">
         <option v-for="c in CURRENCIES" :key="c" :value="c">{{ c }}</option>
       </select>
-      <button type="button" class="total-copy" @click="copy">{{ copied ? t('result.copied') : t('result.copy') }}</button>
     </div>
     <p class="total-figure">
       <CountUp class="total-value" :value="estimate.total.likely" :format="format" />
@@ -40,5 +39,8 @@ async function copy() {
       </span>
     </p>
     <p v-if="notice" class="notice">{{ notice }}</p>
+    <div class="total-foot">
+      <button type="button" class="total-copy" @click="copy">{{ copied ? t('result.copied') : t('result.copy') }}</button>
+    </div>
   </div>
 </template>

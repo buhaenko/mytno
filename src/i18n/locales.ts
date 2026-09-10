@@ -1,16 +1,13 @@
-/** The languages the app speaks. */
-export const LOCALES = [
-  'uk', 'en', 'es', 'de', 'pl', 'fr', 'it', 'pt', 'nl', 'ro', 'cs', 'sk',
-  'hu', 'bg', 'hr', 'sl', 'lt', 'lv', 'et', 'fi', 'sv', 'da', 'el',
-] as const
+/**
+ * The languages the app speaks. The other message files are still in `messages/`,
+ * unlisted: adding one back is a line here, and every page it needs is built again.
+ */
+export const LOCALES = ['uk', 'en', 'es', 'de', 'fr'] as const
 
 export type Locale = (typeof LOCALES)[number]
 
 export const LOCALE_NAMES: Record<Locale, string> = {
-  uk: 'Українська', en: 'English', es: 'Español', de: 'Deutsch', pl: 'Polski', fr: 'Français',
-  it: 'Italiano', pt: 'Português', nl: 'Nederlands', ro: 'Română', cs: 'Čeština', sk: 'Slovenčina',
-  hu: 'Magyar', bg: 'Български', hr: 'Hrvatski', sl: 'Slovenščina', lt: 'Lietuvių', lv: 'Latviešu',
-  et: 'Eesti', fi: 'Suomi', sv: 'Svenska', da: 'Dansk', el: 'Ελληνικά',
+  uk: 'Українська', en: 'English', es: 'Español', de: 'Deutsch', fr: 'Français',
 }
 
 export const isLocale = (value: string | null | undefined): value is Locale =>

@@ -33,8 +33,6 @@ const examples = [countries.euDutySource, countries.vatSource, ukraine.refs.exci
         <span class="footer-dot">·</span>
         <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>
       </template>
-      <span class="footer-dot">·</span>
-      <span>{{ site.legal.updated }}</span>
     </p>
   </footer>
 </template>
