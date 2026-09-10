@@ -19,3 +19,11 @@
   box-shadow: 0 12px 32px -14px rgb(0 0 0 / .25);
 }
 .consent-actions { display: flex; gap: 6px; margin-left: auto; }
+
+@media (max-width: 560px) {
+  /* The address and the legal line are the only things here a thumb ever aims at. */
+  .footer a, .footer-legal { display: inline-flex; align-items: center; min-height: 36px; }
+  /* Separators belong between things on one line, not at the start of the next. */
+  .footer-line { gap: 0 10px; }
+  .footer-dot { display: none; }
+}

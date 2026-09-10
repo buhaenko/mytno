@@ -162,4 +162,7 @@ select.input {
   /* Quiet is the point of these; illegible is not. And a segment is something a thumb lands on. */
   .picker-note { font-size: 11px; }
   .segment { min-height: 38px; }
+  /* Two pickers in one row leave no room for the customs group beside the country;
+     the name matters more, and the group is still on every line of the list itself. */
+  .hero.compact .picker-note { display: none; }
 }

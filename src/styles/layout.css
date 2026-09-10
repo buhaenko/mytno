@@ -89,8 +89,12 @@
 
   /* A thumb needs about nine millimetres; these are the places that were short of it. */
   .brand { padding: 5px 0; }
-  .countries { line-height: 2.1; }
-  .countries a { display: inline-block; padding: 3px 0; }
+  .countries { line-height: 2.3; }
+  .countries a { display: inline-block; padding: 5px 4px; margin: 0 -4px; }
+  /* A source link is a link a thumb has to find between two lines of text. */
+  .brief-rows dd a { display: inline-block; padding: 6px 0; }
+  .brief-rows { grid-template-columns: 1fr; gap: 4px 0; }
+  .brief-rows dd { margin-bottom: 10px; }
   .lang { min-height: 38px; }
 
   /* The mono labels are deliberately quiet, but 9.5 pixels is quiet to the point of unreadable. */
