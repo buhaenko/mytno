@@ -52,7 +52,7 @@ select.input {
 .segment.on { color: var(--ink); background: var(--field); box-shadow: 0 1px 2px rgb(0 0 0 / .05); }
 
 /* Country picker */
-.picker { position: relative; flex: 1 1 0; max-width: 260px; }
+.picker { position: relative; flex: 1 1 0; min-width: 0; max-width: 260px; }
 .picker-button {
   width: 100%; display: flex; align-items: center; gap: 10px; padding: 11px 14px;
   font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); text-align: left;
@@ -110,6 +110,7 @@ select.input {
 /* Help */
 .tip { position: relative; display: inline-flex; vertical-align: middle; }
 .tip-toggle {
+  position: relative;
   width: 16px; height: 16px; padding: 0;
   display: inline-grid; place-items: center;
   font: inherit; font-size: 10px; font-weight: 600; line-height: 1; color: var(--ink-faint);
@@ -117,6 +118,8 @@ select.input {
   cursor: pointer; transition: all .16s var(--ease);
 }
 .tip-toggle:hover, .tip-toggle.open { color: var(--accent-deep); border-color: var(--accent); }
+/* The circle stays 16 pixels; the finger gets 36. */
+.tip-toggle::after { content: ''; position: absolute; inset: -10px; border-radius: 50%; }
 .tip-body {
   position: absolute; z-index: 20; top: 22px; left: 0;
   width: min(340px, 82vw); padding: 12px 13px;
@@ -154,3 +157,9 @@ select.input {
 
 /* A field that has plainly been given the wrong number says so under itself. */
 .field-warn { display: block; margin-top: 5px; color: var(--due); font-size: 12px; line-height: 1.45; }
+
+@media (max-width: 560px) {
+  /* Quiet is the point of these; illegible is not. And a segment is something a thumb lands on. */
+  .picker-note { font-size: 11px; }
+  .segment { min-height: 38px; }
+}

@@ -86,4 +86,14 @@
   .route-arrow { align-self: center; transform: rotate(90deg); }
   .hero.compact .route { flex-direction: row; }
   .hero.compact .route-arrow { transform: none; }
+
+  /* A thumb needs about nine millimetres; these are the places that were short of it. */
+  .brand { padding: 5px 0; }
+  .countries { line-height: 2.1; }
+  .countries a { display: inline-block; padding: 3px 0; }
+  .lang { min-height: 38px; }
+
+  /* The mono labels are deliberately quiet, but 9.5 pixels is quiet to the point of unreadable. */
+  .step-head { font-size: 11.5px; }
+  .countries-label { font-size: 11px; }
 }

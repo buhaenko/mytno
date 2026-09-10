@@ -23,6 +23,13 @@ import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over wou
 - **Code in English** — identifiers, comments, commit messages. Chat with Serhii in Ukrainian.
 - **Aesthetics matter.** One concern per file, a header comment saying why the file exists, short
   templates, no dead CSS. Serhii reads the code and wants it to look considered.
+- **Measure the phone, do not squint at it.** The mobile checks are made by driving Chrome over the
+  DevTools protocol with the WebSocket Node already has — real device metrics, then a script inside
+  the page reporting `scrollWidth` against the viewport, every element wider than it, every piece of
+  text under 12 pixels and every control under 34. It found three things a screenshot never would: the
+  country pickers overflowed by 23 pixels at 360 because `flex: 1 1 0` cannot shrink while
+  `min-width` stays `auto`; the country index links were 20 pixels tall; and the help mark's hit area
+  was its 16-pixel circle. The script lives in the session scratchpad, not the repo.
 - **Look at it before saying it works.** No browser test runner is installed, but Chrome is:
   `npm run build && npx vite preview --port 4173`, then headless Chrome over the DevTools protocol
   — navigate, click, read `location.search`, `innerText`, `performance.getEntriesByType('resource')`
