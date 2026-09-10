@@ -15,7 +15,7 @@ const MARKETS: Market[] = ['US', 'EU', 'JP', 'KR', 'OTHER']
 
 const electrified = computed(() => vehicle.value.fuel === 'electric' || vehicle.value.fuel === 'phev')
 /** CO₂ sets the registration tax in six countries; the new price only in Spain, the power only in Slovakia. */
-const CO2_COUNTRIES: Destination[] = ['ES', 'AT', 'NL', 'PT', 'LT', 'SI', 'FR', 'EE', 'BE', 'DK', 'IE', 'HR', 'MT']
+const CO2_COUNTRIES: Destination[] = ['ES', 'AT', 'NL', 'PT', 'LT', 'SI', 'FR', 'EE', 'BE', 'DK', 'IE', 'HR', 'MT', 'FI', 'GR']
 const needsCo2 = computed(() => CO2_COUNTRIES.includes(props.destination))
 const needsListPrice = computed(() => props.destination === 'ES')
 const POWER_COUNTRIES: Destination[] = ['SK', 'IT', 'SI', 'HU', 'BE']

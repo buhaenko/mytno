@@ -13,6 +13,8 @@ import croatia from '@config/rules.croatia.json'
 import belgium from '@config/rules.belgium.json'
 import denmark from '@config/rules.denmark.json'
 import malta from '@config/rules.malta.json'
+import finland from '@config/rules.finland.json'
+import greece from '@config/rules.greece.json'
 import { ESTONIA_SOURCE, type EstonianFee } from '../estonia'
 import { fromEur, toEur } from '../fx'
 import { exact, money, nothing, percent, plus, times } from '../money'
@@ -344,6 +346,37 @@ export function maltaTax(v: Vehicle, priceEur: number) {
   return { eur: emissions + size, co2, emissions, size }
 }
 
+/**
+ * Finland: a rate per gram of CO₂, straight off the law's own table. Electric cars are not exempt —
+ * at 0 g/km they simply land on its lowest row. The base is the Finnish retail value of the same
+ * car, which the law says the purchase price may not stand for; here it does, and the line says so.
+ */
+export function finlandTax(v: Vehicle, priceEur: number) {
+  if (v.co2Wltp === undefined && v.fuel !== 'electric') return null
+  const co2 = Math.min(v.fuel === 'electric' ? 0 : Math.round(v.co2Wltp!), finland.rates.length - 1)
+  const rate = finland.rates[Math.max(0, co2)]!
+  return { eur: priceEur * (rate / 100), co2, rate }
+}
+
+/**
+ * Greece: a rate on the taxable value, lifted by CO₂ and by how far the car's emission standard has
+ * fallen behind the current one. Electric cars are outside it; hybrids pay half. The cylinder-capacity
+ * tables people still quote were replaced in 2016.
+ */
+export function greeceTax(v: Vehicle, priceEur: number) {
+  if (v.fuel === 'electric') return { eur: 0, ev: true, rate: 0, co2: 0, euro: '' }
+  if (v.co2Wltp === undefined) return null
+
+  const co2 = Math.round(v.co2Wltp)
+  const base = greece.valueBrackets.find((b) => b.maxValue === null || priceEur <= b.maxValue)!.rate
+  const byCo2 = greece.co2Multiplier.find((b) => b.maxCo2 === null || co2 <= b.maxCo2)!.factor
+  const euro = greece.euroMultiplier.find((e) => v.year >= e.fromYear)!
+  const share = v.fuel === 'hybrid' || v.fuel === 'phev' ? greece.hybridShare : 1
+
+  const rate = base * byCo2 * euro.factor * share
+  return { eur: priceEur * rate, ev: false, rate: rate * 100, co2, euro: euro.euro }
+}
+
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
 function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date, estonia?: EstonianFee | null): { line: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
@@ -357,6 +390,8 @@ function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: nu
   if (trip.destination === 'HR') return croatianTax(v, price, now)
   if (trip.destination === 'DK') return danishTax(v, price, fx)
   if (trip.destination === 'MT') return malteseTax(v, price)
+  if (trip.destination === 'FI') return finnishTax(v, price)
+  if (trip.destination === 'GR') return greekTax(v, price)
   if (country.regTax === 'national') {
     // Point at the authority that levies it where the country names one, not at customs.
     const source = (country as { regTaxSource?: { title: string; url: string } }).regTaxSource ?? customsLink
@@ -692,6 +727,49 @@ function malteseTax(v: Vehicle, price: number): { line: Line; warning?: ReturnTy
       notes: [msg('note.mtTax', { co2: Math.round(tax.emissions), size: Math.round(tax.size) })],
       caution: msg('caution.mtBase'),
       source: malta.source,
+    }),
+  }
+}
+
+/** Finland: the rate its table gives, on a value the tax office would set for itself. */
+function finnishTax(v: Vehicle, price: number): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'autovero' })
+  const tax = finlandTax(v, price)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.fiNoCo2')], source: finland.source }),
+      warning: msg('warn.fiNeedCo2'),
+    }
+  }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      estimate: true,
+      formula: `${tax.rate}% × yleinen vähittäismyyntiarvo`,
+      notes: [msg('note.fiTax', { co2: tax.co2, rate: tax.rate })],
+      caution: msg('caution.fiBase'),
+      source: finland.source,
+    }),
+  }
+}
+
+/** Greece: the rate its scale gives, on a value AADE would set from a Greek list price. */
+function greekTax(v: Vehicle, price: number): { line: Line; warning?: ReturnType<typeof msg> } {
+  const label = msg('line.regTaxNamed', { name: 'τέλος ταξινόμησης' })
+  const tax = greeceTax(v, price)
+  if (!tax) {
+    return {
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.grNoCo2')], source: greece.source }),
+      warning: msg('warn.grNeedCo2'),
+    }
+  }
+  if (tax.ev) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.grEv')], source: greece.source }) }
+  return {
+    line: line('regTax', label, 'tax', exact(tax.eur), {
+      estimate: true,
+      formula: 'συντελεστής × φορολογητέα αξία',
+      notes: [msg('note.grTax', { rate: Math.round(tax.rate * 10) / 10, co2: tax.co2, euro: tax.euro })],
+      caution: msg('caution.grBase'),
+      source: greece.source,
     }),
   }
 }

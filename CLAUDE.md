@@ -79,7 +79,7 @@ scripts/                   prerender (667 pages, sitemap, robots) · build-catal
 | Hungary | duty, VAT 27%, **regisztrációs adó**: a multiplier from engine power on 47 000 Ft, less the monthly reduction for age — for cars first registered from 2021 and for hybrids of any age |
 | Italy | duty, VAT 22%, **IPT**: €150.81 up to 53 kW, then €3.5119/kW, shown as a range because the province may add up to 30% |
 | Estonia | duty, VAT 24%, and the **registration fee the register itself works out** — the browser asks Transpordiamet's own API and puts its answer in the total |
-| DK IE HR MT | duty + national VAT, and the registration tax **at the official rates but on the price paid**, because each of these countries values the car itself. Every one of those lines carries a warning in red saying so |
+| DK IE HR MT FI GR | duty + national VAT, and the registration tax **at the official rates but on the price paid**, because each of these countries values the car itself. Every one of those lines carries a warning in red saying so |
 | Belgium | duty, VAT 21%, and the tax of the **region the owner lives in**: Flanders' BIV and Wallonia's TMC are computed once the region is chosen, Brussels is shown and not counted |
 | DE BG RO LU SE LV CY | duty + national VAT; registration tax a real €0, every one checked against its own authority on 9 Sep 2026 |
 | the other 7 EU countries | duty 10% + national VAT; the registration tax is shown as “not in total” with a link to the authority that levies it, because its base is a value we cannot reproduce or a table nobody publishes. Ireland and Croatia at least name what *is* known — the CO₂ band, the emissions half — instead of shrugging |
@@ -255,8 +255,8 @@ DGT fee, plates, mandatory lighting conversion.
   since riigiteataja.ee serves an Angular shell and the ministry's draft figures do not match what the
   API returns. It needs a gross mass, which nothing in our data carries and which every European
   registration certificate prints.
-- **Four countries are computed on an assumption, and the assumption is printed in red.** Denmark,
-  Ireland, Croatia and Malta all charge on a value their own authority assigns — a Danish appraisal
+- **Six countries are computed on an assumption, and the assumption is printed in red.** Denmark,
+  Ireland, Croatia, Malta, Finland and Greece all charge on a value their own authority assigns — a Danish appraisal
   against comparable cars, Revenue's OMSP, a Croatian new-car list price, Transport Malta's
   registration value — and each says outright that the invoice is not it. Serhii asked for numbers
   anyway, so the price paid stands in for that value and the line carries a `caution`, a new field on
@@ -265,6 +265,19 @@ DGT fee, plates, mandatory lighting conversion.
   `estimated`, not `computed`, so nobody reads it as a table lookup. Croatia is the neat one: its tax
   is worked out as if the car were new and then cut to the residual percentage, so the new-car price
   is recovered by dividing the price paid by that same percentage — the law's own model run backwards.
+- **Finland's rate is a table, not a curve, and there is no zero rate for electric cars.** The
+  consolidated Autoverolaki 777/2020 carries table 1 A with one row per gram from 0 to “360 or more”:
+  2.7% at 0, 6.8% at 100, 16.8% at 150, 22.7% at 168, 29.7% at 200, 38.6% at 250, 44.8% at 300 and
+  48.9% at the top. Two things the secondary sources had wrong and the law settles: 44.8% belongs to
+  300 g/km rather than 250, and an electric car is not exempt — at 0 g/km it lands on the lowest row.
+- **Greece stopped taxing cylinder capacity in 2016.** Article 59 of law 4389/2016 replaced art. 121
+  §2 of law 2960/2001 outright with a scale on the taxable value — 4% to €14 000, then 8, 16, 24 and
+  32% above €25 000 — lifted by CO₂ (−5% below 100 g/km, then 0, +10, +20, +30, +40, +60 and +100%
+  above 250) and lifted again where the car is behind the current emission standard (+50% one step
+  back, +200% further, +500% for conventional technology over 250 g/km). AADE's own applied grid
+  multiplies out to the same numbers — 3.80 / 4.00 / 4.40 … 8.00% for the cheapest bracket — which is
+  what confirms the reading. Hybrids pay half; pure electric cars are outside the tax. The cc tables
+  everyone still quotes have been dead law for a decade.
 - **Where the amount cannot be honest, the note can still be useful.** Ireland's line names the band
   the car falls into — “CO₂ 168 g/km puts it in the 30% band, or €600, whichever is greater” — and
   says the percentage is of a value Revenue assigns, not of the invoice. Croatia's names the emissions
@@ -447,12 +460,11 @@ specific, written down above.
    has applied every July since 2024. Its grid is already in the config.
 2. **Greece and Malta** are blocked on their own governments — the Greek coefficients sit behind
    twenty-five unconsolidated amendments, and Malta's base is a value Transport Malta assigns.
-3. **Denmark, Ireland, Croatia and Malta** are computed on the price paid with a red warning, which
-   is as far as honesty allows: their rates are exact and their bases are not ours to know.
-4. **Finland and Greece** are the last two linked. Finland needs its per-gram rate table off vero.fi;
-   Greece needs something harder — a dated, official statement of which basis is even in force, since
-   the 2001 law charges cylinder capacity by emission Directive and everything since suggests a value
-   scale replaced it, with no consolidated text reachable to settle it.
+3. **Denmark, Ireland, Croatia, Malta, Finland and Greece** are computed on the price paid with a red
+   warning, which is as far as honesty allows: their rates are exact and their bases are not ours to
+   know. **Nothing is merely linked any more** — the `national` state exists in the code and in the
+   messages but no country uses it. Leave it there: it is where a country goes when its research goes
+   stale, and that is a better fate than a wrong number.
 
 **The remaining inputs, and what each would unlock.** The *month* of first registration would sharpen
 the Dutch, French and Hungarian tables, which are monthly while we still count from the middle of a

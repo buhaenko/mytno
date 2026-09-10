@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, croatiaTax, czechiaEmissionFee, denmarkTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
+import { austriaNova, croatiaTax, czechiaEmissionFee, denmarkTax, finlandTax, greeceTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { fallbackRates } from '../../fx'
 
@@ -314,6 +314,22 @@ describe('Other EU countries', () => {
       expect(regTax.estimate).toBe(true)
       expect(regTax.caution).toBeDefined()
     }
+  })
+
+  it('reads Finland off its per-gram table and Greece off its price scale', () => {
+    const car = { ...audi, market: 'EU' as const }
+    // Finland: 168 g/km is 22.7%, and an electric car is not exempt — it lands on the lowest row.
+    expect(finlandTax(car, 20000)!.rate).toBe(22.7)
+    expect(finlandTax(car, 20000)!.eur).toBeCloseTo(20000 * 0.227, 6)
+    expect(finlandTax({ ...car, fuel: 'electric' }, 20000)!.rate).toBe(2.7)
+    // Greece: €20 000 is the 16% bracket, 168 g/km lifts it by 30%, EURO 6 adds nothing.
+    const gr = greeceTax(car, 20000)!
+    expect(gr.rate).toBeCloseTo(16 * 1.3, 6)
+    expect(gr.euro).toBe('6')
+    // A hybrid pays half of it, an electric car nothing at all, and an older car more.
+    expect(greeceTax({ ...car, fuel: 'hybrid' }, 20000)!.rate).toBeCloseTo(gr.rate / 2, 6)
+    expect(greeceTax({ ...car, fuel: 'electric' }, 20000)!.eur).toBe(0)
+    expect(greeceTax({ ...car, year: 2012 }, 20000)!.rate).toBeCloseTo(gr.rate * 1.5, 6)
   })
 
   it('reads the Czech emission fee off the model year', () => {

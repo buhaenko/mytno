@@ -141,10 +141,10 @@
       "eu": true,
       "vat": 0.255,
       "customs": "https://tulli.fi/",
-      "regTax": "national",
+      "regTax": "estimated",
       "regTaxSource": {
-        "title": "Verohallinto — amount of car tax (vero.fi)",
-        "url": "https://www.vero.fi/en/individuals/property/car-tax/amount-of-car-tax/"
+        "title": "Autoverolaki 777/2020, verotaulukko 1 A (finlex.fi)",
+        "url": "https://www.finlex.fi/fi/laki/ajantasa/2020/20200777"
       }
     },
     "FR": {
@@ -161,9 +161,9 @@
       "eu": true,
       "vat": 0.24,
       "customs": "https://www.aade.gr/",
-      "regTax": "national",
+      "regTax": "estimated",
       "regTaxSource": {
-        "title": "ΑΑΔΕ — φορολογία αυτοκινήτων οχημάτων, τέλος ταξινόμησης (aade.gr)",
+        "title": "Ν. 4389/2016 άρθρο 59 · ΑΑΔΕ — φορολογία αυτοκινήτων οχημάτων",
         "url": "https://www.aade.gr/sites/default/files/2020-07/09.aftolikita_oximata_forologia.pdf"
       }
     },
