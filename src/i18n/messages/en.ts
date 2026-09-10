@@ -355,5 +355,6 @@ export default {
   'consent.accept': 'Accept',
   'consent.decline': 'Decline',
   'footer.legal': 'Legal and data',
+  'footer.note': 'How the numbers were checked',
   'car.note.epaMatch': 'EPA catalogue: {model}.',
 } as Record<string, string>

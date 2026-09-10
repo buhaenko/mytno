@@ -12,6 +12,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { LOCALES } from '../src/i18n/locales.ts'
 import { countryBrief, countryPath, routeBrief, routePath, sourcesFor } from '../src/lib/pages.ts'
+import { note } from './note.ts'
 
 // The worked examples are computed by the calculator itself, bundled for Node by the build,
 // so a route page and the app can never quote different numbers for the same car.
@@ -103,6 +104,69 @@ function render({ locale, path, title, description, head, body, image }) {
     ].join('\n    '))
     .replace('<div id="app" class="pending"></div>', `<div id="app" class="pending">${body}</div>`)
 }
+
+/**
+ * The long-form page. It carries no calculator, so it boots no app — which also means its
+ * body may sit outside `#app`, where Vue cannot replace it. What each of the twenty-eight
+ * charges is read out of the config the calculator uses, so the two cannot disagree.
+ */
+const REG_TAX_STATE = {
+  computed: 'Computed here, from the official table',
+  api: 'Asked of the register’s own API',
+  regional: 'Depends on the region you live in',
+  estimated: 'Official rates, on a value only that country can assign',
+  none: 'Nothing at registration',
+  national: 'Shown and linked, not counted',
+}
+
+function noteTable() {
+  const rows = DESTINATIONS
+    .map((code) => ({ code, name: countryName(code, 'en'), state: countries.destinations[code].regTax }))
+    .sort((a, b) => a.name.localeCompare(b.name, 'en'))
+    .map(({ code, name, state }) =>
+      `<tr><td><a href="${countryPath('/', 'en', code)}">${escape(name)}</a></td><td>${escape(REG_TAX_STATE[state] ?? state)}</td></tr>`)
+  const tally = DESTINATIONS.reduce((acc, code) => {
+    const state = countries.destinations[code].regTax
+    acc[state] = (acc[state] ?? 0) + 1
+    return acc
+  }, {})
+  const counted = (tally.computed ?? 0) + (tally.api ?? 0)
+  const figures = [
+    [counted, 'answer with a number'],
+    [tally.estimated ?? 0, 'charge on their own valuation'],
+    [tally.none ?? 0, 'charge nothing at all'],
+    [tally.regional ?? 0, 'depend on the region'],
+  ]
+  return `<div class="note-count">${figures
+    .map(([n, label]) => `<div><b>${n}</b><span>${escape(label)}</span></div>`).join('')}</div>
+    <div class="note-table"><table>
+      <thead><tr><th>Country</th><th>Registration tax</th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table></div>`
+}
+
+function renderNote() {
+  const body = [
+    '<article class="note">',
+    `<p class="note-eyebrow">${escape(BRAND)}</p>`,
+    `<h1>${escape(note.title)}</h1>`,
+    `<div class="note-lead">${note.lead.map((p) => `<p>${p}</p>`).join('')}</div>`,
+    '<hr class="note-rule" />',
+    '<h2>Where the twenty-eight stand</h2>',
+    noteTable(),
+    ...note.sections.map((section) =>
+      `<h2>${escape(section.heading)}</h2>${section.body.map((p) => `<p>${p}</p>`).join('')}`),
+    '<a class="note-cta" href="/">Work out your own car →</a>',
+    `<p class="note-foot">© ${new Date().getFullYear()} ${escape(BRAND)} · <a href="mailto:feedback@mytno.app">feedback@mytno.app</a></p>`,
+    '</article>',
+  ].join('')
+
+  return render({ locale: 'en', path: note.slug, title: note.title, description: note.description, head: [], body: '' })
+    // The app would only replace it, and there is nothing here for the app to do.
+    .replace(/<script type="module"[^>]*><\/script>/, '')
+    .replace('<div id="app" class="pending"></div>', body)
+}
+
 
 function write(path, html) {
   const directory = join(DIST, path)
@@ -223,12 +287,16 @@ for (const locale of LOCALES) {
   }
 }
 
+// The long-form page, once, in English: it is the article the research earned.
+write(note.slug, renderNote())
+urls.push({ loc: note.slug, alt: null })
+
 const today = new Date().toISOString().slice(0, 10)
 writeFileSync(join(DIST, 'sitemap.xml'), [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
   ...urls.map(({ loc, alt }) => {
-    const links = LOCALES.map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${abs(alt(l))}"/>`).join('')
+    const links = alt ? LOCALES.map((l) => `<xhtml:link rel="alternate" hreflang="${l}" href="${abs(alt(l))}"/>`).join('') : ''
     return `  <url><loc>${abs(loc)}</loc><lastmod>${today}</lastmod><changefreq>weekly</changefreq>${links}</url>`
   }),
   '</urlset>',

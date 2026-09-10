@@ -484,6 +484,19 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **The research is the asset, and it was invisible.** Every finding sat in this file
+  while the site showed only the numbers that came out of them — nothing to link to, and a
+  two-day-old domain with no links ranks for nothing. `/car-registration-tax-in-europe/` is
+  the article those findings earned: Belgium at €276 against €2 427 for the same car, the
+  Greek cylinder tables that stopped being law in 2016, the Cypriot excise that was
+  abolished while every secondary source kept describing its replacement, Slovenia's bill
+  against Slovenia's law, Finland's 2.7% at zero grams, and Croatia's customs saying in
+  writing that your invoice is irrelevant. The prose lives in `scripts/note.ts` so not a
+  word of it reaches the bundle a visitor downloads; the table of twenty-eight is built by
+  the prerender from `config/countries.json`, so the article and the calculator cannot
+  drift. It is the one page that boots no app — its body sits outside `#app`, where Vue
+  cannot replace it, and the module script is stripped. English only: it exists to be
+  linked from Hacker News and Reddit, which is where a new domain gets its first links.
 - **Cloudflare cannot count people; Plausible is there for that.** Cloudflare Web
   Analytics is cookieless and therefore has no identifier at all: it reports page views and
   visits — a visit being a page view whose referrer is off-site — and no unique-visitor

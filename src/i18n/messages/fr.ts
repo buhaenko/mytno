@@ -347,5 +347,6 @@ export default {
   'consent.accept': 'Accepter',
   'consent.decline': 'Refuser',
   'footer.legal': 'Mentions légales et sources',
+  'footer.note': 'Comment les chiffres ont été vérifiés',
   'car.note.epaMatch': 'Catalogue EPA : {model}.',
 } as Record<string, string>

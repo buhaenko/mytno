@@ -2,6 +2,7 @@
 import site from '@config/site.json'
 import countries from '@config/countries.json'
 import ukraine from '@config/rules.ukraine.json'
+import { NOTE_PATH } from '../../lib/pages'
 import { useI18n } from '../../i18n'
 import HelpTip from '../controls/HelpTip.vue'
 
@@ -29,6 +30,8 @@ const examples = [countries.euDutySource, countries.vatSource, ukraine.refs.exci
           :source="examples"
         />
       </span>
+      <span class="footer-dot">·</span>
+      <a :href="NOTE_PATH">{{ t('footer.note') }}</a>
       <template v-if="site.legal.contactEmail">
         <span class="footer-dot">·</span>
         <a :href="`mailto:${site.legal.contactEmail}`">{{ site.legal.contactEmail }}</a>

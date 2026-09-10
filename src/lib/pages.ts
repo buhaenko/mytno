@@ -40,6 +40,9 @@ type Translate = (key: string, params?: Record<string, string | number>) => stri
 /** Duty on a car built outside the EU: the same 10% heading everywhere here. */
 export const DUTY_PERCENT = 10
 
+/** The long-form page. Its prose lives in scripts/, because only the prerender needs it. */
+export const NOTE_PATH = '/car-registration-tax-in-europe/'
+
 export function countryBrief(
   country: string,
   info: Destination,
