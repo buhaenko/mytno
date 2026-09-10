@@ -1,6 +1,7 @@
 {
   "_note": "Site-wide settings: brand, legal contact and analytics. Analytics stays off until an id is set.",
   "brand": "mytno.app",
+  "host": "mytno.app",
   "legal": {
     "owner": "mytno.app",
     "contactEmail": "feedback@mytno.app",

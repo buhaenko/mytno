@@ -400,6 +400,12 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Analytics counts only the real address.** Every preview deploy, `mytno.pages.dev`, whatever is
+  left of the old GitHub Pages host and every developer's localhost serves the same bundle, and each
+  was arriving as its own line in Top hosts — `mytno.app` at 4.4k next to `mytno.pages.dev` at 630 and
+  a handful of `:80` and `:4173` variants. `src/lib/analytics.ts` now refuses to start unless
+  `location.hostname` is `site.host`. Cloudflare keeps what it already recorded, so the old rows stay;
+  the list stops growing.
 - **Analytics is Cloudflare Web Analytics**, cookieless and needing no consent banner, so it starts
   with the page like Plausible would. The beacon token `c24ddec15eb2411bb19396cbbe450ff6` sits in
   `config/site.json` — it is not a secret, it is visible in the HTML it measures. Cloudflare's own

@@ -9,6 +9,13 @@ const PLAUSIBLE = (import.meta.env.VITE_PLAUSIBLE_DOMAIN as string) || site.anal
 const CLOUDFLARE = (import.meta.env.VITE_CF_BEACON as string) || site.analytics.cloudflareToken
 const CONSENT_KEY = 'mytno:analytics-consent'
 
+/**
+ * Only the real address is measured. Preview deploys, `mytno.pages.dev`, whatever is
+ * left of the old GitHub Pages host and a developer's own machine all serve the same
+ * bundle, and every one of them was showing up as its own line in the statistics.
+ */
+const onSite = typeof location !== 'undefined' && location.hostname === site.host
+
 export const needsConsent = !!GA
 export const consentAnswered = () => { try { return localStorage.getItem(CONSENT_KEY) !== null } catch { return true } }
 export const consentGiven = () => { try { return localStorage.getItem(CONSENT_KEY) === 'yes' } catch { return false } }
@@ -33,6 +40,7 @@ function startGoogleAnalytics() {
 
 /** Call once at boot. Cookieless analytics starts right away; GA waits for a stored yes. */
 export function initAnalytics() {
+  if (!onSite) return
   if (CLOUDFLARE) {
     load('https://static.cloudflareinsights.com/beacon.min.js', { 'data-cf-beacon': JSON.stringify({ token: CLOUDFLARE }) }, true)
   }
@@ -42,5 +50,5 @@ export function initAnalytics() {
 
 export function setConsent(accepted: boolean) {
   try { localStorage.setItem(CONSENT_KEY, accepted ? 'yes' : 'no') } catch { /* private mode */ }
-  if (accepted && GA) startGoogleAnalytics()
+  if (accepted && GA && onSite) startGoogleAnalytics()
 }
