@@ -13,7 +13,9 @@ body {
 h1, h2, h3 { margin: 0; font-weight: 600; }
 p { margin: 0; }
 a { color: var(--accent-deep); text-decoration: none; }
-a:hover { text-decoration: underline; }
+/* Touch keeps :hover on whatever was tapped last, which left one country sitting orange
+   in the middle of the index as if it were the current one. Hover is for pointers. */
+@media (hover: hover) { a:hover { text-decoration: underline; } }
 ::selection { background: var(--accent-wash); }
 
 .muted { color: var(--ink-faint); }

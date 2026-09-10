@@ -419,6 +419,20 @@ DGT fee, plates, mandatory lighting conversion.
   on the right in quiet mono — USA, EUROPE, UKRAINE, JAPAN, KOREA, OTHER — in the list and on the
   closed button, because that group, not the country, decides the rules; the label is the same
   `car.market.*` string the vehicle step uses, and Ukraine borrows the country name.
+- **The country index is an index, not running text.** Twenty-eight names set as a
+  wrapping line read as something left over on a phone: a ragged right edge, no left edge
+  at all because the “By country” label sat inside the first row, and — from a blunt
+  `line-height: 2.3` added once to give thumbs room — rows 43 pixels apart around
+  12.5-pixel words. The label is its own row now with a hairline under it, the same shape
+  as `.step-head`, and the height comes off the leading instead of off the target: the row
+  pitch is 34, which is exactly what a thumb needs, and the padding that makes “Italy” a
+  36-pixel-wide target is taken back out of the layout with a negative margin, so the text
+  still starts flush under the rule. Measured: 253 → 196 pixels at 390, 295 → 230 at 320.
+- **Hover is for pointers.** Touch leaves `:hover` on whatever was tapped last, so one
+  country sat orange and underlined in the middle of the index as if it were the current
+  page — the cheapest-looking thing on the screen, and nothing to do with state. Every
+  hover rule that changes colour is behind `@media (hover: hover)` now, `a:hover` in
+  `base.css` included.
 - **A tip hangs off the window, not off the page.** The “?” panel was absolutely positioned
   under its mark, which broke twice on a phone. The footer's mark sits near the right
   border, so the panel ran off the screen: half the legal text was unreadable and the page
