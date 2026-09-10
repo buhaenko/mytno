@@ -379,8 +379,27 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
-- **Analytics** stays off until an id is set: Plausible (cookieless, no banner) or GA4 behind the
-  consent bar. Both configured in `config/site.json` or via env.
+- **Analytics is Cloudflare Web Analytics**, cookieless and needing no consent banner, so it starts
+  with the page like Plausible would. The beacon token `c24ddec15eb2411bb19396cbbe450ff6` sits in
+  `config/site.json` — it is not a secret, it is visible in the HTML it measures. Cloudflare's own
+  auto-install was on but had no rule under it, which is why nothing was ever injected; it is off now
+  and the beacon is loaded by `src/lib/analytics.ts` instead, where the code can be read. Plausible
+  and GA4 remain configurable in the same place, GA4 still behind the consent bar.
+- **Google Search Console is verified at the domain**, by the TXT record
+  `google-site-verification=8_Cttd0PYtM6uevwYA08MGx6drWxQEn24W2Ppsfi8GI`, which covers `www` and every
+  path. Nothing about it lives in the repository. The sitemap is listed in `robots.txt`, so Google
+  finds it either way; submitting it in the Search Console interface only makes it faster.
+- **The share card is a real image now**, one per language in `public/og/`, 1200×630, drawn by
+  `npm run og` with headless Chrome from the site's own type and palette: the wheel mark, the question
+  the site opens with, and the three numbers — 43 countries of purchase, 28 destinations, 23 languages
+  — labelled with strings the app already had translated. The PNGs are committed, so a build needs no
+  browser. Re-run it when the tagline or those numbers change.
+- **IndexNow** pings Bing, Yandex and Seznam on every deploy: the key file is in `public/`, the poster
+  is `scripts/indexnow.mjs`, and CI runs it after the upload with `continue-on-error`, because a
+  search engine being down is not a broken build. Google ignores IndexNow — that is what the sitemap
+  is for.
+- **`www` is a redirect, not a second copy.** `public/_redirects` sends `www.mytno.app/*` to the apex
+  with a forced 301, which Cloudflare Pages applies at the edge.
 - **Cloudflare, done over the API.** Zone `mytno.app`: two proxied `CNAME`s, apex and `www`, both to
   `mytno.pages.dev`. Adding a custom domain through the API does **not** create the DNS record the
   way the dashboard does — the domain sits in `pending` until the record exists. Note the shape of a

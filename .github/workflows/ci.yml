@@ -28,3 +28,9 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist --project-name=mytno --branch=main
+
+      # Bing, Yandex and Seznam are told the moment a page changes; Google reads the sitemap.
+      - name: Ping IndexNow
+        if: github.ref == 'refs/heads/main'
+        run: npm run indexnow
+        continue-on-error: true

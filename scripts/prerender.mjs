@@ -71,11 +71,16 @@ function render({ locale, path, title, description, head, body }) {
     .replace(/<meta name="description" content=".*?" \/>/, `<meta name="description" content="${escape(description)}" />`)
     .replace(/<meta property="og:title" content=".*?" \/>/, `<meta property="og:title" content="${escape(title)}" />`)
     .replace(/<meta property="og:description" content=".*?" \/>/, `<meta property="og:description" content="${escape(description)}" />`)
+    .replace(/<meta property="og:image" content=".*?" \/>\n\s*/, '')
     .replace('<!--seo-->', [
       `<link rel="canonical" href="${abs(path)}" />`,
       `<meta property="og:url" content="${abs(path)}" />`,
       `<meta property="og:locale" content="${locale}" />`,
       `<meta property="og:site_name" content="${BRAND}" />`,
+      `<meta property="og:image" content="${abs(`/og/${locale}.png`)}" />`,
+      '<meta property="og:image:width" content="1200" />',
+      '<meta property="og:image:height" content="630" />',
+      `<meta name="twitter:image" content="${abs(`/og/${locale}.png`)}" />`,
       ...head,
     ].join('\n    '))
     .replace('<div id="app"></div>', `<div id="app">${body}</div>`)
