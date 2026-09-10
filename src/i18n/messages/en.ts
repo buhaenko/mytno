@@ -6,8 +6,8 @@ export default {
   'app.origin.OTHER': 'Other country',
   'app.foot': 'Rates from official national sources. Calculated in your browser.',
   'app.lang': 'Language',
-  'seo.title': 'mytno.app — Car import tax calculator by VIN',
-  'seo.description': 'What it costs to clear customs and register a car: duty, excise, VAT and registration taxes at official rates. VIN lookup, full model catalogue, 43 countries of purchase and 28 destinations.',
+  'seo.title': 'Car import tax calculator — 28 countries in one place',
+  'seo.description': 'Duty, excise, VAT and registration tax for 28 countries in one place, at official rates. Buy in any of 43 countries; look up the car by VIN.',
 
   'car.byVin': 'By VIN',
   'car.catalog': 'Find in catalogue',

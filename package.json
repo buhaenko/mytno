@@ -11,7 +11,8 @@
     "catalog": "node scripts/build-catalog.mjs",
     "og": "npm run calc && node --experimental-strip-types scripts/og-images.mjs",
     "indexnow": "node scripts/indexnow.mjs",
-    "calc": "esbuild scripts/calc-entry.ts --bundle --format=esm --platform=node --alias:@config=./config --outfile=.cache/calc.mjs --log-level=warning"
+    "calc": "esbuild scripts/calc-entry.ts --bundle --format=esm --platform=node --alias:@config=./config --outfile=.cache/calc.mjs --log-level=warning",
+    "icons": "node scripts/icons.mjs"
   },
   "dependencies": {
     "flag-icons": "^7.5.0",

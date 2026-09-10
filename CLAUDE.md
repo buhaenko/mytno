@@ -419,6 +419,22 @@ DGT fee, plates, mandatory lighting conversion.
   on the right in quiet mono — USA, EUROPE, UKRAINE, JAPAN, KOREA, OTHER — in the list and on the
   closed button, because that group, not the country, decides the rules; the label is the same
   `car.market.*` string the vehicle step uses, and Ukraine borrows the country name.
+- **Google showed a globe instead of our mark, and it was two things.** It fetches
+  `/favicon.ico` from the root by name — ours was a 404, because the icons were declared in
+  the head and nothing sat at that path — and it will not use an icon that is not a square
+  a multiple of 48 pixels wide; the only raster we shipped was 32. `npm run icons` renders
+  the mark from `public/favicon.svg` at 16, 32, 48, 96 and 144 (Chrome, at each size rather
+  than scaled down from one big one, so the five spokes land on whole pixels) and packs the
+  three small ones into a real `favicon.ico` — PNG payloads inside an ICO, which every
+  browser reads. The PNGs are committed, so a build needs no browser. Note that the icon is
+  crawled on its own schedule, days after the page: the markup being right is necessary,
+  not sufficient.
+- **The title says what it covers, not what you type into it.** It read “mytno.app — Car
+  import tax calculator by VIN”, which sold the input rather than the point: VIN lookup is
+  a convenience, twenty-eight countries in one place is the reason to come. It is “Car
+  import tax calculator — 28 countries in one place” now, in all six languages, with the
+  brand dropped because Google already prints the domain on the line above it. “Calculator”
+  stays: it is the word people search for, whatever it does to the marketing copy.
 - **The country index is an index, not running text.** Twenty-eight names set as a
   wrapping line read as something left over on a phone: a ragged right edge, no left edge
   at all because the “By country” label sat inside the first row, and — from a blunt
