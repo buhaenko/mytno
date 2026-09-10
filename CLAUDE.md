@@ -398,12 +398,15 @@ DGT fee, plates, mandatory lighting conversion.
   is `scripts/indexnow.mjs`, and CI runs it after the upload with `continue-on-error`, because a
   search engine being down is not a broken build. Google ignores IndexNow — that is what the sitemap
   is for.
-- **`www` is still a second copy, and Pages cannot fix it.** A `_redirects` file was tried and
-  removed: Cloudflare Pages matches those rules on the *path* only, so a rule whose source names
-  another host never fires — `www.mytno.app` kept answering 200. The fix is a Single Redirect at the
-  zone level, and that is a **zone**-scoped permission, which an account-scoped token does not carry,
-  the same trap as DNS records and Email Routing. Until it is made, the canonical tag is what keeps
-  the two apart, and nothing links to `www` anyway.
+- **`www` is a 301 to the apex, done with Bulk Redirects.** Two things were learned the hard way.
+  Cloudflare Pages matches `_redirects` on the *path* only, so a rule whose source names another host
+  never fires — that file was written, observed to do nothing, and removed. And a Single Redirect
+  needs `Zone → Config`, which an account-scoped token does not carry. **Bulk Redirects do not**:
+  the list lives at `/accounts/{id}/rules/lists` (kind `redirect`) and is switched on by a rule in the
+  account's own `http_request_redirect` phase, both of which an account token can reach. The list is
+  `www_to_apex`, one item, `subpath_matching` and `preserve_query_string` on, so
+  `www.mytno.app/uk/import/de/?x=1` lands on the same path at the apex. PUT that entrypoint without a
+  `kind` field — the API rejects it as unknown.
 - **Cloudflare, done over the API.** Zone `mytno.app`: two proxied `CNAME`s, apex and `www`, both to
   `mytno.pages.dev`. Adding a custom domain through the API does **not** create the DNS record the
   way the dashboard does — the domain sits in `pending` until the record exists. Note the shape of a
