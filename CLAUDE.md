@@ -418,6 +418,14 @@ DGT fee, plates, mandatory lighting conversion.
   Everything legal lives in that single tip — the disclaimer, what “official source” means, the data,
   privacy and liability notes, and three official sources as examples. It was four stacked paragraphs
   of small print before, which is three too many, and the name was repeated in each of them.
+- **There is no mobile app, and there should not be.** Bringing a car in is a decision made once in
+  several years, so nothing an app store rewards — retention — can happen here; every visitor arrives
+  from a search an app cannot rank for; and a rate change that takes two minutes through a push would
+  wait days for review, which contradicts the one promise the whole thing makes. The parts of an app
+  worth having need no store: `public/site.webmanifest` makes the site installable, with the wheel
+  mark rendered at 192 and 512 from `favicon.svg`, `display: standalone` and the canvas colour behind
+  it. An app becomes the right answer only if this turns into a tool for people who import cars for a
+  living — saved vehicles, documents, shipment deadlines — which is a different product.
 - **The favicon is not the wheel mark.** The mark has five thin spokes and a hairline rim, which at
   16 pixels turns to mush; the icon is a solid white disc with five cut spokes and the orange hub, on
   the dark square (`public/favicon.svg`, with a 32px PNG and a full-bleed 180px apple-touch beside
