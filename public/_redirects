@@ -1,3 +1,0 @@
-# Cloudflare Pages reads this file. The canonical tag already points at the apex;
-# this makes the second copy stop existing rather than merely stop being indexed.
-https://www.mytno.app/* https://mytno.app/:splat 301!

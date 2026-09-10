@@ -398,8 +398,12 @@ DGT fee, plates, mandatory lighting conversion.
   is `scripts/indexnow.mjs`, and CI runs it after the upload with `continue-on-error`, because a
   search engine being down is not a broken build. Google ignores IndexNow — that is what the sitemap
   is for.
-- **`www` is a redirect, not a second copy.** `public/_redirects` sends `www.mytno.app/*` to the apex
-  with a forced 301, which Cloudflare Pages applies at the edge.
+- **`www` is still a second copy, and Pages cannot fix it.** A `_redirects` file was tried and
+  removed: Cloudflare Pages matches those rules on the *path* only, so a rule whose source names
+  another host never fires — `www.mytno.app` kept answering 200. The fix is a Single Redirect at the
+  zone level, and that is a **zone**-scoped permission, which an account-scoped token does not carry,
+  the same trap as DNS records and Email Routing. Until it is made, the canonical tag is what keeps
+  the two apart, and nothing links to `www` anyway.
 - **Cloudflare, done over the API.** Zone `mytno.app`: two proxied `CNAME`s, apex and `www`, both to
   `mytno.pages.dev`. Adding a custom domain through the API does **not** create the DNS record the
   way the dashboard does — the domain sits in `pending` until the record exists. Note the shape of a
