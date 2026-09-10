@@ -9,9 +9,9 @@
     "jurisdictionNote": "Rates and rules are taken from the official sources listed next to every line of the calculation."
   },
   "analytics": {
-    "_note": "Analytics is off until an id is set. Cloudflare Web Analytics and Plausible are cookieless and need no consent banner; gaMeasurementId (G-XXXXXXXXXX) loads Google Analytics 4 behind the consent bar. The Cloudflare token is not a secret — it is visible in the page it measures.",
+    "_note": "Analytics is off until an id is set. Cloudflare Web Analytics and Plausible are cookieless and need no consent banner; gaMeasurementId (G-XXXXXXXXXX) loads Google Analytics 4 behind the consent bar. Cloudflare counts page views and visits and cannot count unique visitors — it has no identifier at all. Plausible is what the unique-visitor number comes from: a hash of a daily-rotating salt with the IP and user agent, so nobody can be followed past midnight. Neither token is a secret; both are visible in the page they measure.",
     "cloudflareToken": "c24ddec15eb2411bb19396cbbe450ff6",
-    "plausibleDomain": "",
+    "plausibleDomain": "mytno.app",
     "gaMeasurementId": ""
   },
   "dataSources": [

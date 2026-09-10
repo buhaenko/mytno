@@ -346,7 +346,7 @@ export default {
   'result.copied': 'Copied',
   'footer.disclaimer': '{brand} is an information tool, not tax or legal advice. The final amount is set by the customs and registration authorities.',
   'footer.data': 'Rates and rules come from official public sources, linked next to every line. Vehicle data: NHTSA vPIC and EPA fueleconomy.gov (US public domain). Exchange rates: National Bank of Ukraine.',
-  'footer.privacy': 'No accounts and no tracking cookies. The calculation runs in your browser; a share link stores only the calculation you chose to share.',
+  'footer.privacy': 'No accounts and no tracking cookies. Visits are counted anonymously and without cookies by Cloudflare Web Analytics and Plausible. The calculation runs in your browser; a share link stores only the calculation you chose to share.',
   'footer.liability': 'Provided as is, without warranty of any kind. Check the official sources before you buy or pay.',
   'footer.rights': 'Open data, reused under the terms of each source.',
   'footer.help.rights': 'Every number comes from an official source — the customs tariff, the tax law or the registration authority of the country it applies to — linked next to the line it produces. Only the market prices marked as estimates are not official.',

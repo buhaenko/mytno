@@ -338,7 +338,7 @@ export default {
   'result.copied': 'Copiado',
   'footer.disclaimer': '{brand} es una herramienta informativa, no asesoramiento fiscal ni jurídico. El importe final lo determinan la aduana y el organismo de matriculación.',
   'footer.data': 'Los tipos y las normas proceden de fuentes públicas oficiales, enlazadas junto a cada línea. Datos del vehículo: NHTSA vPIC y EPA fueleconomy.gov (dominio público de EE. UU.). Tipos de cambio: Banco Nacional de Ucrania.',
-  'footer.privacy': 'Sin cuentas y sin cookies de seguimiento. El cálculo se hace en tu navegador; el enlace compartido guarda solo el cálculo que decidiste compartir.',
+  'footer.privacy': 'Sin cuentas y sin cookies de seguimiento. Las visitas se cuentan de forma anónima y sin cookies con Cloudflare Web Analytics y Plausible. El cálculo se ejecuta en tu navegador; un enlace compartido guarda solo el cálculo que decidiste compartir.',
   'footer.liability': 'Se ofrece tal cual, sin garantía de ningún tipo. Consulta las fuentes oficiales antes de comprar o pagar.',
   'footer.rights': 'Datos abiertos, reutilizados según las condiciones de cada fuente.',
   'footer.help.rights': 'Cada cifra procede de una fuente oficial — el arancel aduanero, la ley fiscal o el organismo de matriculación del país correspondiente — enlazada junto a la línea que produce. Solo los precios de mercado marcados como estimación no son oficiales.',

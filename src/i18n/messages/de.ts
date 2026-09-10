@@ -338,7 +338,7 @@ export default {
   'result.copied': 'Kopiert',
   'footer.disclaimer': '{brand} ist ein Informationswerkzeug, keine Steuer- oder Rechtsberatung. Den endgültigen Betrag legen Zoll und Zulassungsbehörde fest.',
   'footer.data': 'Sätze und Regeln stammen aus amtlichen öffentlichen Quellen, verlinkt neben jeder Zeile. Fahrzeugdaten: NHTSA vPIC und EPA fueleconomy.gov (US Public Domain). Wechselkurse: Nationalbank der Ukraine.',
-  'footer.privacy': 'Keine Konten und keine Tracking-Cookies. Die Berechnung läuft in Ihrem Browser; ein geteilter Link speichert nur die Berechnung, die Sie teilen wollten.',
+  'footer.privacy': 'Keine Konten und keine Tracking-Cookies. Besuche werden anonym und ohne Cookies mit Cloudflare Web Analytics und Plausible gezählt. Die Berechnung läuft in Ihrem Browser; ein geteilter Link speichert nur die Berechnung, die Sie teilen wollten.',
   'footer.liability': 'Bereitstellung ohne jede Gewähr. Prüfen Sie die amtlichen Quellen, bevor Sie kaufen oder zahlen.',
   'footer.rights': 'Offene Daten, genutzt zu den Bedingungen der jeweiligen Quelle.',
   'footer.help.rights': 'Jede Zahl stammt aus einer amtlichen Quelle — dem Zolltarif, dem Steuergesetz oder der Zulassungsbehörde des jeweiligen Landes — verlinkt neben der Zeile, die sie erzeugt. Nicht amtlich sind nur die als Schätzung gekennzeichneten Marktpreise.',

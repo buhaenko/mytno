@@ -338,7 +338,7 @@ export default {
   'result.copied': 'Copié',
   'footer.disclaimer': '{brand} est un outil d’information, pas un conseil fiscal ou juridique. Le montant final est fixé par la douane et l’autorité d’immatriculation.',
   'footer.data': 'Les taux et les règles proviennent de sources publiques officielles, liées à chaque ligne. Données véhicule : NHTSA vPIC et EPA fueleconomy.gov (domaine public américain). Taux de change : Banque nationale d’Ukraine.',
-  'footer.privacy': 'Pas de compte ni de cookies de suivi. Le calcul s’exécute dans votre navigateur ; un lien partagé ne conserve que le calcul que vous avez choisi de partager.',
+  'footer.privacy': 'Aucun compte et aucun cookie de suivi. Les visites sont comptées anonymement et sans cookies par Cloudflare Web Analytics et Plausible. Le calcul se fait dans votre navigateur ; un lien partagé ne conserve que le calcul que vous avez choisi de partager.',
   'footer.liability': 'Fourni en l’état, sans aucune garantie. Vérifiez les sources officielles avant d’acheter ou de payer.',
   'footer.rights': 'Données ouvertes, réutilisées selon les conditions de chaque source.',
   'footer.help.rights': 'Chaque chiffre provient d’une source officielle — le tarif douanier, la loi fiscale ou l’autorité d’immatriculation du pays concerné — avec le lien à côté de la ligne qu’il produit. Seuls les prix du marché signalés comme estimation ne sont pas officiels.',

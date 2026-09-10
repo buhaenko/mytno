@@ -484,6 +484,21 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Cloudflare cannot count people; Plausible is there for that.** Cloudflare Web
+  Analytics is cookieless and therefore has no identifier at all: it reports page views and
+  visits — a visit being a page view whose referrer is off-site — and no unique-visitor
+  number exists in it to find. Plausible is the cookieless way to get one: a hash of a
+  salt with the IP and the user agent, the salt rotating every 24 hours, so nobody can be
+  followed past midnight. That rotation is also its limit — someone who comes back on
+  another day counts again, so a month's “unique visitors” leans high. It barely matters
+  here: bringing a car in is a once-in-years decision, so returning visitors are near zero
+  and visits are already close to people. `plausibleDomain` in `config/site.json` switches
+  it on; `analytics.ts` loads it beside the Cloudflare beacon, both gated to the real host.
+  Two things to know. It needs a paid Plausible account — the site has to exist in that
+  dashboard before a single event is kept, and nothing in the repository can do that step.
+  And `plausible.io` sits on the common ad-block lists, so its number reads low against
+  Cloudflare's; the fix is proxying the script from our own domain, which on Pages means a
+  Function, which is why it has not been done. Keep both: the pair is the cross-check.
 - **Analytics counts only the real address.** Every preview deploy, `mytno.pages.dev`, whatever is
   left of the old GitHub Pages host and every developer's localhost serves the same bundle, and each
   was arriving as its own line in Top hosts — `mytno.app` at 4.4k next to `mytno.pages.dev` at 630 and

@@ -338,7 +338,7 @@ export default {
   'result.copied': 'Skopiowano',
   'footer.disclaimer': '{brand} to narzędzie informacyjne, a nie porada podatkowa czy prawna. Ostateczną kwotę ustalają urząd celny i organ rejestrujący.',
   'footer.data': 'Stawki i przepisy pochodzą z oficjalnych źródeł publicznych, linki są przy każdej pozycji. Dane pojazdu: NHTSA vPIC i EPA fueleconomy.gov (domena publiczna USA). Kursy: Narodowy Bank Ukrainy.',
-  'footer.privacy': 'Bez kont i bez plików cookie śledzących. Obliczenia działają w Twojej przeglądarce; link zapisuje tylko to obliczenie, którym się podzieliłeś.',
+  'footer.privacy': 'Bez kont i bez plików cookie do śledzenia. Wizyty liczone są anonimowo i bez cookies przez Cloudflare Web Analytics i Plausible. Obliczenia wykonują się w Twojej przeglądarce; udostępniony link zapisuje tylko to obliczenie, którym się podzieliłeś.',
   'footer.liability': 'Udostępniane w stanie, w jakim jest, bez żadnej gwarancji. Sprawdź oficjalne źródła przed zakupem lub zapłatą.',
   'footer.rights': 'Otwarte dane, wykorzystane na warunkach każdego źródła.',
   'footer.help.rights': 'Każda liczba pochodzi z oficjalnego źródła — taryfy celnej, ustawy podatkowej lub urzędu rejestracji danego kraju — z odnośnikiem obok wiersza, który tworzy. Nieoficjalne są tylko ceny rynkowe oznaczone jako szacunek.',
