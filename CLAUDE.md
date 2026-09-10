@@ -338,6 +338,24 @@ DGT fee, plates, mandatory lighting conversion.
 - **There is a copy button after all.** The address bar is still the share link and still carries
   every value — but nobody copies an address bar on a phone, and that was costing us the sharing the
   design was built around. The button copies exactly that address and nothing else.
+- **A car with no European approval lands in Spain's top band whatever its CO₂, and the
+  screen has to say so.** Ley 38/1992 puts a vehicle whose official CO₂ cannot be
+  accredited in epígrafe 4º — 14.75% — so a US-market car pays the top rate even with a
+  real WLTP figure typed in. The code always knew this; the screen did not show it. The
+  label read a flat “14.75%” next to a CO₂ field the reader had just filled in, and the
+  reason sat in a grey note behind a question mark. The band the certified figure would
+  earn was already the bottom of the money range, so the range moved and nothing explained
+  why. Now the label reads “9.75–14.75%” whenever the two differ, and the reason is a
+  `caution` — the full-width red row — directly under the amount. Only for cars without EU
+  type approval, and only when certification would actually change the band: at 210 g/km
+  both rates are 14.75% and the line goes back to being one number.
+- **Numbers inside a sentence are formatted for the reader.** `t()` ran `String(value)`, so
+  a rate read “9.75%” in Ukrainian, German, Spanish, French and Polish, where it should be
+  “9,75%”. It now goes through `toLocaleString` with grouping **off** — grouping would turn
+  a year into “2 017”, and every figure that needs spaces (prices, list values) is passed
+  in already formatted as a string and so is left alone. The prerender's own translator
+  does exactly the same, with the page's locale, or a crawler and a reader would see
+  different numbers on the same page.
 - **Two money fields is one too many for a reader, and neither can go.** The purchase price is the
   base of duty, VAT and excise; Spain's IEDMT is charged on the tax office's own table of new prices
   times an age coefficient, so a cheap purchase does not make it cheap. They cannot be merged without

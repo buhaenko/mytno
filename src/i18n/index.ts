@@ -49,7 +49,15 @@ export async function setLocale(next: Locale) {
 export function t(key: string, params?: Record<string, string | number>): string {
   const template = messages.value[key] ?? english.value[key] ?? key
   if (!params) return template
-  return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), template)
+  // A rate reads as 9,75% in five of the six languages and 9.75% in one. Numbers are
+  // formatted for the reader; anything already a string is left exactly as it was given,
+  // which is how the prices — grouped elsewhere — keep their spaces. Grouping is off here
+  // so that a year stays 2017 rather than becoming 2 017. The prerender does the same.
+  const show = (value: string | number) =>
+    typeof value === 'number'
+      ? value.toLocaleString(locale.value, { maximumFractionDigits: 2, useGrouping: false })
+      : value
+  return Object.entries(params).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, show(value)), template)
 }
 
 export function useI18n() {

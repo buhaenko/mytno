@@ -70,8 +70,14 @@ function messages(locale) {
 }
 
 /** The same `t` the app has: a template and whatever it needs filled in. */
-const translator = (all) => (key, params) =>
-  Object.entries(params ?? {}).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, String(value)), all[key] ?? key)
+/** The same interpolation the app does, decimal separator included — see src/i18n/index.ts. */
+const translator = (all, locale = 'en') => (key, params) => {
+  const show = (value) =>
+    typeof value === 'number'
+      ? value.toLocaleString(locale, { maximumFractionDigits: 2, useGrouping: false })
+      : String(value)
+  return Object.entries(params ?? {}).reduce((text, [name, value]) => text.replaceAll(`{${name}}`, show(value)), all[key] ?? key)
+}
 
 const countryName = (code, locale) => {
   try { return new Intl.DisplayNames([locale], { type: 'region' }).of(code) ?? code } catch { return code }
@@ -194,7 +200,7 @@ function countryLinks(locale, t) {
 }
 
 for (const locale of LOCALES) {
-  const t = translator(messages(locale))
+  const t = translator(messages(locale), locale)
 
   // The calculator itself.
   const home = homePath(locale)

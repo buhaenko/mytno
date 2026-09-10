@@ -45,7 +45,23 @@ function registrationTax(v: Vehicle, trip: Trip, price: number, years: number) {
 
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
   const due = exempt ? nothing : money(base.min * bestRate, base.likely * rate, base.max * rate)
-  return { due, rate: exempt ? 0 : rate, notes: exempt ? [msg('note.relocation')] : [rateNote, baseNote] }
+
+  /**
+   * A car without European type approval has no CO₂ Spain recognises, so it lands in the
+   * top band whatever figure is on screen — and someone who has just typed 168 into a CO₂
+   * field reads that as the field being ignored. The band the certified figure would earn
+   * is already the bottom of the range; this says so where the number is, in red, rather
+   * than in a note behind a question mark.
+   */
+  const showsRange = !exempt && !euSpec && certified && bestRate !== rate
+  const caution = showsRange
+    ? msg('note.esTopBand', { high: rate * 100, low: bestRate * 100, co2: v.co2Wltp ?? 0 })
+    : undefined
+
+  return {
+    due, caution, showsRange, low: bestRate, rate: exempt ? 0 : rate,
+    notes: exempt ? [msg('note.relocation')] : [rateNote, baseNote],
+  }
 }
 
 export function estimateSpain(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()): Estimate {
@@ -79,8 +95,11 @@ export function estimateSpain(v: Vehicle, trip: Trip, fx: FxRates, now = new Dat
   }
 
   const iedmt = registrationTax(v, trip, price, years)
-  lines.push(line('regTax', msg('line.iedmt', { rate: iedmt.rate * 100 }), 'tax', iedmt.due, {
-    formula: 'rate(CO₂) × base', notes: iedmt.notes, source: rules.refs.iedmt,
+  const iedmtLabel = iedmt.showsRange
+    ? msg('line.iedmtRange', { low: iedmt.low * 100, high: iedmt.rate * 100 })
+    : msg('line.iedmt', { rate: iedmt.rate * 100 })
+  lines.push(line('regTax', iedmtLabel, 'tax', iedmt.due, {
+    formula: 'rate(CO₂) × base', notes: iedmt.notes, caution: iedmt.caution, source: rules.refs.iedmt,
   }))
   if (v.market !== 'EU' && !exempt) warnings.push(msg('warn.esNoCertCo2'))
   if (v.market === 'EU' && !v.co2Wltp) warnings.push(msg('warn.esEnterCo2'))
