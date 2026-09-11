@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, croatiaTax, czechiaEmissionFee, denmarkTax, finlandTax, greeceTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
+import { austriaNova, brusselsTmc, croatiaTax, czechiaEmissionFee, denmarkTax, finlandTax, greeceTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { countryFromPath, routeFromPath, routePath } from '../../pages'
 import { fallbackRates } from '../../fx'
@@ -151,8 +151,9 @@ describe('Other EU countries', () => {
   })
 
   it('keeps a line that cannot be counted out of the total but on the page', () => {
-    // Brussels indexes its grid every July and does not publish the index, so its amount is not ours to give.
-    const e = estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'BE', region: 'BR', currency: 'EUR' }, fx, now)
+    // A Hungarian car first registered before 2021 is charged on an environmental class of
+    // decree 6/1990 that is neither CO₂ nor a EURO norm, so the amount is not ours to give.
+    const e = estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'HU', currency: 'EUR' }, fx, now)
     expect(lineOf(e, 'regTax').unknown).toBe(true)
     expect(e.total.likely).toBeCloseTo(e.lines.filter((l) => !l.unknown).reduce((a, l) => a + l.amount.likely, 0), 6)
   })
@@ -294,8 +295,15 @@ describe('Other EU countries', () => {
     // An electric car pays the Flemish flat rate, and a car past thirty the veteran one.
     expect(flandersBiv({ ...car, fuel: 'electric' }, now)!.total).toBe(61.5)
     expect(flandersBiv({ ...car, year: 1990 }, now)!.total).toBe(41.99)
-    // Brussels is shown but never totalled: its published amounts are indexed and the index is not.
-    expect(lineOf(estimateEu(car, { ...be, region: 'BR' }, fx, now), 'regTax').unknown).toBe(true)
+    // All three regions answer now. Brussels reads a grid of kilowatts and litres, takes the
+    // higher, cuts it by whole years and indexes it — the published coefficient reproduces the
+    // table to the cent, so a 2.0-litre car in its first year is exactly the published 634.89.
+    const brussels = brusselsTmc(car, now)!
+    expect(lineOf(estimateEu(car, { ...be, region: 'BR' }, fx, now), 'regTax').unknown).toBeUndefined()
+    expect(lineOf(estimateEu(car, { ...be, region: 'BR' }, fx, now), 'regTax').amount.likely).toBeCloseTo(brussels.total, 6)
+    expect(brusselsTmc({ ...car, engineCc: 1984, powerHp: 95, year: now.getFullYear(), regMonth: 6 }, now)!.total).toBeCloseTo(634.89, 2)
+    expect(brusselsTmc({ ...car, fuel: 'electric' }, now)!.total).toBeCloseTo(78.88, 2)
+    expect(brusselsTmc({ ...car, year: 1990 }, now)!.total).toBeCloseTo(78.88, 2)
     expect(lineOf(estimateEu(car, { ...be, region: 'FL' }, fx, now), 'regTax').amount.likely).toBeCloseTo(flanders.total, 6)
   })
 
