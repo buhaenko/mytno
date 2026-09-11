@@ -45,31 +45,36 @@
       "eu": false,
       "vat": 0.2,
       "customs": "https://customs.gov.ua/",
-      "regTax": "computed"
+      "regTax": "computed",
+      "checked": "2026-09-09"
     },
     "ES": {
       "eu": true,
       "vat": 0.21,
       "customs": "https://www.agenciatributaria.es/",
-      "regTax": "computed"
+      "regTax": "computed",
+      "checked": "2026-09-09"
     },
     "PL": {
       "eu": true,
       "vat": 0.23,
       "customs": "https://puesc.gov.pl/",
-      "regTax": "computed"
+      "regTax": "computed",
+      "checked": "2026-09-09"
     },
     "DE": {
       "eu": true,
       "vat": 0.19,
       "customs": "https://www.zoll.de",
-      "regTax": "none"
+      "regTax": "none",
+      "checked": "2026-09-09"
     },
     "AT": {
       "eu": true,
       "vat": 0.2,
       "customs": "https://www.bmf.gv.at/en.html",
-      "regTax": "computed"
+      "regTax": "computed",
+      "checked": "2026-09-09"
     },
     "BE": {
       "eu": true,
@@ -79,13 +84,15 @@
       "regTaxSource": {
         "title": "Vlaamse Codex Fiscaliteit · SPW Finances · Bruxelles Fiscalité — три регіональні податки",
         "url": "https://fisc.brussels/mytax/fr/contact"
-      }
+      },
+      "checked": "2026-09-11"
     },
     "BG": {
       "eu": true,
       "vat": 0.2,
       "customs": "https://customs.bg/",
-      "regTax": "none"
+      "regTax": "none",
+      "checked": "2026-09-09"
     },
     "HR": {
       "eu": true,
@@ -95,7 +102,8 @@
       "regTaxSource": {
         "title": "Zakon o posebnom porezu na motorna vozila (zakon.hr)",
         "url": "https://www.zakon.hr/z/561/Zakon-o-posebnom-porezu-na-motorna-vozila"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "CY": {
       "eu": true,
@@ -105,7 +113,8 @@
       "regTaxSource": {
         "title": "Ο περί Φόρων Κατανάλωσης Νόμος 91(I)/2004, Τέταρτος Πίνακας — «Ατελώς» για επιβατικά (cylaw.org)",
         "url": "http://www.cylaw.org/nomoi/enop/non-ind/2004_1_91/full.html"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "CZ": {
       "eu": true,
@@ -115,7 +124,8 @@
       "regTaxSource": {
         "title": "SFŽP ČR — emisní poplatek vozidel, zákon 542/2020 Sb. (sfzp.gov.cz)",
         "url": "https://sfzp.gov.cz/legislativa/poplatkova-agenda/odpady/emisni-poplatek-vozidel/"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "DK": {
       "eu": true,
@@ -125,7 +135,8 @@
       "regTaxSource": {
         "title": "Motorstyrelsen — registreringsafgift, satser (motorst.dk)",
         "url": "https://motorst.dk/erhverv/motorafgifter/registreringsafgift/betaling-af-og-satser-for-registreringsafgift"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "EE": {
       "eu": true,
@@ -135,7 +146,8 @@
       "regTaxSource": {
         "title": "Transpordiamet — registreerimistasu (transpordiamet.ee)",
         "url": "https://www.transpordiamet.ee/en/motor-vehicle-tax"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "FI": {
       "eu": true,
@@ -145,7 +157,8 @@
       "regTaxSource": {
         "title": "Autoverolaki 777/2020, verotaulukko 1 A (finlex.fi)",
         "url": "https://www.finlex.fi/fi/laki/ajantasa/2020/20200777"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "FR": {
       "eu": true,
@@ -155,7 +168,8 @@
       "regTaxSource": {
         "title": "CIBS art. L.421-62 — barèmes CO₂ par année (legifrance.gouv.fr)",
         "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051214838"
-      }
+      },
+      "checked": "2026-09-11"
     },
     "GR": {
       "eu": true,
@@ -165,7 +179,8 @@
       "regTaxSource": {
         "title": "Ν. 4389/2016 άρθρο 59 · ΑΑΔΕ — φορολογία αυτοκινήτων οχημάτων",
         "url": "https://www.aade.gr/sites/default/files/2020-07/09.aftolikita_oximata_forologia.pdf"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "HU": {
       "eu": true,
@@ -175,7 +190,8 @@
       "regTaxSource": {
         "title": "2003. évi CX. törvény a regisztrációs adóról (net.jogtar.hu)",
         "url": "https://net.jogtar.hu/jogszabaly?docid=a0300110.tv"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "IE": {
       "eu": true,
@@ -185,7 +201,8 @@
       "regTaxSource": {
         "title": "Revenue — calculating Vehicle Registration Tax (revenue.ie)",
         "url": "https://www.revenue.ie/en/vrt/calculating-vrt/applying-tax.aspx"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "IT": {
       "eu": true,
@@ -195,7 +212,8 @@
       "regTaxSource": {
         "title": "ACI — normativa IPT, D.M. 435/1998 (aci.gov.it)",
         "url": "https://aci.gov.it/pratica-auto/normativa-ipt-ministero-delle-finanze-decreto-27-novembre-1998-n-435/"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "LV": {
       "eu": true,
@@ -205,7 +223,8 @@
       "regTaxSource": {
         "title": "CSDD — payments on first registration in Latvia (csdd.lv)",
         "url": "https://www.csdd.lv/pirmreizeja-transportlidzekla-registracija-latvija/pirmreiz-tl-reg-lv-maksaj-19"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "LT": {
       "eu": true,
@@ -215,7 +234,8 @@
       "regTaxSource": {
         "title": "Regitra — registration tax fee (regitra.lt)",
         "url": "https://www.regitra.lt/en/services/vehicle-registration/registration-tax-fee/"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "LU": {
       "eu": true,
@@ -225,7 +245,8 @@
       "regTaxSource": {
         "title": "guichet.lu — registering a vehicle last registered abroad (guichet.public.lu)",
         "url": "https://guichet.public.lu/fr/citoyens/transport/transports-individuels/vehicule-motorise/immatriculer-vehicule/acheter-vehicule-etranger.html"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "MT": {
       "eu": true,
@@ -235,7 +256,8 @@
       "regTaxSource": {
         "title": "Motor Vehicles Registration and Licensing Act, Cap. 368, Second Schedule (legislation.mt)",
         "url": "https://legislation.mt/eli/cap/368/eng/pdf"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "NL": {
       "eu": true,
@@ -245,7 +267,8 @@
       "regTaxSource": {
         "title": "Belastingdienst — bpm berekenen voor een personenauto (belastingdienst.nl)",
         "url": "https://www.belastingdienst.nl/wps/wcm/connect/nl/bpm/content/personenauto-bpm-tarief-berekenen"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "PT": {
       "eu": true,
@@ -255,13 +278,15 @@
       "regTaxSource": {
         "title": "Código do ISV, Lei 22-A/2007 — texto consolidado (diariodarepublica.pt)",
         "url": "https://diariodarepublica.pt/dr/legislacao-consolidada/lei/2007-34445975-114488809"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "RO": {
       "eu": true,
       "vat": 0.21,
       "customs": "https://www.customs.ro/ro/",
-      "regTax": "none"
+      "regTax": "none",
+      "checked": "2026-09-09"
     },
     "SK": {
       "eu": true,
@@ -271,7 +296,8 @@
       "regTaxSource": {
         "title": "Zákon 145/1995 Z. z., položka 65 — zápis vozidla do evidencie (slov-lex.sk)",
         "url": "https://static.slov-lex.sk/static/SK/ZZ/1995/145/20260901.html"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "SI": {
       "eu": true,
@@ -281,7 +307,8 @@
       "regTaxSource": {
         "title": "ZDMV-1, Uradni list RS 200/2020 — davek na motorna vozila",
         "url": "https://www.uradni-list.si/glasilo-uradni-list-rs/vsebina/2020-01-3606"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "SE": {
       "eu": true,
@@ -291,7 +318,8 @@
       "regTaxSource": {
         "title": "Transportstyrelsen — fordonsskatt and malus, an annual tax (transportstyrelsen.se)",
         "url": "https://www.transportstyrelsen.se/sv/vagtrafik/fordon/skatter-och-avgifter/malus/"
-      }
+      },
+      "checked": "2026-09-09"
     },
     "CH": {
       "eu": false,
@@ -301,7 +329,8 @@
       "regTaxSource": {
         "title": "Automobilsteuergesetz Art. 13 — 4% Automobilsteuer (fedlex.admin.ch)",
         "url": "https://www.fedlex.admin.ch/eli/cc/1996/3045_3045_3045/de"
-      }
+      },
+      "checked": "2026-09-11"
     },
     "NO": {
       "eu": false,
@@ -311,7 +340,8 @@
       "regTaxSource": {
         "title": "Stortingsvedtak om engangsavgift for 2026 (lovdata.no)",
         "url": "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2755"
-      }
+      },
+      "checked": "2026-09-11"
     },
     "GB": {
       "eu": false,
@@ -321,7 +351,8 @@
       "regTaxSource": {
         "title": "VERA 1994 s.62(1C) — no first vehicle licence for a used import (legislation.gov.uk)",
         "url": "https://www.legislation.gov.uk/ukpga/1994/22/section/62"
-      }
+      },
+      "checked": "2026-09-11"
     }
   },
   "poland": {
@@ -402,5 +433,6 @@
         "czk": 10000
       }
     ]
-  }
+  },
+  "_checkedNote": "When each country's rates were last read against the authority that levies them. All twenty-eight EU and Ukrainian entries were gone through on 9 September 2026; the United Kingdom, Norway and Switzerland were added on 11 September, and Belgium and France were re-read the same day for Brussels and the weight malus. Update the date when, and only when, the source has actually been opened again."
 }

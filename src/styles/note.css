@@ -52,3 +52,121 @@
 @media (hover: hover) { .note-cta:hover { text-decoration: none; opacity: .92; } }
 
 .note-foot { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-faint); }
+
+/* ── The first screen ───────────────────────────────────────────────────────────────────
+   The ladder is the page's one object: the same car priced everywhere, cheapest first. It
+   sits on the ordinary canvas like everything else — the dark band that was tried here read
+   as a different product, not as this one. */
+.spread { max-width: 620px; margin: 34px auto 0; padding-top: 26px; border-top: 1px solid var(--line); }
+.spread-head h2 { margin: 0; font-size: 15px; font-weight: 600; letter-spacing: -.01em; color: var(--ink); }
+.spread-head p { margin: 4px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-faint); }
+/* The car is what changes; it carries the weight and the colour, the terms stay quiet beside it. */
+.spread-car {
+  font-weight: 600; font-size: 13.5px; letter-spacing: -.01em; color: var(--ink);
+  display: inline-block; margin-right: 3px;
+}
+.swap-enter-active, .swap-leave-active { transition: opacity .22s ease, transform .22s var(--ease); }
+.swap-enter-from { opacity: 0; transform: translateY(3px); }
+.swap-leave-to { opacity: 0; transform: translateY(-3px); }
+
+.spread-list { position: relative; margin: 18px 0 0; padding: 0; list-style: none; }
+/* Every column is a fixed width. With `auto` the name and amount columns re-measured
+   themselves whenever the set of countries changed, so the bars and figures shifted
+   sideways on every car — which is the jump, not the sliding. Now only transforms move. */
+.spread-list li {
+  display: grid; grid-template-columns: 18px 132px 1fr 78px;
+  align-items: center; gap: 0 12px; height: 30px;
+  font-size: 12.5px; color: var(--ink-soft);
+}
+/* Quiet: at full saturation twenty-eight flags outshout the numbers, which are the point. */
+.spread-list .fi { width: 17px; height: 11px; border-radius: 2px; opacity: .75; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .08); }
+.spread-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* The bar is the shape of the answer; the number is the answer. */
+/* The length is a width, not a scaleX. Safari drops the transition on a child that scales
+   from zero inside an overflow-hidden box — it simply arrives at the new size with no
+   animation at all, which is why this looked right in Chrome and dead in Safari. A width is
+   the same rectangle, animates everywhere, and twelve of them cost nothing to lay out. */
+/* Twelve pixels, not six. A hairline has nowhere to put a colour: the scale was applied and
+   measured correct, and still looked like the grey it replaced, because there was no area for
+   it to be seen in. Colour needs room before it needs choosing. */
+.spread-bar { height: 12px; border-radius: 3px; background: var(--surface-sunken); }
+.spread-bar i {
+  display: block; height: 100%; width: 0; border-radius: 3px; background: var(--line-strong);
+  transition: width .9s cubic-bezier(.65, 0, .35, 1), background-color .9s ease;
+}
+.spread-total {
+  font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums;
+  color: var(--ink); text-align: right; white-space: nowrap;
+}
+/* Only the dear end is coloured. Accent on a row that reads “nothing” looks like an error. */
+.spread-list li.high .spread-total { color: var(--accent-deep); }
+/* Colour marks the two ends, never weight: a bolder name is a wider name, and a wider name
+   is a reflow in the middle of a transition. */
+.spread-list li.low .spread-name, .spread-list li.high .spread-name { color: var(--ink); }
+.spread-name, .spread-total { transition: color .5s ease; }
+
+/* Twelve rows re-sorting among themselves, one curve, one duration, no stagger. The field is
+   what was cut, not the movement: at twenty-eight rows a re-sort threw three quarters of them
+   across four hundred pixels at once, which no easing can make graceful. */
+.ladder-move { transition: transform .9s cubic-bezier(.65, 0, .35, 1); }
+.spread-note { margin: 16px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-faint); }
+.spread-note b { color: var(--ink); font-weight: 500; }
+
+@media (max-width: 560px) {
+  .spread { margin-top: 28px; padding-top: 22px; }
+  .spread-list li { grid-template-columns: 16px 104px 1fr 70px; gap: 0 9px; height: 28px; font-size: 12px; }
+  .spread-bar { height: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spread-bar i, .swap-enter-active, .swap-leave-active, .ladder-move { transition: none; }
+}
+
+/* ── Where every rate comes from ────────────────────────────────────────────────────────
+   Built by the prerender out of the calculator itself: the lines it really produces, the
+   formula each one used and the authority it read. It boots no app, so it is set as a
+   document rather than as a screen. */
+.sources { max-width: 780px; margin: 0 auto; padding: 26px 20px 96px; }
+.sources-brand { margin: 0 0 28px; font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.sources-brand a { color: var(--ink-faint); text-decoration: none; }
+.sources h1 { margin: 0; font-size: clamp(26px, 5vw, 34px); font-weight: 600; line-height: 1.15; letter-spacing: -.02em; text-wrap: balance; }
+.sources-lead { margin: 16px 0 0; max-width: 62ch; font-size: 15.5px; line-height: 1.62; color: var(--ink-soft); }
+.sources h3 {
+  margin: 40px 0 0; padding-bottom: 8px; font-size: 15px; font-weight: 600; letter-spacing: -.01em;
+  border-bottom: 1px solid var(--line);
+}
+.sources h3 a { color: var(--ink); text-decoration: none; }
+@media (hover: hover) { .sources h3 a:hover { color: var(--accent-deep); } }
+
+.src-table { margin-top: 10px; overflow-x: auto; }
+/* Fixed columns: the source titles are the long text on this page and they were being
+   squeezed into five lines each by a formula column sized to its widest formula. */
+.src-table table { width: 100%; table-layout: fixed; border-collapse: collapse; font-size: 13px; }
+.src-table col.line { width: 30%; }
+.src-table col.formula { width: 30%; }
+.src-table col.source { width: 40%; }
+.src-table th {
+  padding: 8px 12px 6px 0; text-align: left; font-family: var(--mono); font-size: 9.5px;
+  letter-spacing: .12em; text-transform: uppercase; font-weight: 500; color: var(--ink-faint);
+}
+.src-table td { padding: 7px 12px 7px 0; border-top: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+.src-table td:first-child { color: var(--ink); }
+.src-table code {
+  font-family: var(--mono); font-size: 11.5px; line-height: 1.5; color: var(--ink-faint);
+  overflow-wrap: anywhere;
+}
+.src-table a { color: var(--accent-deep); overflow-wrap: anywhere; }
+.sources nav { display: flex; flex-wrap: wrap; gap: 0 12px; margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12.5px; }
+.sources nav a { color: var(--ink-soft); }
+
+@media (max-width: 560px) {
+  .sources { padding: 20px 16px 80px; }
+  .src-table table { font-size: 12.5px; }
+  .src-table th { font-size: 11px; }
+  .src-table col.line { width: 34%; }
+  .src-table col.formula { width: 26%; }
+  .src-table col.source { width: 40%; }
+}
+
+/* The legal page shares the sources page's document setting; only its paragraphs differ. */
+.legal-para { margin: 16px 0 0; max-width: 66ch; font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); }
+.legal-list { margin: 12px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.9; color: var(--ink-soft); }

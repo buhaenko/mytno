@@ -16,6 +16,9 @@ import StepSection from './components/layout/StepSection.vue'
 import SiteFooter from './components/layout/SiteFooter.vue'
 import CountryBrief from './components/layout/CountryBrief.vue'
 import CountryLinks from './components/layout/CountryLinks.vue'
+import HomeSpread from './components/layout/HomeSpread.vue'
+import modelList from '@config/models.json'
+import { carBySlug, carFromPath, carName, carVehicle, type CarModel } from './lib/cars'
 import ConsentBar from './components/layout/ConsentBar.vue'
 import CountrySelect from './components/controls/CountrySelect.vue'
 import ChoiceChips from './components/controls/ChoiceChips.vue'
@@ -40,10 +43,17 @@ const PINNED_DESTINATIONS = ['UA', 'ES', 'PL', 'DE']
 const arrivedOnCountryPage = countryFromPath(location.pathname, import.meta.env.BASE_URL, (code) => code in DESTINATION_INFO)
 /** `/uk/import/us-ua/` is a route page: it opens with both ends already chosen. */
 const arrivedOnRoutePage = routeFromPath(location.pathname, import.meta.env.BASE_URL)
+/** Somebody who searched for their own model rather than for a country lands here. */
+const CAR_MODELS = modelList as CarModel[]
+const arrivedOnCarPage = carFromPath(location.pathname, import.meta.env.BASE_URL, CAR_MODELS)
+const pageCar = arrivedOnCarPage ? carBySlug(arrivedOnCarPage, CAR_MODELS) : undefined
+const pageCarEngine = pageCar?.engines[0]
 const pageCountry = computed(() =>
   arrivedOnCountryPage && destination.value && destination.value in DESTINATION_INFO ? destination.value : null)
 
 const page = computed(() => {
+  // A model page says what it is about before the ladder does.
+  if (pageCar) return { h1: carName(pageCar), lead: t('app.tagline'), faq: [] }
   const code = pageCountry.value
   if (!code) return null
   const info = DESTINATION_INFO[code]!
@@ -60,6 +70,8 @@ const priceText = ref('')
 const resultStep = ref<{ root: HTMLElement | null } | null>(null)
 /** True once a route is picked: the hero shrinks and the steps appear. */
 const started = ref(false)
+/** The ladder is the bare home page's argument; a country page or a chosen route has its own. */
+const showSpread = computed(() => !started.value && !pageCountry.value && !arrivedOnRoutePage)
 /** Held while the first state is restored, so nothing is written back over it. */
 const restoring = ref(true)
 
@@ -143,15 +155,24 @@ onMounted(async () => {
 
 <template>
   <div class="page">
-    <TopBar :model-value="locale" :label="t('app.lang')" @update:model-value="changeLocale" />
+    <TopBar :model-value="locale" :label="t('app.lang')" :sources-label="t('page.sources')" :legal-label="t('page.legal')" @update:model-value="changeLocale" />
 
-    <Hero :compact="started" :title="page?.h1" :tagline="page?.lead" :flag="pageCountry?.toLowerCase()">
-      <CountrySelect v-model="originCountry" :options="origins" :placeholder="t('app.from')" />
-      <span class="route-arrow" aria-hidden="true">
-        <svg viewBox="0 0 24 12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" /></svg>
-      </span>
-      <CountrySelect v-model="destination" :options="destinations" :placeholder="t('app.to')" />
-    </Hero>
+    <div>
+      <Hero :compact="started" :title="page?.h1" :tagline="page?.lead" :flag="pageCountry?.toLowerCase()">
+        <CountrySelect v-model="originCountry" :options="origins" :placeholder="t('app.from')" />
+        <span class="route-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 12"><path d="M0 6h22M17 1l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" /></svg>
+        </span>
+        <CountrySelect v-model="destination" :options="destinations" :placeholder="t('app.to')" />
+      </Hero>
+      <HomeSpread
+        v-if="showSpread"
+        :fx="fx" :currency="calc.display.value"
+        :car="pageCar && pageCarEngine ? carVehicle(pageCar, pageCarEngine) : undefined"
+        :price="pageCarEngine?.listEur"
+        :car-label="pageCar ? carName(pageCar) : undefined"
+      />
+    </div>
 
     <Transition name="rise">
       <StepSection v-if="started && calc.routeChosen.value" :title="t('step.car')">

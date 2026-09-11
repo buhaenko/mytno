@@ -21,9 +21,20 @@ import HelpTip from '../controls/HelpTip.vue'
 
 const props = defineProps<{ estimate: Estimate; vehicle: Vehicle; trip: Trip; fx: FxRates }>()
 const currency = defineModel<Currency>('currency', { required: true })
-const { t, locale } = useI18n()
+const { t, locale, region } = useI18n()
 const format = (value: number) => formatMoney(value, currency.value, props.fx, locale.value)
 const translate = (m: Msg) => t(m.key, m.params)
+
+/**
+ * When this country's rates were last read against the authority that levies them. It is a
+ * date recorded in the config by hand, not a build timestamp: a build says when the file was
+ * compiled, which tells a reader nothing about whether the law behind it still holds.
+ */
+const checked = computed(() => {
+  const date = (countries.destinations as Record<string, { checked?: string }>)[props.trip.destination]?.checked
+  if (!date) return null
+  return new Intl.DateTimeFormat(locale.value, { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(date))
+})
 
 /** Every source behind the numbers, so the reader can check any of them. */
 const sources = computed<Record<string, { title: string; url: string }>>(() => {
@@ -101,6 +112,7 @@ const used = computed(() =>
             </a>
           </li>
         </ul>
+        <p v-if="checked" class="checked">{{ t('result.checked', { country: region(trip.destination), date: checked }) }}</p>
       </details>
     </div>
   </div>

@@ -1,20 +1,33 @@
-/* The whole visual language: five greys, one accent, one scale of motion. */
+/* The whole visual language: five neutrals, one accent, one scale of motion.
+   The ground is faintly cool on purpose. The accent and the whole bar scale are warm, and a
+   warm ground put them in the same family: the pale end of the ladder — Switzerland, Ireland,
+   the Netherlands — sank into the page and the chart lost half its range. A cool ground pushes
+   the warm scale forward instead. It is also the reason this does not look like every other
+   warm-cream page of the last two years. */
 :root {
-  --bg: #F4F4F6;
-  --surface: #FBFBFC;
-  --surface-sunken: #EDEDF0;
-  --field: #FDFDFE;
+  --bg: #EDF1F7;
+  --surface: #F9FBFD;
+  --surface-sunken: #E3E9F1;
+  --field: #FBFCFE;
 
   --ink: #1C1C20;
   --ink-soft: #55565D;
   --ink-faint: #7A7B83;
 
-  --line: #E3E3E7;
-  --line-strong: #D3D4D9;
+  --line: #DCE3EC;
+  --line-strong: #C8D2DF;
 
   --accent: #E2662A;
   --accent-deep: #C4551F;
   --accent-wash: #FDF0E8;
+
+  /* The ladder's two ends. Colour on this site earns its place in the data, not behind it —
+     shifting the background greys turned out to be invisible, while giving the bars a scale
+     changed the whole page. One hue, from a pale tint to the deep accent, so the darkest bar
+     is the same colour as the figure beside it. A cool-to-hot scale was tried and rejected:
+     blue and orange interpolate through neutral, and the middle of the ladder went muddy. */
+  --bar-low: #F7D6C2;
+  --bar-high: #C4551F;
 
   --due: #DC2626;
   --likely: #D97706;

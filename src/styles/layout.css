@@ -1,10 +1,31 @@
 .page { max-width: 700px; margin: 0 auto; padding: 18px 24px 100px; }
 
 /* Header: the mark on one side, the language on the other. */
+/* The rule under the header runs the width of the window, not the width of the column: a
+   line that stops short of the edges reads as a box, not as a header. The content inside
+   stays in the column, so nothing else has to know. */
 .topbar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 4px 0 12px; margin-bottom: 8px;
+  margin-inline: calc(50% - 50vw); margin-bottom: 18px;
+  padding: 6px calc(50vw - 50%) 12px;
   border-bottom: 1px solid var(--line);
+}
+.topbar-right { display: flex; align-items: center; gap: 4px; }
+.topbar-link {
+  padding: 5px 9px; font-size: 12.5px; color: var(--ink-faint); text-decoration: none;
+  border: 1px solid transparent; border-radius: 8px; transition: all .18s var(--ease);
+}
+@media (hover: hover) { .topbar-link:hover { color: var(--ink); background: var(--surface); border-color: var(--line-strong); } }
+@media (max-width: 560px) {
+  .topbar { padding: 6px 16px 10px; margin-inline: -16px; }
+  .topbar-link { padding: 8px 7px; }
+  /* Three things in a 320-pixel header is one too many, and the brand is the one that can
+     give: the mark alone still goes home and still says whose site this is. */
+  .topbar .brand-name { display: none; }
+}
+@media (max-width: 340px) {
+  /* Narrower still: the language keeps its globe and loses its name. */
+  .topbar .lang-name { display: none; }
 }
 .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); text-decoration: none; }
 .brand-name { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }

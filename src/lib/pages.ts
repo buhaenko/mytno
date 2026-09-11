@@ -52,6 +52,12 @@ const COUNTS_UNKNOWN: Counts = { destinations: 0, origins: 0, languages: 0 }
 /** The long-form page. Its prose lives in scripts/, because only the prerender needs it. */
 export const NOTE_PATH = '/car-registration-tax-in-europe/'
 
+/** Where every rate on the site comes from, one country at a time. */
+export const SOURCES_PATH = 'sources/'
+
+/** The disclaimer, the rights, the privacy note — a page rather than a tooltip in a footer. */
+export const LEGAL_PATH = 'legal/'
+
 export function countryBrief(
   country: string,
   info: Destination,

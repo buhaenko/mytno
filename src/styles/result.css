@@ -79,3 +79,6 @@
 .total-foot { display: flex; justify-content: flex-end; margin-top: 12px; }
 .total-copy { padding: 5px 10px; border: 1px solid var(--line-strong); border-radius: 999px; background: var(--surface); color: var(--ink-soft); font: inherit; font-size: 12px; cursor: pointer; transition: border-color .2s var(--ease), color .2s var(--ease); }
 .total-copy:hover { border-color: var(--accent); color: var(--accent-deep); }
+
+/* When this country's rates were last read. A date the reader can act on, unlike a build time. */
+.checked { margin: 10px 0 0; font-size: 12px; line-height: 1.5; color: var(--ink-faint); }

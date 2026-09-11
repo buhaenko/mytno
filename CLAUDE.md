@@ -500,6 +500,44 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **The home page shows an answer before it asks a question.** It was a headline, two empty
+  selects and a wall of grey country names — a form, not a product, with nothing on it to
+  look at and nothing proving the tool could do anything. It now opens with the ladder: one
+  car priced in every country that can answer, dearest first, twelve bars drawn. A dozen
+  ordinary cars take turns every 4.8 seconds and the bars re-sort, re-length and the figures
+  count from the old number to the new. `src/lib/spread.ts` computes it and is handed
+  `estimate` rather than importing it, so the prerender and the app run the same function —
+  and `averageOrder` picks the fixed dozen so a crawler and a reader see the same table.
+- **Three things were tried on that ladder and two were wrong.** Sorting all twenty-eight rows
+  per car moved twenty-five of them, several four hundred pixels, every few seconds: measured,
+  not guessed, and no easing rescues it — a bar-chart race works because one year differs from
+  the last by a place or two. Cutting the field to twelve fixed the motion. Then a cool-to-hot
+  colour scale was tried and rejected because blue and orange interpolate through neutral and
+  the middle of the ladder went muddy. And the bars were six pixels tall: the scale was applied
+  and measured correct and still looked like the grey it replaced, because colour needs area
+  before it needs choosing. Twelve pixels made it visible.
+- **The ground is cool on purpose.** Four backgrounds were rendered side by side — warm ochre,
+  clay, sage, cool blue. The tone matters less than what it does to the chart: on a warm ground
+  the pale end of the bar scale sank into the page and the ladder lost half its range, because
+  the accent and the scale are warm too. `--bg` is `#EDF1F7`; sage is the other one that keeps
+  the scale readable if a warmer page is ever wanted.
+- **A page per car model, from `config/models.json` only.** Twenty-eight models whose CO₂ is
+  the certified European figure and whose price is a real list price — not the American EPA
+  cycle the catalogue carries. `/car/audi-a4/` prices that model as it left the showroom and
+  draws the same ladder. The catalogue holds 3 611 models for 2011–2026 and generating all of
+  them would be twenty-one thousand pages of approximate CO₂ from a domain days old, which
+  Google reads as a content farm. Twenty-eight checked beats three thousand guessed.
+- **The header carries the pages; the footer carries nothing but the address.** `Sources` and
+  `Legal` sit beside the language, and the rule under them runs the full width of the window.
+  `/sources/` is built by the prerender **out of the calculator**: for every destination it
+  produces the real lines and prints the formula each one used and the authority it read, so a
+  source cannot drift from the code. `/legal/` is the four paragraphs that used to hide inside
+  a footer tooltip. Both boot no app.
+- **Every country carries the date its rates were last read.** `checked` in
+  `config/countries.json`, shown in the result under the sources. A build timestamp would have
+  been free and worthless: it says when the file compiled, not whether the law still holds.
+  Twenty-six say 9 September 2026; the United Kingdom, Norway, Switzerland, Belgium and France
+  say 11 September. Move a date only when the source has actually been opened again.
 - **A grey placeholder reads as a filled field.** “168” and “47150” sat in the CO₂ and
   list-price boxes as hints and were taken for data — reasonably, since every other box on
   the screen holds a number. They say “e.g. 168” now, and an empty list price carries a

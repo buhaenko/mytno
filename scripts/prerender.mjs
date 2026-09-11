@@ -13,6 +13,9 @@ import { join } from 'node:path'
 import { LOCALES } from '../src/i18n/locales.ts'
 import { countryBrief, countryPath, routeBrief, routePath, sourcesFor } from '../src/lib/pages.ts'
 import { note } from './note.ts'
+import { averageOrder, spread } from '../src/lib/spread.ts'
+import { carName, carPath, carSlug, carVehicle, rotation } from '../src/lib/cars.ts'
+import { LEGAL_PATH, SOURCES_PATH } from '../src/lib/pages.ts'
 
 // The worked examples are computed by the calculator itself, bundled for Node by the build,
 // so a route page and the app can never quote different numbers for the same car.
@@ -204,6 +207,119 @@ function routeLinks(locale, t) {
   return `<nav>${escape(t('page.routes'))} ${links.join(' ')}</nav>`
 }
 
+/**
+ * The ladder the home page opens with, as a plain table for whoever arrives without
+ * JavaScript. Same function and same calculator as the component, so the crawler and the
+ * reader cannot be shown different figures.
+ */
+// The first car of the rotation: what the reader sees in the first frame, so a crawler
+// without JavaScript and a reader with it are looking at the same car.
+const FIRST = rotation(config('models.json'))[0]
+const FIRST_ENGINE = FIRST.engines[0]
+const REFERENCE = carVehicle(FIRST, FIRST_ENGINE)
+const REFERENCE_TRIP = {
+  origin: 'EU', price: FIRST_ENGINE.listEur, currency: 'EUR',
+  hasOriginProof: true, residenceTransfer: false, region: 'FL',
+}
+// The same fixed order the home page keeps while its cars change, so the table a crawler
+// reads and the table a reader watches are in the same sequence as well as the same figures.
+const ROTATION_LADDERS = rotation(config('models.json')).map((car) => spread(
+  estimate, carVehicle(car, car.engines[0]),
+  { origin: 'EU', price: car.engines[0].listEur, currency: 'EUR', hasOriginProof: true, residenceTransfer: false, region: 'FL' },
+  DESTINATIONS, fx,
+))
+const SHOWN = 12
+const ORDER = averageOrder(ROTATION_LADDERS).slice(0, SHOWN)
+const FIRST_ALL = spread(estimate, REFERENCE, REFERENCE_TRIP, DESTINATIONS, fx)
+const FIRST_LADDER = new Map(FIRST_ALL.map((r) => [r.code, r]))
+// The fixed dozen, sorted for this car — the same two steps the component takes.
+const LADDER = ORDER.map((code) => FIRST_LADDER.get(code) ?? { code, total: 0, share: 0 })
+  .sort((a, b) => b.total - a.total)
+
+function spreadTable(locale, t) {
+  const car = `${carName(FIRST)} ${FIRST.years[1] ?? FIRST.years[0]}`
+  const money = (n) => format(n, 'EUR', fx, locale)
+  const rows = LADDER.map(({ code, total }) =>
+    `<tr><td><a href="${countryPath('/', locale, code)}">${escape(countryName(code, locale))}</a></td>` +
+    `<td>${escape(total < 1 ? t('home.spread.nothing') : money(total))}</td></tr>`)
+  const sorted = [...FIRST_ALL].sort((a, b) => b.total - a.total)
+  const dear = sorted[0]
+  const cheap = sorted[sorted.length - 1]
+  const note = t('home.spread.note', {
+    low: `${countryName(cheap.code, locale)} — ${cheap.total < 1 ? t('home.spread.nothing') : money(cheap.total)}`,
+    high: `${countryName(dear.code, locale)} — ${money(dear.total)}`,
+    shown: LADDER.length,
+    computed: FIRST_ALL.length,
+    destinations: COUNTS.destinations,
+  }).replace(/<\/?b>/g, '')
+  return `<h2>${escape(t('home.spread.title', COUNTS))}</h2>` +
+    `<p><strong>${escape(car)}</strong> ${escape(t('home.spread.car', { price: money(FIRST_ENGINE.listEur) }))}</p>` +
+    `<table><tbody>${rows.join('')}</tbody></table>` +
+    `<p>${escape(note)}</p>`
+}
+
+/**
+ * A page per car model: the ladder for that exact car, which is what somebody searching for
+ * their own model rather than for a country actually wants. Priced as it left the showroom —
+ * its own list price, its own last year of production — so nothing is assumed for them.
+ */
+const CARS = config('models.json')
+const CAR_LADDERS = new Map(CARS.map((car) => {
+  const engine = car.engines[0]
+  const vehicle = carVehicle(car, engine)
+  const trip = {
+    origin: 'EU', price: engine.listEur, currency: 'EUR',
+    hasOriginProof: true, residenceTransfer: false, region: 'FL',
+  }
+  return [carSlug(car), { car, engine, vehicle, rows: spread(estimate, vehicle, trip, DESTINATIONS, fx) }]
+}))
+
+/**
+ * Every rate on the site, country by country, taken from the calculator rather than typed
+ * out beside it: for each destination the real lines are produced, and each one prints the
+ * formula it used and the authority it read. A source that drifts from the code is worse
+ * than none, and this way it cannot.
+ */
+function sourcesFor_(locale, t) {
+  // A car brought in from outside the EU, so every line is exercised at its real rate: duty
+  // applies, VAT is the country's own rather than the zero an intra-EU used car pays, and the
+  // registration tax still computes because the car carries European approval.
+  const shown = { ...REFERENCE, market: 'EU' }
+  const trip = { ...REFERENCE_TRIP, origin: 'OTHER', hasOriginProof: false }
+  const seen = new Set()
+  const blocks = DESTINATIONS
+    .map((code) => ({ code, name: countryName(code, locale) }))
+    .sort((a, b) => a.name.localeCompare(b.name, locale))
+    .map(({ code, name }) => {
+      const result = estimate(shown, { ...trip, destination: code }, fx)
+      const rows = result.lines
+        .filter((line) => line.source || line.formula)
+        .map((line) => {
+          if (line.source) seen.add(line.source.url)
+          const label = t(line.label.key, line.label.params)
+          const formula = line.formula ? escape(line.formula) : (line.unknown ? escape(t('page.sources.asked')) : '—')
+          const source = line.source
+            ? `<a href="${escape(line.source.url)}" rel="noopener noreferrer" target="_blank">${escape(line.source.title)}</a>`
+            : '—'
+          return `<tr><td>${escape(label)}</td><td><code>${formula}</code></td><td>${source}</td></tr>`
+        })
+      return `<h3><a href="${countryPath('/', locale, code)}">${escape(name)}</a></h3>` +
+        `<div class="src-table"><table>` +
+        '<colgroup><col class="line"><col class="formula"><col class="source"></colgroup>' +
+        '<thead><tr>' +
+        `<th>${escape(t('page.sources.line'))}</th><th>${escape(t('page.sources.formula'))}</th><th>${escape(t('page.sources.source'))}</th>` +
+        `</tr></thead><tbody>${rows.join('')}</tbody></table></div>`
+    })
+  return { blocks: blocks.join(''), count: seen.size }
+}
+
+/** The model index: how a crawler walks from any page to every car page. */
+function carLinks(locale, t) {
+  const links = CARS
+    .map((car) => `<a href="${carPath('/', locale, carSlug(car))}">${escape(carName(car))}</a>`)
+  return `<nav>${escape(t('page.cars'))} ${links.join(' ')}</nav>`
+}
+
 /** The country index, as plain links: how a crawler walks from any page to all of them. */
 function countryLinks(locale, t) {
   const links = DESTINATIONS
@@ -232,12 +348,55 @@ for (const locale of LOCALES) {
       `<h1>${escape(t('app.title'))}</h1>`,
       `<p>${escape(t('app.tagline'))}</p>`,
       `<p>${escape(t('page.home.about', COUNTS))}</p>`,
+      spreadTable(locale, t),
+      carLinks(locale, t),
       `<h2>${escape(t('page.routes'))}</h2>`,
       `<ul>${priced.map(({ from, to, estimate: e }) =>
         `<li><a href="${routePath('/', locale, from, to)}">${escape(countryName(from, locale))} → ${escape(countryName(to, locale))}</a> — ${escape(format(e.total.likely, 'EUR', fx, locale))}</li>`).join('')}</ul>`,
       countryLinks(locale, t),
     ].join(''),
   }))
+
+  // One page per car model.
+  for (const [slug, { car, engine, rows }] of CAR_LADDERS) {
+    const path = (l) => carPath('/', l, slug)
+    const here = path(locale)
+    const name = carName(car)
+    const money = (n) => format(n, 'EUR', fx, locale)
+    const dearest = rows[0]
+    const cheapest = rows[rows.length - 1]
+    const low = cheapest.total < 1 ? t('home.spread.nothing') : money(cheapest.total)
+    const vars = {
+      car: name, engine: engine.label, countries: rows.length, destinations: COUNTS.destinations,
+      price: money(engine.listEur), year: car.years[1] ?? car.years[0],
+      low: `${countryName(cheapest.code, locale)} — ${low}`,
+      high: `${countryName(dearest.code, locale)} — ${money(dearest.total)}`,
+    }
+    const title = t('page.car.h1', vars)
+    urls.push({ loc: here, alt: path })
+    write(here, render({
+      locale, path: here, title: `${title} — ${BRAND}`, description: t('page.car.lead', vars),
+      head: [alternates(path), `<script type="application/ld+json">${JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'FAQPage',
+        mainEntity: [{ '@type': 'Question', name: t('page.car.faq.q', vars),
+          acceptedAnswer: { '@type': 'Answer', text: t('page.car.faq.a', vars) } }],
+      })}</script>`],
+      body: [
+        `<h1>${escape(title)}</h1>`,
+        `<p>${escape(t('page.car.lead', vars))}</p>`,
+        `<table><tbody>${rows.map(({ code, total }) =>
+          `<tr><td><a href="${countryPath('/', locale, code)}">${escape(countryName(code, locale))}</a></td>` +
+          `<td>${escape(total < 1 ? t('home.spread.nothing') : money(total))}</td></tr>`).join('')}</tbody></table>`,
+        `<p>${escape(t('page.car.priceNote'))}</p>`,
+        `<h2>${escape(t('page.car.engines'))}</h2>`,
+        `<ul>${car.engines.map((e) =>
+          `<li>${escape(e.label)}${e.co2 ? ` — CO₂ ${e.co2} g/km` : ''}${e.listEur ? `, ${escape(money(e.listEur))}` : ''}</li>`).join('')}</ul>`,
+        `<h2>${escape(t('page.car.faq.q', vars))}</h2><p>${escape(t('page.car.faq.a', vars))}</p>`,
+        carLinks(locale, t),
+        countryLinks(locale, t),
+      ].join(''),
+    }))
+  }
 
   // One page per country a car can be registered in.
   for (const code of DESTINATIONS) {
@@ -305,6 +464,69 @@ for (const locale of LOCALES) {
       ].join(''),
     }))
   }
+}
+
+// The legal notice, as a page. It used to be four paragraphs inside a footer tooltip, which
+// is a fine place to hide something and a poor place to publish it.
+for (const locale of LOCALES) {
+  const t = translator(messages(locale), locale)
+  const path = (l) => `${homePath(l)}${LEGAL_PATH}`
+  const here = path(locale)
+  const examples = [countries.euDutySource, countries.vatSource, ukraine.refs.excise]
+  urls.push({ loc: here, alt: path })
+  write(here, render({
+    locale, path: here,
+    title: `${t('page.legal.h1')} — ${BRAND}`,
+    description: t('footer.disclaimer').replace('{brand}', BRAND),
+    head: [alternates(path)],
+    body: [
+      '<article class="sources">',
+      `<p class="sources-brand"><a href="${homePath(locale)}">${escape(BRAND)}</a></p>`,
+      `<h1>${escape(t('page.legal.h1'))}</h1>`,
+      `<p class="sources-lead">${escape(t('footer.disclaimer').replace('{brand}', BRAND))}</p>`,
+      ...['footer.help.rights', 'footer.data', 'footer.privacy', 'footer.liability']
+        .map((key) => `<p class="legal-para">${escape(t(key))}</p>`),
+      `<h3>${escape(t('page.sources'))}</h3>`,
+      `<ul class="legal-list">${examples.map((source) =>
+        `<li><a href="${escape(source.url)}" rel="noopener noreferrer" target="_blank">${escape(source.title)}</a></li>`).join('')}` +
+        `<li><a href="${homePath(locale)}${SOURCES_PATH}">${escape(t('page.sources.h1'))}</a></li></ul>`,
+      '</article>',
+    ].join(''),
+  }).replace(/<script type="module"[^>]*><\/script>/, '')
+    .replace('<div id="app" class="pending">', '<div class="page">'))
+}
+
+// Where every rate comes from, one page per language.
+for (const locale of LOCALES) {
+  const t = translator(messages(locale), locale)
+  const path = (l) => `${homePath(l)}${SOURCES_PATH}`
+  const here = path(locale)
+  const { blocks } = sourcesFor_(locale, t)
+  const dataRows = [
+    [t('page.sources.cars'), 'NHTSA vPIC · EPA fueleconomy.gov', 'https://vpic.nhtsa.dot.gov/api/'],
+    [t('page.sources.rates'), 'ECB · NBP · Norges Bank · NBU', 'https://data-api.ecb.europa.eu/'],
+  ]
+  urls.push({ loc: here, alt: path })
+  write(here, render({
+    locale, path: here,
+    title: `${t('page.sources.h1')} — ${BRAND}`,
+    description: t('page.sources.lead'),
+    head: [alternates(path)],
+    body: [
+      '<article class="sources">',
+      `<p class="sources-brand"><a href="${homePath(locale)}">${escape(BRAND)}</a></p>`,
+      `<h1>${escape(t('page.sources.h1'))}</h1>`,
+      `<p class="sources-lead">${escape(t('page.sources.lead'))}</p>`,
+      blocks,
+      `<h3>${escape(t('page.sources.cars'))} · ${escape(t('page.sources.rates'))}</h3>`,
+      `<div class="src-table"><table><colgroup><col class="line"><col class="formula"><col class="source"></colgroup><tbody>${dataRows.map(([a, b, u]) =>
+        `<tr><td>${escape(a)}</td><td><code>—</code></td><td><a href="${u}" rel="noopener noreferrer" target="_blank">${escape(b)}</a></td></tr>`).join('')}</tbody></table></div>`,
+      countryLinks(locale, t),
+      '</article>',
+    ].join(''),
+  }).replace(/<script type="module"[^>]*><\/script>/, '')
+    .replace('<div id="app" class="pending">', '<div class="page">')
+    .replace(/<\/div>\s*<\/body>/, '</div></body>'))
 }
 
 // The long-form page, once, in English: it is the article the research earned.
