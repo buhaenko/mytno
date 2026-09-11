@@ -1015,32 +1015,87 @@
     }
   ],
   "weight": {
-    "_note": "Art. L.421-75, marginal per kilogram, with abatements of 100 kg for a hybrid and 200 kg for a plug-in, capped at 15% of the mass in running order. Not computed: we do not know the mass.",
-    "bands": [
-      {
-        "from": 1500,
-        "perKg": 10
+    "_note": "Art. L.421-75, taxe sur la masse en ordre de marche. Marginal per kilogram, and the scale is the one of the year the car was FIRST registered — in France or abroad (L.421-5, BOFiP §300). Two consequences worth knowing: a car first registered before 1 January 2022 owes nothing at all whatever it weighs, because the tax did not exist yet (BOFiP §330); and the kilograms are counted inclusively from the top of the zero band, which is what reproduces BOFiP's own worked example of 3 215 € for 1 880 kg on the 2025 scale. Electric and hydrogen cars are exempt outright (L.421-79). The décote of L.421-7-2 applies (L.421-73), and then L.421-74 caps the CO2 malus and this one together at the top of the CO2 barème.",
+    "zeroBeforeYear": 2022,
+    "scales": {
+      "2022": {
+        "free": 1799,
+        "bands": [
+          {
+            "to": null,
+            "perKg": 10
+          }
+        ]
       },
-      {
-        "from": 1700,
-        "perKg": 15
+      "2024": {
+        "free": 1599,
+        "bands": [
+          {
+            "to": 1799,
+            "perKg": 10
+          },
+          {
+            "to": 1899,
+            "perKg": 15
+          },
+          {
+            "to": 1999,
+            "perKg": 20
+          },
+          {
+            "to": 2099,
+            "perKg": 25
+          },
+          {
+            "to": null,
+            "perKg": 30
+          }
+        ]
       },
-      {
-        "from": 1800,
-        "perKg": 20
-      },
-      {
-        "from": 1900,
-        "perKg": 25
-      },
-      {
-        "from": 2000,
-        "perKg": 30
+      "2026": {
+        "free": 1499,
+        "bands": [
+          {
+            "to": 1699,
+            "perKg": 10
+          },
+          {
+            "to": 1799,
+            "perKg": 15
+          },
+          {
+            "to": 1899,
+            "perKg": 20
+          },
+          {
+            "to": 1999,
+            "perKg": 25
+          },
+          {
+            "to": null,
+            "perKg": 30
+          }
+        ]
       }
-    ],
+    },
+    "abatement": {
+      "_note": "L.421-79-1, by the date of first registration. A plug-in registered in 2022 or 2023 is exempt outright; from 2024 it takes 200 kg, capped at 15% of the mass. A micro-hybrid loses its 100 kg from 2027.",
+      "hybridKg": 100,
+      "plugInKg": 200,
+      "plugInCapPct": 15,
+      "plugInExemptBeforeYear": 2024
+    },
     "source": {
-      "title": "CIBS art. L.421-75, taxe sur la masse en ordre de marche",
+      "title": "CIBS art. L.421-75 — taxe sur la masse en ordre de marche (legifrance)",
       "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000051214824"
+    },
+    "capSource": {
+      "title": "CIBS art. L.421-74 — plafond commun avec le malus CO2 (legifrance)",
+      "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000044603121"
+    },
+    "exemptSource": {
+      "title": "CIBS art. L.421-79 — exonération des véhicules électriques et hydrogène (legifrance)",
+      "url": "https://www.legifrance.gouv.fr/codes/article_lc/LEGIARTI000053545019"
     }
   }
 }

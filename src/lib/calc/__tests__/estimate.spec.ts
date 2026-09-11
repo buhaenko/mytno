@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Estimate, FxRates, Trip, Vehicle } from '../../../types'
 import { ageFactor, estimateUkraine, excise, pensionRate } from '../ukraine'
 import { depreciation, estimateSpain, iedmtRate } from '../spain'
-import { austriaNova, brusselsTmc, croatiaTax, czechiaEmissionFee, denmarkTax, finlandTax, greeceTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
+import { austriaNova, brusselsTmc, franceWeightMalus, croatiaTax, czechiaEmissionFee, denmarkTax, finlandTax, greeceTax, estimateEu, flandersBiv, franceMalus, hungaryTax, irelandVrt, maltaTax, italyIpt, lithuaniaTax, netherlandsBpm, polandExcise, portugalIsv, slovakiaFee, sloveniaDmv, walloniaTmc } from '../eu'
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { countryFromPath, routeFromPath, routePath } from '../../pages'
 import { fallbackRates } from '../../fx'
@@ -151,6 +151,24 @@ describe('Other EU countries', () => {
     expect(e.taxes.likely).toBe(0)
     expect(lineOf(e, 'regTax').unknown).toBeUndefined()
     expect(lineOf(e, 'regTax').amount.likely).toBe(0)
+  })
+
+  it('charges the French weight malus on the mass, and nothing at all before 2022', () => {
+    const heavy = { ...audi, market: 'EU' as const, kerbMassKg: 1880 }
+    // The tax began on 1 January 2022; an older car is outside it whatever it weighs.
+    expect(franceWeightMalus({ ...heavy, year: 2017 }, now, 0, 80000)!.total).toBe(0)
+    // The tax office's own worked example: 1 880 kg on the 2024 scale is 3 215 euro.
+    expect(franceWeightMalus({ ...heavy, year: 2024 }, now, 0, 80000)!.gross).toBe(3215)
+    // 2026 lowered the first taxed kilogram to 1 500: 2 000 kg comes to 8 030.
+    expect(franceWeightMalus({ ...heavy, year: 2026, kerbMassKg: 2000 }, now, 0, 80000)!.gross).toBe(8030)
+    // Electric is exempt outright, and so is a plug-in first registered in 2022 or 2023.
+    expect(franceWeightMalus({ ...heavy, year: 2026, fuel: 'electric' }, now, 0, 80000)!.exempt).toBe(true)
+    expect(franceWeightMalus({ ...heavy, year: 2023, fuel: 'phev' }, now, 0, 80000)!.exempt).toBe(true)
+    // The two malus share one ceiling: once the CO₂ one reaches it, the weight one is nil.
+    expect(franceWeightMalus({ ...heavy, year: 2026 }, now, 80000, 80000)!.total).toBe(0)
+    expect(franceWeightMalus({ ...heavy, year: 2026 }, now, 80000, 80000)!.capped).toBe(true)
+    // No mass, no answer — and the line says so rather than guessing.
+    expect(franceWeightMalus({ ...heavy, year: 2026, kerbMassKg: undefined }, now, 0, 80000)).toBeNull()
   })
 
   it('keeps a line that cannot be counted out of the total but on the page', () => {

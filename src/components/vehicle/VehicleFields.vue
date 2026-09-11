@@ -21,6 +21,9 @@ const needsCo2 = computed(() => CO2_COUNTRIES.includes(props.destination))
 const needsListPrice = computed(() => props.destination === 'ES')
 const POWER_COUNTRIES: Destination[] = ['SK', 'IT', 'SI', 'HU', 'BE']
 const needsMass = computed(() => props.destination === 'EE' || props.destination === 'BE')
+/** The mass in running order, field G: Norway's whole tax, the French weight malus, the Swiss CO₂ target. */
+const KERB_COUNTRIES: Destination[] = ['NO', 'FR', 'CH']
+const needsKerb = computed(() => KERB_COUNTRIES.includes(props.destination))
 const needsLength = computed(() => props.destination === 'MT')
 /** Five tables are monthly, so in those five the month of first registration is worth asking for. */
 const MONTH_COUNTRIES: Destination[] = ['NL', 'FR', 'HU', 'BE', 'HR']
@@ -89,6 +92,11 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
     <label v-if="needsMass" class="field">
       <span class="field-label">{{ t('car.mass') }} <HelpTip :text="t('car.help.mass')" /></span>
       <input v-model.number="vehicle.grossMassKg" type="number" class="input" placeholder="2000" />
+    </label>
+
+    <label v-if="needsKerb" class="field">
+      <span class="field-label">{{ t('car.kerbMass') }} <HelpTip :text="t('car.help.kerbMass')" /></span>
+      <input v-model.number="vehicle.kerbMassKg" type="number" class="input" placeholder="1600" />
     </label>
 
     <label v-if="needsLength" class="field">

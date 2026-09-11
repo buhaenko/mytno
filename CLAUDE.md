@@ -199,9 +199,7 @@ DGT fee, plates, mandatory lighting conversion.
   car's own first-registration year applies, wherever that happened** (L.421-62, L.421-72), and the
   article carries barèmes only from 2020 — 2015 to 2019 sit in the old Code général des impôts. A car
   with no European type approval falls to the fiscal-horsepower barème (L.421-64), one approved before
-  WLTP to the NEDC barème (L.421-63); neither has been collected. The malus au poids (€10/kg from
-  1 500 kg to €30 from 2 000, less 100 kg for a hybrid and 200 for a plug-in, capped at 15% of mass)
-  needs a kerb mass we do not have, and L.421-74 caps the two together at the top of the CO₂ barème.
+  WLTP to the NEDC barème (L.421-63); neither has been collected. The malus au poids is computed now — see below.
 - **Estonia has charged a registration fee since 1 Jan 2025** — a base part plus CO₂ and mass parts,
   times an age coefficient, collected by Transpordiamet at first registration and separate from the
   annual motor vehicle tax the tax office bills. The config called it €0 until 9 Sep 2026, which was
@@ -502,6 +500,20 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **The French weight malus is computed, and its most useful figure is a zero.** A car first
+  registered anywhere before **1 January 2022** owes nothing at all, whatever it weighs,
+  because the tax did not exist yet (BOFiP §330 says so with an example) — for most imports
+  that is a citable answer rather than a gap. Beyond that it is a marginal scale on the
+  **mass in running order, field G** — not F.1, not G.1 — and the scale is the one of the
+  year of first registration *anywhere*: 1 800 kg free in 2022–23, 1 600 in 2024–25, **1 500
+  from 2026**. The kilograms are counted inclusively from the top of the zero band, which is
+  what reproduces the tax office's own worked example of €3 215 for 1 880 kg on the 2024
+  scale; 2 000 kg on the 2026 scale is €8 030. Electric and hydrogen are exempt outright, a
+  plug-in first registered in 2022–23 too, and from 2024 it takes 200 kg off capped at 15% of
+  the mass. Then the décote of L.421-7-2 applies — the same table as the CO₂ malus — and
+  L.421-74 caps the two **together** at the top of the CO₂ barème, so a car heavy and dirty
+  enough pays the ceiling once: at 2 500 kg and 250 g/km the weight malus comes out at zero
+  because the CO₂ one has already taken the whole cap.
 - **Britain has no registration tax, and a used import does not pay the “showroom tax”.**
   What everyone calls that is the rate of the *first* annual licence, and VERA 1994 s.62(1C)
   says there is no first vehicle licence at all where the car was registered abroad more

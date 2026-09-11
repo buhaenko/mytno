@@ -195,7 +195,7 @@ export function hungaryTax(v: Vehicle, fx: FxRates, now: Date) {
  * horsepower, which we cannot know. The weight malus is a separate tax and needs a mass we do not have.
  */
 export function franceMalus(v: Vehicle, now: Date) {
-  if (v.year < france.zeroBeforeYear) return { total: 0, gross: 0, written: 0, before2015: true }
+  if (v.year < france.zeroBeforeYear) return { total: 0, gross: 0, written: 0, cap: 0, before2015: true }
   const co2 = v.fuel === 'electric' ? 0 : v.co2Wltp === undefined ? undefined : Math.round(v.co2Wltp)
   if (co2 === undefined) return null
 
@@ -214,7 +214,57 @@ export function franceMalus(v: Vehicle, now: Date) {
 
   const months = Math.round(age(v, now) * 12)
   const written = france.decote.find((d) => d.maxMonths === null || months <= d.maxMonths)!.pct
-  return { total: gross * (1 - written / 100), gross, written, before2015: false }
+  const cap = scale ? scale.cap : france.nedcBands20152016[france.nedcBands20152016.length - 1]!.eur
+  return { total: gross * (1 - written / 100), gross, written, cap, before2015: false }
+}
+
+/**
+ * The French weight malus — taxe sur la masse en ordre de marche, art. L.421-75.
+ *
+ * Three things decide it and none of them is the price. The scale is the one of the year the
+ * car was **first registered anywhere**, so an import brings its own year with it; the mass
+ * is field G of the certificate, the car as it stands; and the kilograms are counted
+ * inclusively from the top of the zero band, which is what reproduces the tax office's own
+ * worked example of €3 215 for 1 880 kg.
+ *
+ * The most useful fact in the whole article is a zero: a car first registered before
+ * 1 January 2022 owes nothing at all, whatever it weighs, because the tax did not exist yet.
+ * For most imports that is the answer, and it is a citable answer rather than a gap.
+ *
+ * Then L.421-74 caps this and the CO₂ malus together at the top of the CO₂ barème, so a car
+ * heavy *and* dirty enough pays the ceiling once, not twice.
+ */
+export function franceWeightMalus(v: Vehicle, now: Date, co2Malus: number, co2Cap: number) {
+  const w = france.weight
+  if (v.year < w.zeroBeforeYear) return { total: 0, gross: 0, written: 0, before: true, exempt: false, capped: false }
+  if (v.fuel === 'electric') return { total: 0, gross: 0, written: 0, before: false, exempt: true, capped: false }
+  if (!v.kerbMassKg) return null
+
+  const scales = w.scales as unknown as Record<string, { free: number; bands: { to: number | null; perKg: number }[] }>
+  const scale = scales[v.year >= 2026 ? '2026' : v.year >= 2024 ? '2024' : '2022']!
+
+  let mass = v.kerbMassKg
+  if (v.fuel === 'phev') {
+    if (v.year < w.abatement.plugInExemptBeforeYear) return { total: 0, gross: 0, written: 0, before: false, exempt: true, capped: false }
+    mass -= Math.min(w.abatement.plugInKg, (v.kerbMassKg * w.abatement.plugInCapPct) / 100)
+  } else if (v.fuel === 'hybrid') {
+    mass -= w.abatement.hybridKg
+  }
+  mass = Math.round(mass)
+
+  let gross = 0
+  let from = scale.free + 1
+  for (const band of scale.bands) {
+    const to = band.to ?? Number.MAX_SAFE_INTEGER
+    if (mass >= from) gross += (Math.min(mass, to) - from + 1) * band.perKg
+    from = to + 1
+  }
+
+  const months = Math.round(age(v, now) * 12)
+  const written = france.decote.find((d) => d.maxMonths === null || months <= d.maxMonths)!.pct
+  const afterDecote = gross * (1 - written / 100)
+  const room = Math.max(0, co2Cap * (1 - written / 100) - co2Malus)
+  return { total: Math.min(afterDecote, room), gross, written, before: false, exempt: false, capped: afterDecote > room }
 }
 
 interface Scale { firstGram: number; amounts: number[]; cap: number }
@@ -411,7 +461,7 @@ export function greeceTax(v: Vehicle, priceEur: number) {
 }
 
 /** Registration tax: computed where we have the formula, a real zero where none exists, otherwise shown but not counted. */
-function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date, estonia?: EstonianFee | null): { line: Line; warning?: ReturnType<typeof msg> } {
+function registrationTax(country: CountryInfo, v: Vehicle, trip: Trip, price: number, fx: FxRates, customsLink: { title: string; url: string }, now: Date, estonia?: EstonianFee | null): { line: Line; extra?: Line; warning?: ReturnType<typeof msg> } {
   const exempt = trip.residenceTransfer && trip.origin !== 'EU'
 
   if (country.regTax === 'none') {
@@ -623,7 +673,7 @@ function hungarianTax(v: Vehicle, exempt: boolean, fx: FxRates, now: Date): { li
 }
 
 /** France: the CO₂ malus of the year the car was first registered, less the décote for its age. */
-function frenchMalus(v: Vehicle, exempt: boolean, now: Date): { line: Line; warning?: ReturnType<typeof msg> } {
+function frenchMalus(v: Vehicle, exempt: boolean, now: Date): { line: Line; extra?: Line; warning?: ReturnType<typeof msg> } {
   const source = france.source
   const label = msg('line.regTaxNamed', { name: 'malus CO₂' })
   if (exempt) return { line: line('regTax', label, 'tax', nothing, { notes: [msg('note.relocation')], source }) }
@@ -641,9 +691,30 @@ function frenchMalus(v: Vehicle, exempt: boolean, now: Date): { line: Line; warn
     }
   }
   const notes = malus.before2015 ? [msg('note.frBefore2015')]
-    : [msg('note.frMalus', { year: v.year, gross: Math.round(malus.gross), written: malus.written }), msg('note.frWeight')]
+    : [msg('note.frMalus', { year: v.year, gross: Math.round(malus.gross), written: malus.written })]
+  const co2Line = line('regTax', label, 'tax', exact(malus.total), { formula: 'barème de l’année − décote', notes, source })
+
+  const weight = franceWeightMalus(v, now, malus.total, malus.cap)
+  const weightLabel = msg('line.frWeight')
+  if (weight === null) {
+    return {
+      line: co2Line,
+      extra: line('regTaxWeight', weightLabel, 'tax', nothing, {
+        unknown: true, notes: [msg('note.frWeightNeedsMass')], source: france.weight.source,
+      }),
+      warning: msg('warn.frNeedMass'),
+    }
+  }
+  const weightNote = weight.before ? msg('note.frWeightBefore2022')
+    : weight.exempt ? msg('note.frWeightExempt')
+    : msg('note.frWeightDue', { year: v.year, gross: Math.round(weight.gross), written: weight.written })
   return {
-    line: line('regTax', label, 'tax', exact(malus.total), { formula: 'barème de l’année − décote', notes, source }),
+    line: co2Line,
+    extra: line('regTaxWeight', weightLabel, 'tax', exact(weight.total), {
+      formula: 'barème de la masse − décote, plafonné avec le malus CO₂',
+      notes: weight.capped ? [weightNote, msg('note.frWeightCapped')] : [weightNote],
+      source: weight.before ? france.weight.source : weight.exempt ? france.weight.exemptSource : france.weight.source,
+    }),
   }
 }
 
@@ -887,6 +958,7 @@ export function estimateEu(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()
 
   const registration = registrationTax(country, v, trip, price, fx, customsLink, now, estonia)
   lines.push(registration.line)
+  if (registration.extra) lines.push(registration.extra)
   if (registration.warning) warnings.push(registration.warning)
 
   lines.push(line('regFees', msg('line.regFees'), 'fee', nothing, { unknown: true, notes: [msg('note.regFeesNational')], source: customsLink }))
