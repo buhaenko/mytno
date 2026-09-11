@@ -9,7 +9,7 @@ import ChoiceChips from '../controls/ChoiceChips.vue'
 /** Whatever the lookup could not tell us, or got wrong, is editable here. */
 const vehicle = defineModel<Vehicle>({ required: true })
 const props = defineProps<{ destination: Destination }>()
-const { t } = useI18n()
+const { t, locale } = useI18n()
 
 const FUELS: Fuel[] = ['petrol', 'diesel', 'hybrid', 'phev', 'electric', 'lpg']
 const MARKETS: Market[] = ['US', 'EU', 'JP', 'KR', 'OTHER']
@@ -22,6 +22,13 @@ const needsListPrice = computed(() => props.destination === 'ES')
 const POWER_COUNTRIES: Destination[] = ['SK', 'IT', 'SI', 'HU', 'BE']
 const needsMass = computed(() => props.destination === 'EE' || props.destination === 'BE')
 const needsLength = computed(() => props.destination === 'MT')
+/** Five tables are monthly, so in those five the month of first registration is worth asking for. */
+const MONTH_COUNTRIES: Destination[] = ['NL', 'FR', 'HU', 'BE', 'HR']
+const needsMonth = computed(() => MONTH_COUNTRIES.includes(props.destination))
+const months = computed(() => Array.from({ length: 12 }, (_, i) => ({
+  value: i + 1,
+  label: new Intl.DateTimeFormat(locale.value, { month: 'long' }).format(new Date(2026, i, 1)),
+})))
 const needsPower = computed(() => POWER_COUNTRIES.includes(props.destination))
 /** A car cannot have cost less when new than it did second-hand: that is the purchase price in the wrong field. */
 const listPriceTooLow = computed(() =>
@@ -56,6 +63,14 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
     <label v-if="electrified" class="field">
       <span class="field-label">{{ t('car.kwh') }} <HelpTip :text="t('car.help.kwh')" /></span>
       <input v-model.number="vehicle.batteryKwh" type="number" class="input" placeholder="75" />
+    </label>
+
+    <label v-if="needsMonth" class="field">
+      <span class="field-label">{{ t('car.regMonth') }} <HelpTip :text="t('car.help.regMonth')" /></span>
+      <select v-model.number="vehicle.regMonth" class="input">
+        <option :value="undefined">{{ t('car.regMonth.unknown') }}</option>
+        <option v-for="m in months" :key="m.value" :value="m.value">{{ m.label }}</option>
+      </select>
     </label>
 
     <label v-if="needsCo2" class="field">

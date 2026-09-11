@@ -44,6 +44,12 @@ export interface Vehicle {
   model: string
   year: number
   fuel: Fuel
+  /**
+   * Month of first registration, 1–12, field B of a European registration certificate.
+   * Five of the tables are monthly — the Dutch, French, Hungarian, Flemish and Croatian —
+   * and without it the year alone is worth up to six months of depreciation either way.
+   */
+  regMonth?: number
   /** Which market the car was built for — it decides whether EU type approval is needed. */
   market: Market
   brandTier: BrandTier

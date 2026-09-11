@@ -13,7 +13,10 @@ export const builtInEu = (v: Vehicle) => !!v.plantCountry && EU_PLANTS.has(v.pla
 
 /** Age in years, counted from the middle of the model year. */
 export function age(v: Vehicle, now = new Date()): number {
-  const firstRegistered = new Date(v.year, 6, 1)
+  // The middle of the year is the honest guess when only the year is known; when the month
+  // is known it is used, and every monthly table downstream sharpens with it.
+  const month = v.regMonth && v.regMonth >= 1 && v.regMonth <= 12 ? v.regMonth - 1 : 6
+  const firstRegistered = new Date(v.year, month, 1)
   return Math.max(0, (now.getTime() - firstRegistered.getTime()) / (365.25 * 24 * 3600 * 1000))
 }
 
