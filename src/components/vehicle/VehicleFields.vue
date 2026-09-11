@@ -60,12 +60,12 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
 
     <label v-if="vehicle.fuel !== 'electric'" class="field">
       <span class="field-label">{{ t('car.cc') }} <HelpTip :text="t(displacementHelp)" /></span>
-      <input v-model.number="vehicle.engineCc" type="number" class="input" placeholder="1984" />
+      <input v-model.number="vehicle.engineCc" type="number" class="input" :placeholder="t('car.eg', { value: 1984 })" />
     </label>
 
     <label v-if="electrified" class="field">
       <span class="field-label">{{ t('car.kwh') }} <HelpTip :text="t('car.help.kwh')" /></span>
-      <input v-model.number="vehicle.batteryKwh" type="number" class="input" placeholder="75" />
+      <input v-model.number="vehicle.batteryKwh" type="number" class="input" :placeholder="t('car.eg', { value: 75 })" />
     </label>
 
     <label v-if="needsMonth" class="field">
@@ -81,27 +81,31 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
         {{ t('car.co2') }}
         <HelpTip :text="t('car.help.co2')" :source="destination === 'ES' ? spainCo2Source : undefined" />
       </span>
-      <input v-model.number="vehicle.co2Wltp" type="number" class="input" placeholder="168" />
+      <input
+        v-model.number="vehicle.co2Wltp" type="number" class="input" :placeholder="t('car.eg', { value: 168 })"
+        @input="vehicle.co2Source = 'certified'"
+      />
+      <span v-if="vehicle.co2Source === 'epa'" class="field-note">{{ t('car.co2FromEpa') }}</span>
     </label>
 
     <label v-if="needsPower" class="field">
       <span class="field-label">{{ t('car.power') }} <HelpTip :text="t('car.help.power')" /></span>
-      <input v-model.number="vehicle.powerHp" type="number" class="input" placeholder="252" />
+      <input v-model.number="vehicle.powerHp" type="number" class="input" :placeholder="t('car.eg', { value: 252 })" />
     </label>
 
     <label v-if="needsMass" class="field">
       <span class="field-label">{{ t('car.mass') }} <HelpTip :text="t('car.help.mass')" /></span>
-      <input v-model.number="vehicle.grossMassKg" type="number" class="input" placeholder="2000" />
+      <input v-model.number="vehicle.grossMassKg" type="number" class="input" :placeholder="t('car.eg', { value: 2000 })" />
     </label>
 
     <label v-if="needsKerb" class="field">
       <span class="field-label">{{ t('car.kerbMass') }} <HelpTip :text="t('car.help.kerbMass')" /></span>
-      <input v-model.number="vehicle.kerbMassKg" type="number" class="input" placeholder="1600" />
+      <input v-model.number="vehicle.kerbMassKg" type="number" class="input" :placeholder="t('car.eg', { value: 1600 })" />
     </label>
 
     <label v-if="needsLength" class="field">
       <span class="field-label">{{ t('car.length') }} <HelpTip :text="t('car.help.length')" /></span>
-      <input v-model.number="vehicle.lengthMm" type="number" class="input" placeholder="4726" />
+      <input v-model.number="vehicle.lengthMm" type="number" class="input" :placeholder="t('car.eg', { value: 4726 })" />
     </label>
 
     <label v-if="needsListPrice" class="field">
@@ -109,7 +113,8 @@ const fuels = computed(() => FUELS.map((value) => ({ value, label: t(`car.fuel.$
         {{ t('car.listPrice') }}
         <HelpTip :text="t('car.help.listPrice')" :source="{ title: 'AEAT — Vehículos', url: 'https://sede.agenciatributaria.gob.es/Sede/vehiculos-embarcaciones.html' }" />
       </span>
-      <input v-model.number="vehicle.listPriceEur" type="number" class="input" placeholder="47150" />
+      <input v-model.number="vehicle.listPriceEur" type="number" class="input" :placeholder="t('car.eg', { value: 47150 })" />
+      <span v-if="!vehicle.listPriceEur" class="field-note">{{ t('car.listPriceEmpty') }}</span>
       <span v-if="listPriceTooLow" class="field-warn">{{ t('car.listPriceTooLow') }}</span>
     </label>
 

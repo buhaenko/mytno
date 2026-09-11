@@ -500,6 +500,22 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **A grey placeholder reads as a filled field.** “168” and “47150” sat in the CO₂ and
+  list-price boxes as hints and were taken for data — reasonably, since every other box on
+  the screen holds a number. They say “e.g. 168” now, and an empty list price carries a
+  sentence saying what happens without it: the tax falls back to the price paid, which is
+  lower than the table price, so the real bill comes out higher. The note gets two columns
+  of the four-column grid — a sentence does not fit in one — while the input keeps its size.
+- **The EPA figure goes in the CO₂ box now, marked.** The catalogue has carried a real
+  measured CO₂ in g/km all along and the code deliberately refused to use it, because the
+  American cycle is not WLTP and the tax laws want WLTP. But refusing left the field empty,
+  and an empty CO₂ sends Spain to its punitive 14.75% and several others to “cannot be
+  computed” — worse answers than an approximate one. It is filled from the catalogue when
+  nothing certified is known, `co2Source` records where it came from, the field says so
+  underneath, and `estimate()` adds one warning for every destination rather than each
+  country repeating it. Typing in the box clears the flag: it is the reader's figure then.
+  For a 2017 A4 the EPA number is 176 g/km against a certified 168, which is the size of
+  error to expect.
 - **The French weight malus is computed, and its most useful figure is a zero.** A car first
   registered anywhere before **1 January 2022** owes nothing at all, whatever it weighs,
   because the tax did not exist yet (BOFiP §330 says so with an example) — for most imports

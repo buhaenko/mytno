@@ -16,6 +16,7 @@ function addEuropeanEquivalent(v: Vehicle) {
   if (!match) return
   const { model, engine } = match
   v.co2Wltp = engine.co2 || undefined
+  if (engine.co2) v.co2Source = 'certified'
   v.listPriceEur = engine.listEur
   v.batteryKwh ??= engine.kwh
   v.powerHp ??= engine.hp
@@ -40,7 +41,15 @@ async function addCatalogueMatch(v: Vehicle) {
     if (!best) return
     if (best[0] && (!v.engineCc || Math.abs(best[0] - v.engineCc) / best[0] < 0.06)) v.engineCc = best[0]
     v.notes.push(note('car.note.epaMatch', { model: match.model }))
-    if (best[3]) v.notes.push(note('car.note.epaCo2'))
+    // An EPA figure is a real measurement on the wrong cycle. Better in the field, marked,
+    // than an empty box that quietly sends the calculation to the punitive rate.
+    if (best[3] && v.co2Wltp === undefined) {
+      v.co2Wltp = best[3]
+      v.co2Source = 'epa'
+      v.notes.push(note('car.note.epaCo2Filled', { co2: best[3] }))
+    } else if (best[3]) {
+      v.notes.push(note('car.note.epaCo2'))
+    }
   } catch { /* the catalogue is optional */ }
 }
 
@@ -101,7 +110,14 @@ export function identifyByCatalog(make: string, model: string, year: number, ver
     drive: version[5],
     notes: [note('car.note.catalogPick', { version: label })],
   }
-  if (version[3]) vehicle.notes.push(note('car.note.epaCo2'))
+  // The reference list first: it carries the certified European figure where it has one.
   addEuropeanEquivalent(vehicle)
+  if (version[3] && vehicle.co2Wltp === undefined) {
+    vehicle.co2Wltp = version[3]
+    vehicle.co2Source = 'epa'
+    vehicle.notes.push(note('car.note.epaCo2Filled', { co2: version[3] }))
+  } else if (version[3]) {
+    vehicle.notes.push(note('car.note.epaCo2'))
+  }
   return vehicle
 }

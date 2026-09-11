@@ -158,6 +158,13 @@ select.input {
 
 /* A field that has plainly been given the wrong number says so under itself. */
 .field-warn { display: block; margin-top: 5px; color: var(--due); font-size: 12px; line-height: 1.45; }
+/* Quieter than a warning: the field is usable, the number in it just is not the certified one. */
+.field-note { display: block; margin-top: 5px; color: var(--ink-faint); font-size: 12px; line-height: 1.45; }
+/* A sentence needs more than one column of a four-column grid. The input keeps its size;
+   only the explanation under it gets the room, which is the part that is prose. */
+.grid-4 .field:has(.field-note), .grid-3 .field:has(.field-note) { grid-column: span 2; }
+.field:has(.field-note) .input { max-width: 260px; }
+@media (max-width: 560px) { .field:has(.field-note) .input { max-width: none; } }
 
 @media (max-width: 560px) {
   /* Quiet is the point of these; illegible is not. And a segment is something a thumb lands on. */

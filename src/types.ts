@@ -59,6 +59,12 @@ export interface Vehicle {
   batteryKwh?: number
   powerHp?: number
   co2Wltp?: number
+  /**
+   * Where the CO₂ came from. `epa` means it was measured on the American cycle and filled in
+   * here because nothing better was known — a real figure, from the wrong test, and every
+   * tax that reads it says so on the screen until someone types the certified one.
+   */
+  co2Source?: 'certified' | 'epa'
   /** Gross mass in kilograms, field F.1 of a European registration certificate: the Estonian fee needs it. */
   grossMassKg?: number
   /**
