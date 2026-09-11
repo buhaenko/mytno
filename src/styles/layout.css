@@ -31,7 +31,11 @@
 .brand-name { font-size: 15px; font-weight: 600; letter-spacing: -.02em; }
 
 /* Hero: a question that folds away into a route bar. */
-.hero { padding-top: 14vh; text-align: center; transition: padding .5s var(--ease); }
+/* 14vh was written when the hero was the whole page. There is a chart under it now, and on a
+   phone that padding pushed all but five of its rows off the first screen — a hundred and fifty
+   pixels of nothing between the header and the headline. The opening should start near the top
+   and let the thing worth seeing be seen. */
+.hero { padding-top: 6vh; text-align: center; transition: padding .5s var(--ease); }
 .hero.compact { padding-top: 4px; }
 .hero-text {
   max-height: 340px; margin: 14px 0 30px; overflow: hidden; opacity: 1;
@@ -107,6 +111,9 @@
   .route-arrow { align-self: center; transform: rotate(90deg); }
   .hero.compact .route { flex-direction: row; }
   .hero.compact .route-arrow { transform: none; }
+
+  .hero { padding-top: 10px; }
+  .hero-text { margin: 8px 0 22px; }
 
   /* A thumb needs about nine millimetres; these are the places that were short of it. */
   .brand { padding: 5px 0; }

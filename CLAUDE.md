@@ -500,6 +500,12 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **The hero's `14vh` was a rule from a page that no longer exists.** It was written when the
+  hero *was* the page; with the ladder underneath it put a hundred and fifty pixels of nothing
+  between the header and the headline on a phone and pushed all but five rows of the chart off
+  the first screen. It is `6vh` now, and 10px below 560 — nine rows visible on a 390×844 phone
+  instead of five. Every padding chosen for an earlier layout is worth re-reading when the
+  layout changes; this one survived three redesigns of the page under it.
 - **The home page shows an answer before it asks a question.** It was a headline, two empty
   selects and a wall of grey country names — a form, not a product, with nothing on it to
   look at and nothing proving the tool could do anything. It now opens with the ladder: one
