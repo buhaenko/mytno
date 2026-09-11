@@ -1,0 +1,238 @@
+{
+  "_note": "Norway is charged purely on technical characteristics — kerb weight and CO2 — and never on what the car cost, which is why it is computed rather than estimated. 2026 is a reform year: the NOx component was abolished, engine power and displacement no longer appear for cars, and there is no longer any tax-free CO2 allowance. Do not carry over any table published before 1 January 2026. The rates come from the annual Stortingsvedtak adopted each December, so this file wants re-reading every January.",
+  "effective": "2026-01-01",
+  "validUntil": "2026-12-31",
+  "currency": "NOK",
+  "duty": 0,
+  "vat": 0.25,
+  "evVatFreeNok": 300000,
+  "registration": {
+    "_note": "Stortingsvedtak FOR-2025-12-18-2755. The first weight part is charged on every car, electric included, because it sits in section 2; the second weight part and the CO2 part are in section 3, which reaches only piston combustion engines. CO2 bands are marginal.",
+    "weightAllKg": 500,
+    "weightAllNokPerKg": 12.71,
+    "weightCombustionKg": 1200,
+    "weightCombustionNokPerKg": 260,
+    "co2Bands": [
+      {
+        "maxCo2": 100,
+        "nokPerGram": 800
+      },
+      {
+        "maxCo2": 150,
+        "nokPerGram": 1600
+      },
+      {
+        "maxCo2": 225,
+        "nokPerGram": 3200
+      },
+      {
+        "maxCo2": null,
+        "nokPerGram": 5000
+      }
+    ],
+    "nedcToWltp": 1.24,
+    "co2FromMassDivisor": 10,
+    "useDeduction": [
+      {
+        "overMonths": 1,
+        "pct": 2
+      },
+      {
+        "overMonths": 2,
+        "pct": 4
+      },
+      {
+        "overMonths": 3,
+        "pct": 6
+      },
+      {
+        "overMonths": 4,
+        "pct": 8
+      },
+      {
+        "overMonths": 5,
+        "pct": 10
+      },
+      {
+        "overMonths": 6,
+        "pct": 12
+      },
+      {
+        "overMonths": 7,
+        "pct": 14
+      },
+      {
+        "overMonths": 8,
+        "pct": 15
+      },
+      {
+        "overMonths": 9,
+        "pct": 16
+      },
+      {
+        "overMonths": 10,
+        "pct": 17
+      },
+      {
+        "overMonths": 11,
+        "pct": 18
+      },
+      {
+        "overMonths": 12,
+        "pct": 19
+      },
+      {
+        "overMonths": 14,
+        "pct": 20
+      },
+      {
+        "overMonths": 16,
+        "pct": 21
+      },
+      {
+        "overMonths": 18,
+        "pct": 22
+      },
+      {
+        "overMonths": 20,
+        "pct": 23
+      },
+      {
+        "overMonths": 22,
+        "pct": 24
+      },
+      {
+        "overMonths": 24,
+        "pct": 26
+      },
+      {
+        "overMonths": 30,
+        "pct": 30
+      },
+      {
+        "overMonths": 36,
+        "pct": 33
+      },
+      {
+        "overMonths": 42,
+        "pct": 37
+      },
+      {
+        "overMonths": 48,
+        "pct": 40
+      },
+      {
+        "overMonths": 54,
+        "pct": 44
+      },
+      {
+        "overMonths": 60,
+        "pct": 50
+      },
+      {
+        "overMonths": 66,
+        "pct": 54
+      },
+      {
+        "overMonths": 72,
+        "pct": 58
+      },
+      {
+        "overMonths": 78,
+        "pct": 62
+      },
+      {
+        "overMonths": 84,
+        "pct": 66
+      },
+      {
+        "overMonths": 90,
+        "pct": 70
+      },
+      {
+        "overMonths": 96,
+        "pct": 74
+      },
+      {
+        "overMonths": 102,
+        "pct": 78
+      },
+      {
+        "overMonths": 108,
+        "pct": 82
+      },
+      {
+        "overMonths": 120,
+        "pct": 90
+      },
+      {
+        "overMonths": 132,
+        "pct": 91
+      },
+      {
+        "overMonths": 144,
+        "pct": 92
+      },
+      {
+        "overMonths": 156,
+        "pct": 93
+      },
+      {
+        "overMonths": 168,
+        "pct": 94
+      },
+      {
+        "overMonths": 180,
+        "pct": 95
+      },
+      {
+        "overMonths": 192,
+        "pct": 96
+      },
+      {
+        "overMonths": 216,
+        "pct": 98
+      },
+      {
+        "overMonths": 240,
+        "pct": 100
+      }
+    ]
+  },
+  "fees": {
+    "_note": "The scrap deposit and the refrigerant charge are fixed nationally. Statens vegvesen publishes no price list for approval, inspection and plates — it says outright that you learn the price when you book — so those are left out rather than guessed.",
+    "scrapDepositNok": 2400,
+    "refrigerantNokPerKg": 2130.7,
+    "refrigerantKg": 1
+  },
+  "refs": {
+    "duty": {
+      "title": "Tolletaten — bilimport: fortolling uten toll (toll.no)",
+      "url": "https://www.toll.no/no/varer/bil-og-andre-kjoretoy/bilimport"
+    },
+    "vat": {
+      "title": "Skatteetaten — merverdiavgiftssatser (skatteetaten.no)",
+      "url": "https://www.skatteetaten.no/satser/merverdiavgift/"
+    },
+    "registration": {
+      "title": "Stortingsvedtak om engangsavgift for 2026, FOR-2025-12-18-2755 (lovdata.no)",
+      "url": "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2755"
+    },
+    "useDeduction": {
+      "title": "Skatteetaten — bruksfradragstabellen",
+      "url": "https://www.skatteetaten.no/satser/bruksfradragstabellen/"
+    },
+    "scrap": {
+      "title": "Skatteetaten — vrakpantavgift",
+      "url": "https://www.skatteetaten.no/satser/vrakpantavgift/"
+    },
+    "other": {
+      "title": "Skatteetaten — andre avgifter ved import (klimagassavgift)",
+      "url": "https://www.skatteetaten.no/person/avgifter/bil/importere/andre-avgifter/"
+    },
+    "inspection": {
+      "title": "Statens vegvesen — privat import av kjøretøy",
+      "url": "https://www.vegvesen.no/kjoretoy/kjop-og-salg/import/privat-import/"
+    }
+  }
+}

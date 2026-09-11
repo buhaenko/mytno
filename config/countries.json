@@ -302,6 +302,16 @@
         "title": "Automobilsteuergesetz Art. 13 — 4% Automobilsteuer (fedlex.admin.ch)",
         "url": "https://www.fedlex.admin.ch/eli/cc/1996/3045_3045_3045/de"
       }
+    },
+    "NO": {
+      "eu": false,
+      "vat": 0.25,
+      "customs": "https://www.toll.no/no/varer/bil-og-andre-kjoretoy/bilimport",
+      "regTax": "computed",
+      "regTaxSource": {
+        "title": "Stortingsvedtak om engangsavgift for 2026 (lovdata.no)",
+        "url": "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2755"
+      }
     }
   },
   "poland": {

@@ -502,6 +502,20 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Norway is the biggest number in the app and the most certain one.** The engangsavgift
+  is charged on kerb weight and CO₂ and never on what the car cost, so it computes exactly —
+  no valuation, no red caution. **2026 rewrote it and every older table is wrong**: the NOx
+  component was abolished, engine power and displacement no longer appear for cars, and the
+  tax-free CO₂ allowance is gone — the first gram costs money. What is left is 12.71 kr a
+  kilo above 500 (every car, electric included, because it sits in §2), plus 260 kr a kilo
+  above 1 200 and the marginal CO₂ bands (800 / 1 600 / 3 200 / 5 000) for piston engines
+  only, all cut by the bruksfradrag table — which reaches 100% at twenty years, so an old
+  car pays nothing. Where no CO₂ is certified the law now derives one as **kerb weight ÷ 10**
+  rather than falling back to displacement. Customs duty is 0.00 from everywhere; VAT is 25%,
+  and an electric car is free of it on the first NOK 300 000 (down from 500 000 on 1 Jan
+  2026). Statens vegvesen publishes no price for approval, inspection or plates — it says so
+  outright — so those are left out rather than guessed. Rates come from the annual
+  Stortingsvedtak adopted each December: re-read every January.
 - **Switzerland pays no customs duty at all, and almost every source says otherwise.** It
   abolished industrial tariffs — chapters 25 to 97, which contains 8703 — on 1 January 2024,
   and the Generaltarif reads 0.00 on every car line. The CHF 12–15 per 100 kg of gross

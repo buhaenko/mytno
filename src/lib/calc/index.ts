@@ -2,6 +2,7 @@ import type { Estimate, FxRates, Trip, Vehicle } from '../../types'
 import type { EstonianFee } from '../estonia'
 import { estimateEu } from './eu'
 import { estimateSpain } from './spain'
+import { estimateNorway } from './norway'
 import { estimateSwitzerland } from './switzerland'
 import { estimateUkraine } from './ukraine'
 
@@ -10,5 +11,6 @@ export function estimate(vehicle: Vehicle, trip: Trip, fx: FxRates, estonia?: Es
   if (trip.destination === 'UA') return estimateUkraine(vehicle, trip, fx)
   if (trip.destination === 'ES') return estimateSpain(vehicle, trip, fx)
   if (trip.destination === 'CH') return estimateSwitzerland(vehicle, trip, fx)
+  if (trip.destination === 'NO') return estimateNorway(vehicle, trip, fx)
   return estimateEu(vehicle, trip, fx, undefined, estonia)
 }
