@@ -40,6 +40,15 @@ type Translate = (key: string, params?: Record<string, string | number>) => stri
 /** Duty on a car built outside the EU: the same 10% heading everywhere here. */
 export const DUTY_PERCENT = 10
 
+/**
+ * How many countries and languages the tool covers. Every sentence that quotes a number —
+ * the title, the description, the home page, the route FAQ — takes it from here, so adding
+ * a destination rewrites all of them and none can be left saying twenty-eight. The names are
+ * deliberately not `from`/`to`: a route page already spends those on its two country names.
+ */
+export type Counts = { destinations: number; origins: number; languages: number }
+const COUNTS_UNKNOWN: Counts = { destinations: 0, origins: 0, languages: 0 }
+
 /** The long-form page. Its prose lives in scripts/, because only the prerender needs it. */
 export const NOTE_PATH = '/car-registration-tax-in-europe/'
 
@@ -83,9 +92,10 @@ export function routeBrief(
   to: string,
   example: { car: string; price: string; total: string },
   t: Translate,
+  counts: Counts = COUNTS_UNKNOWN,
 ): RouteBrief {
   // The arrow keeps both country names in the nominative, so no language has to decline them.
-  const params = { from, to, ...example }
+  const params = { from, to, ...example, ...counts }
   return {
     h1: t('page.route.h1', params),
     lead: t('page.route.lead', params),

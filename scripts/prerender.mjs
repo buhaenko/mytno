@@ -29,6 +29,17 @@ const ukraine = config('rules.ukraine.json')
 const spain = config('rules.spain.json')
 const DESTINATIONS = Object.keys(countries.destinations)
 const { routes: ROUTES, example: EXAMPLE } = config('routes.json')
+
+/**
+ * How much the tool covers, counted rather than typed. Every sentence that quotes one of
+ * these numbers takes it from here, so adding a destination rewrites the title, the
+ * description, the home page and the route FAQ in all six languages at once.
+ */
+const COUNTS = {
+  destinations: Object.keys(countries.destinations).length,
+  origins: config('origins.json').countries.length,
+  languages: LOCALES.length,
+}
 const fx = fallbackRates()
 
 /** One route, priced once: the numbers are the same in every language, only the words differ. */
@@ -207,17 +218,17 @@ for (const locale of LOCALES) {
   urls.push({ loc: home, alt: homePath })
   write(home, render({
     locale, path: home,
-    title: t('seo.title'), description: t('seo.description'),
+    title: t('seo.title', COUNTS), description: t('seo.description', COUNTS),
     head: [alternates(homePath), `<script type="application/ld+json">${JSON.stringify({
       '@context': 'https://schema.org', '@type': 'WebApplication', name: BRAND,
-      alternateName: t('seo.title'), description: t('seo.description'), url: abs(home), inLanguage: locale,
+      alternateName: t('seo.title', COUNTS), description: t('seo.description', COUNTS), url: abs(home), inLanguage: locale,
       applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     })}</script>`],
     body: [
       `<h1>${escape(t('app.title'))}</h1>`,
       `<p>${escape(t('app.tagline'))}</p>`,
-      `<p>${escape(t('page.home.about'))}</p>`,
+      `<p>${escape(t('page.home.about', COUNTS))}</p>`,
       `<h2>${escape(t('page.routes'))}</h2>`,
       `<ul>${priced.map(({ from, to, estimate: e }) =>
         `<li><a href="${routePath('/', locale, from, to)}">${escape(countryName(from, locale))} → ${escape(countryName(to, locale))}</a> — ${escape(format(e.total.likely, 'EUR', fx, locale))}</li>`).join('')}</ul>`,
@@ -261,7 +272,7 @@ for (const locale of LOCALES) {
     const car = `${EXAMPLE.make} ${EXAMPLE.model} ${EXAMPLE.year}`
     const price = format(EXAMPLE.priceEur, 'EUR', fx, locale)
     const total = format(e.total.likely, 'EUR', fx, locale)
-    const brief = routeBrief(countryName(from, locale), countryName(to, locale), { car, price, total }, t)
+    const brief = routeBrief(countryName(from, locale), countryName(to, locale), { car, price, total }, t, COUNTS)
 
     const lines = e.lines.filter((l) => !l.unknown && l.amount.likely > 0)
       .map((l) => `<dt>${escape(t(l.label.key, l.label.params))}</dt><dd>${escape(format(l.amount.likely, 'EUR', fx, locale))}</dd>`).join('')
