@@ -502,6 +502,19 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Brussels is computed, and the indexed table was published all along.** It is not on
+  fiscalite.brussels — that domain now redirects — but on the MyTax help page at
+  `fisc.brussels/mytax/fr/contact`, as server-rendered HTML that plain `curl` reads, with
+  its own validity period printed on it: 1 July 2026 to 30 June 2027. One coefficient,
+  **1.2826**, reproduces all seven published amounts to the cent (61.50 → 78.88, 4 957 →
+  6 357.85), so the config keeps the statutory grid and the coefficient rather than a
+  re-typed table. Two things the earlier note had wrong: the age ladder is not ten-point
+  steps all the way down — it falls 10 points a year to 60% at five years, then **5 points**
+  a year to 10% at fifteen; and the LPG deduction of €298 comes off the statutory amount
+  **before** indexation, which is what reproduces the published LPG column exactly. Age
+  counts whole years since first registration *anywhere*, which is what an import needs.
+  Checked against seven published cells, including the €78.88 floor and the electric case.
+  Re-read that page each July: it states its own expiry.
 - **The research is the asset, and it was invisible.** Every finding sat in this file
   while the site showed only the numbers that came out of them — nothing to link to, and a
   two-day-old domain with no links ranks for nothing. `/car-registration-tax-in-europe/` is

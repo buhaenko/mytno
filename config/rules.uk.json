@@ -1,0 +1,85 @@
+{
+  "_note": "The United Kingdom has no registration tax. What looks like one is the first year's VED licence, and a genuinely used import does not pay it at all — VERA 1994 s.62(1C) removes the first vehicle licence when the car was registered abroad more than 6 months ago AND has covered more than 6 000 km. Both limbs must be met. Everything here is in pounds and converted at the day's rate.",
+  "effective": "2026-04-01",
+  "validUntil": "2027-03-31",
+  "currency": "GBP",
+  "duty": 0.1,
+  "vat": 0.2,
+  "ved": {
+    "_note": "Rates for licences taken out on or after 1 April 2026 (VERA 1994 Sch. 1, substituted by Finance Act 2026 s.92). The diesel column is for cars that do not meet Euro 6d — Euro 6d-TEMP does not count. The alternative-fuel discount was abolished on 1 April 2025, so petrol, hybrid and electric share the first column; a zero-emission car pays £10, not nothing.",
+    "usedTest": { "months": 6, "km": 6000 },
+    "co2RegimeFromYear": 2017,
+    "co2RegimeFromMonth": 4,
+    "standardGbp": 200,
+    "firstYear": [
+      { "maxCo2": 0, "gbp": 10, "dieselGbp": 10 },
+      { "maxCo2": 50, "gbp": 115, "dieselGbp": 135 },
+      { "maxCo2": 75, "gbp": 135, "dieselGbp": 280 },
+      { "maxCo2": 90, "gbp": 280, "dieselGbp": 365 },
+      { "maxCo2": 100, "gbp": 365, "dieselGbp": 405 },
+      { "maxCo2": 110, "gbp": 405, "dieselGbp": 455 },
+      { "maxCo2": 130, "gbp": 455, "dieselGbp": 560 },
+      { "maxCo2": 150, "gbp": 560, "dieselGbp": 1410 },
+      { "maxCo2": 170, "gbp": 1410, "dieselGbp": 2270 },
+      { "maxCo2": 190, "gbp": 2270, "dieselGbp": 3420 },
+      { "maxCo2": 225, "gbp": 3420, "dieselGbp": 4850 },
+      { "maxCo2": 255, "gbp": 4850, "dieselGbp": 5690 },
+      { "maxCo2": null, "gbp": 5690, "dieselGbp": 5690 }
+    ],
+    "supplement": {
+      "_note": "Annual, not one-off, so it is named and not counted. It does reach imports: para. 1GE(1)(b) measures the six years from first registration anywhere, and the threshold is tested against a UK list price, not the invoice.",
+      "gbp": 440,
+      "thresholdGbp": 40000,
+      "thresholdZeroEmissionGbp": 50000,
+      "years": 6
+    }
+  },
+  "fees": {
+    "_note": "One-off amounts actually collected at registration. Plates carry no official price — DVLA only requires a registered supplier — so that one is a market range, like every other estimate here.",
+    "firstRegistrationGbp": 55,
+    "ivaGbp": 199,
+    "conversionIvaGbp": 100,
+    "cocGbp": [100, 300],
+    "motGbp": 54.85,
+    "motFromYears": 3,
+    "platesGbp": [20, 40]
+  },
+  "refs": {
+    "tariff": {
+      "title": "UK Integrated Online Tariff — heading 8703 (trade-tariff.service.gov.uk)",
+      "url": "https://www.trade-tariff.service.gov.uk/commodities/8703239000"
+    },
+    "vatDuty": {
+      "title": "GOV.UK — Importing vehicles into the UK: paying VAT and duty",
+      "url": "https://www.gov.uk/importing-vehicles-into-the-uk/paying-vat-and-duty"
+    },
+    "origin": {
+      "title": "GOV.UK — Claiming preferential rates of duty between the UK and EU",
+      "url": "https://www.gov.uk/guidance/claiming-preferential-rates-of-duty-between-the-uk-and-eu"
+    },
+    "ved": {
+      "title": "GOV.UK — Vehicle tax rates for cars registered on or after 1 April 2017",
+      "url": "https://www.gov.uk/vehicle-tax-rate-tables/vehicle-tax-rates-for-cars-registered-on-or-after-1-april-2017"
+    },
+    "firstLicence": {
+      "title": "Vehicle Excise and Registration Act 1994, s.62(1C) — no first vehicle licence for a used import (legislation.gov.uk)",
+      "url": "https://www.legislation.gov.uk/ukpga/1994/22/section/62"
+    },
+    "registration": {
+      "title": "GOV.UK — Vehicle registration: the £55 first registration fee",
+      "url": "https://www.gov.uk/vehicle-registration"
+    },
+    "approval": {
+      "title": "GOV.UK — Importing vehicles into the UK: getting vehicle approval",
+      "url": "https://www.gov.uk/importing-vehicles-into-the-uk/getting-vehicle-approval"
+    },
+    "iva": {
+      "title": "GOV.UK — Individual Vehicle Approval inspection fees",
+      "url": "https://www.gov.uk/government/publications/individual-vehicle-approval-inspection-fees/vehicle-approval-test-costs-cars"
+    },
+    "mot": {
+      "title": "GOV.UK — MOT test fees (maximum £54.85 for a car)",
+      "url": "https://www.gov.uk/getting-an-mot/mot-test-fees"
+    }
+  }
+}

@@ -246,6 +246,39 @@ export function flandersBiv(v: Vehicle, now: Date) {
 }
 
 /** Wallonia: a base by engine power, worn down by age, scaled by CO₂, by mass and by the energy. */
+/**
+ * Brussels TMC: a grid read twice — once on displacement (the fiscal-horsepower column in
+ * litres) and once on kilowatts — with the higher of the two amounts winning, cut by the
+ * whole years since the car was first registered anywhere, and then indexed. CO₂ plays no
+ * part at all, which makes it the one Belgian region that needs nothing about emissions.
+ *
+ * The indexed table is published by Bruxelles Fiscalité each July. One coefficient
+ * reproduces all seven of its amounts to the cent, so the whole ladder follows from it
+ * rather than from a table we would have to re-type. LPG comes off the statutory amount
+ * *before* indexation — that is what reproduces the published LPG column — and an electric
+ * car, or one past fifteen years, pays the indexed floor.
+ */
+export function brusselsTmc(v: Vehicle, now: Date) {
+  const br = belgium.brussels
+  const cents = (n: number) => Math.round(n * 100) / 100
+  const floorEur = cents(br.minEur * br.index)
+  const years = Math.floor(age(v, now))
+  if (v.fuel === 'electric' || years >= br.veteranYears) return { total: floorEur, floor: true, years }
+
+  // The published bands are in tenths of a litre, and the law rounds at the half-decilitre.
+  const litres = v.engineCc ? Math.round(v.engineCc / 100) / 10 : undefined
+  const kw = v.powerHp ? v.powerHp * slovakia.hpToKw : undefined
+  if (litres === undefined && kw === undefined) return null
+
+  const byLitres = litres === undefined ? 0 : br.grid.find((g) => g.maxLitres === null || litres <= g.maxLitres)!.eur
+  const byKw = kw === undefined ? 0 : br.grid.find((g) => g.maxKw === null || kw <= g.maxKw)!.eur
+  const statutory = Math.max(byLitres, byKw)
+  const base = v.fuel === 'lpg' ? Math.max(0, statutory - br.lpgReductionEur) : statutory
+
+  const total = Math.max(floorEur, cents(base * br.index * (br.age[years] / 100)))
+  return { total, floor: false, years, base }
+}
+
 export function walloniaTmc(v: Vehicle, now: Date) {
   const wa = belgium.wallonia
   const years = Math.floor(now.getFullYear() - v.year)
@@ -626,21 +659,20 @@ function belgianTax(v: Vehicle, region: Trip['region'], exempt: boolean, now: Da
       warning: msg('warn.beNeedRegion'),
     }
   }
-  if (region === 'BR') {
-    return { line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg('note.beBrussels')], source }) }
-  }
-
-  const tax = region === 'FL' ? flandersBiv(v, now) : walloniaTmc(v, now)
+  const tax = region === 'FL' ? flandersBiv(v, now) : region === 'BR' ? brusselsTmc(v, now) : walloniaTmc(v, now)
   if (!tax) {
+    const missing = region === 'FL' ? 'note.beFlandersNoCo2' : region === 'BR' ? 'note.beBrusselsNeeds' : 'note.beWalloniaNeeds'
+    const warn = region === 'FL' ? 'warn.frNeedCo2' : region === 'BR' ? 'warn.beBrusselsNeeds' : 'warn.beWalloniaNeeds'
     return {
-      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg(region === 'FL' ? 'note.beFlandersNoCo2' : 'note.beWalloniaNeeds')], source }),
-      warning: msg(region === 'FL' ? 'warn.frNeedCo2' : 'warn.beWalloniaNeeds'),
+      line: line('regTax', label, 'tax', nothing, { unknown: true, notes: [msg(missing)], source }),
+      warning: msg(warn),
     }
   }
   return {
     line: line('regTax', label, 'tax', exact(tax.total), {
-      formula: region === 'FL' ? '((CO₂ · f · q) / 246)⁶ · 4500 + c' : 'MB · CO₂/136 · MMA/1838 · C',
-      notes: [msg(region === 'FL' ? 'note.beFlanders' : 'note.beWallonia')],
+      formula: region === 'FL' ? '((CO₂ · f · q) / 246)⁶ · 4500 + c'
+        : region === 'BR' ? 'max(kW, cyl) × index × age' : 'MB · CO₂/136 · MMA/1838 · C',
+      notes: [msg(region === 'FL' ? 'note.beFlanders' : region === 'BR' ? 'note.beBrusselsCalc' : 'note.beWallonia')],
       source,
     }),
   }
