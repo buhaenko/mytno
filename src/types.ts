@@ -4,9 +4,11 @@ export type Fuel = 'petrol' | 'diesel' | 'hybrid' | 'phev' | 'electric' | 'lpg'
 export type Market = 'US' | 'EU' | 'JP' | 'KR' | 'OTHER'
 export type BrandTier = 'mass' | 'premium' | 'luxury'
 export type Origin = 'US' | 'EU' | 'UA' | 'JP' | 'KR' | 'OTHER'
+/** Where a car can be registered. Ukraine, the EU-27, and the three European countries outside it. */
 export type Destination =
   | 'UA' | 'ES' | 'PL' | 'DE' | 'AT' | 'BE' | 'BG' | 'HR' | 'CY' | 'CZ' | 'DK' | 'EE' | 'FI' | 'FR'
   | 'GR' | 'HU' | 'IE' | 'IT' | 'LV' | 'LT' | 'LU' | 'MT' | 'NL' | 'PT' | 'RO' | 'SK' | 'SI' | 'SE'
+  | 'CH'
 export type Currency =
   | 'EUR'
   | 'USD'
@@ -59,6 +61,12 @@ export interface Vehicle {
   co2Wltp?: number
   /** Gross mass in kilograms, field F.1 of a European registration certificate: the Estonian fee needs it. */
   grossMassKg?: number
+  /**
+   * Mass in running order, field G of a European registration certificate — the car as it
+   * stands, not what it may weigh loaded. Norway charges its whole registration tax on it,
+   * the French weight malus is a scale of it, and the Swiss CO₂ target is a line through it.
+   */
+  kerbMassKg?: number
   /** Overall length in millimetres: half of the Maltese tax is charged on it. */
   lengthMm?: number
   /** List price when new, in the destination country: the base of the Spanish registration tax. */

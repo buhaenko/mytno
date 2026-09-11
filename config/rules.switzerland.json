@@ -1,0 +1,57 @@
+{
+  "_note": "Switzerland abolished all industrial tariffs on 1 January 2024, so a car pays no customs duty from anywhere — the old CHF 12–15 per 100 kg is dead law. What remains is the 4% automobile tax and 8.1% VAT, both charged on the price actually paid, which is why Switzerland is computed and not estimated. The CO2 sanction exists but does not reach an ordinary used import.",
+  "effective": "2024-01-01",
+  "currency": "CHF",
+  "duty": 0,
+  "automobileTax": 0.04,
+  "vat": 0.081,
+  "co2Sanction": {
+    "_note": "Only for a car that is effectively new: registered abroad 12 months ago or less, or between 6 and 12 months ago with under 5 000 km. Art. 17d Abs. 3 CO2-Verordnung. The target curve and the franc-per-gram are re-set every year — M(t−2) is the Swiss average kerb weight two years back — so this block wants re-reading each January.",
+    "exemptAfterMonths": 12,
+    "exemptAfterMonthsWithKm": 6,
+    "exemptKm": 5000,
+    "targetBaseGrams": 93.6,
+    "targetSlope": -0.0144,
+    "referenceMassKg": 1777,
+    "chfPerGram": 95,
+    "year": 2026
+  },
+  "fees": {
+    "_note": "Only the federal amounts are fixed nationwide. Cantonal registration, plates and the technical check differ in all 26 cantons and no national figure exists, so they are a market range and labelled an estimate.",
+    "customsProofChf": 20,
+    "importPortalChf": 5.5,
+    "cantonalRegistrationChf": [90, 160],
+    "platesChf": [20, 40],
+    "inspectionChf": [30, 200]
+  },
+  "refs": {
+    "tariff": {
+      "title": "BAZG — Aufhebung der Industriezölle per 1. Januar 2024 (bazg.admin.ch)",
+      "url": "https://www.bazg.admin.ch/de/aufhebung-industriezolle-januar-2024"
+    },
+    "automobileTax": {
+      "title": "Automobilsteuergesetz Art. 13 und 24 — 4% auf das Entgelt (fedlex.admin.ch)",
+      "url": "https://www.fedlex.admin.ch/eli/cc/1996/3045_3045_3045/de"
+    },
+    "vat": {
+      "title": "MWSTG Art. 54 und 55 — 8,1% auf Entgelt plus Automobilsteuer (fedlex.admin.ch)",
+      "url": "https://www.fedlex.admin.ch/eli/cc/2009/615/de"
+    },
+    "import": {
+      "title": "BAZG — Fahrzeug in die Schweiz importieren: Zollanmeldung und Steuern",
+      "url": "https://www.bazg.admin.ch/de/fahrzeug-import-schweiz-zollanmeldung-steuern"
+    },
+    "co2": {
+      "title": "CO2-Verordnung Art. 17d — Ausnahmen für eingeführte Fahrzeuge (fedlex.admin.ch)",
+      "url": "https://www.fedlex.admin.ch/eli/cc/2012/856/de"
+    },
+    "co2Calc": {
+      "title": "BFE — Sanktionsberechnung für Personenwagen",
+      "url": "https://www.bfe.admin.ch/de/sanktionsberechnung-pw"
+    },
+    "registration": {
+      "title": "VZV Art. 71 und 76 — Voraussetzungen der Zulassung (fedlex.admin.ch)",
+      "url": "https://www.fedlex.admin.ch/eli/cc/1976/2423_2423_2423/de"
+    }
+  }
+}

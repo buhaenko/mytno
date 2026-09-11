@@ -292,6 +292,16 @@
         "title": "Transportstyrelsen — fordonsskatt and malus, an annual tax (transportstyrelsen.se)",
         "url": "https://www.transportstyrelsen.se/sv/vagtrafik/fordon/skatter-och-avgifter/malus/"
       }
+    },
+    "CH": {
+      "eu": false,
+      "vat": 0.081,
+      "customs": "https://www.bazg.admin.ch/de/fahrzeug-import-schweiz-zollanmeldung-steuern",
+      "regTax": "computed",
+      "regTaxSource": {
+        "title": "Automobilsteuergesetz Art. 13 — 4% Automobilsteuer (fedlex.admin.ch)",
+        "url": "https://www.fedlex.admin.ch/eli/cc/1996/3045_3045_3045/de"
+      }
     }
   },
   "poland": {

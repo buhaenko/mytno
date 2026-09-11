@@ -502,6 +502,18 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Switzerland pays no customs duty at all, and almost every source says otherwise.** It
+  abolished industrial tariffs — chapters 25 to 97, which contains 8703 — on 1 January 2024,
+  and the Generaltarif reads 0.00 on every car line. The CHF 12–15 per 100 kg of gross
+  weight that forums and brokers still quote has been dead law since then. What is left is
+  the 4% automobile tax (AStG art. 13) and 8.1% VAT charged on the price plus that tax,
+  which compounds to **12.4224%** of the price and nothing else federal. Both run off the
+  invoice — a Swiss market value applies only where there is no sale, a gift or an
+  inheritance — so Switzerland is `computed`, with no red caution. The CO₂ sanction is real
+  but does not reach an ordinary import: art. 17d Abs. 3 CO2-V lets a car go once it has
+  been registered abroad over twelve months, or over six with 5 000 km. Electric cars lost
+  their automobile-tax exemption on 1 January 2024. The cantonal tax is annual and differs
+  in all twenty-six cantons, so it is named and never counted.
 - **Brussels is computed, and the indexed table was published all along.** It is not on
   fiscalite.brussels — that domain now redirects — but on the MyTax help page at
   `fisc.brussels/mytax/fr/contact`, as server-rendered HTML that plain `curl` reads, with
