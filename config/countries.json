@@ -312,6 +312,16 @@
         "title": "Stortingsvedtak om engangsavgift for 2026 (lovdata.no)",
         "url": "https://lovdata.no/dokument/STV/forskrift/2025-12-18-2755"
       }
+    },
+    "GB": {
+      "eu": false,
+      "vat": 0.2,
+      "customs": "https://www.gov.uk/importing-vehicles-into-the-uk",
+      "regTax": "none",
+      "regTaxSource": {
+        "title": "VERA 1994 s.62(1C) — no first vehicle licence for a used import (legislation.gov.uk)",
+        "url": "https://www.legislation.gov.uk/ukpga/1994/22/section/62"
+      }
     }
   },
   "poland": {

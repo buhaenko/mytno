@@ -10,7 +10,7 @@ import { age, conversion, line, msg, totalOf } from './common'
  * There is no customs duty on a car from anywhere: the industrial tariffs went on
  * 1 January 2024, and the CHF 12–15 per 100 kg that every forum still repeats is dead law.
  * What is left is the 4% automobile tax on what was actually paid, and 8.1% VAT on that
- * plus the automobile tax — which compounds to 12.4224% of the price and nothing else.
+ * plus the automobile tax — which compounds to 12.424% of the price and nothing else.
  *
  * Because both run off the invoice rather than a Swiss valuation, this is a computed
  * country, not an estimated one. The annual cantonal tax is real but annual, and differs

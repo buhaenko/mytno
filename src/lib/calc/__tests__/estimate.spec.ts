@@ -6,6 +6,9 @@ import { austriaNova, brusselsTmc, croatiaTax, czechiaEmissionFee, denmarkTax, f
 import { checkDigitValid, detectMarket, modelYearFromVin } from '../../vehicle/vin'
 import { countryFromPath, routeFromPath, routePath } from '../../pages'
 import { fallbackRates } from '../../fx'
+import { estimateSwitzerland, swissCo2Sanction } from '../switzerland'
+import { estimateNorway, norwayRegistrationTax } from '../norway'
+import { estimateUnitedKingdom, ukFirstYearVed } from '../uk'
 
 /** The bundled rates, with the two the assertions below reason about pinned. */
 const fx: FxRates = {
@@ -376,5 +379,52 @@ describe('Other EU countries', () => {
     const at = (price: number) =>
       estimateEu({ ...audi, market: 'EU' }, { ...trip, origin: 'EU', destination: 'AT', currency: 'EUR', price }, fx, now).total.likely
     expect(at(20000)).toBeGreaterThan(at(10000))
+  })
+})
+
+describe('Outside the European Union', () => {
+  const car = { ...audi, market: 'EU' as const, kerbMassKg: 1600, mileageKm: 90000 }
+
+  it('charges Switzerland 12.424% of the price and no duty at all', () => {
+    const e = estimateSwitzerland(car, { ...trip, origin: 'EU', destination: 'CH', currency: 'EUR', price: 20000 }, fx, now)
+    // Industrial tariffs went on 1 January 2024; the 12–15 francs per 100 kg is dead law.
+    expect(lineOf(e, 'duty').amount.likely).toBe(0)
+    // 4% on the price, then 8.1% on price plus that tax — the two compound.
+    const expected = 20000 * 0.04 + (20000 + 20000 * 0.04) * 0.081
+    expect(e.taxes.likely).toBeCloseTo(expected, 6)
+    expect(expected / 20000).toBeCloseTo(0.12424, 6)
+    // A car this old is long past the CO₂ sanction's reach.
+    expect(swissCo2Sanction(car, now)!.exempt).toBe(true)
+    expect(swissCo2Sanction({ ...car, year: now.getFullYear(), mileageKm: 100 }, now)!.exempt).toBe(false)
+  })
+
+  it('builds the Norwegian tax from weight and CO₂, and never from the price', () => {
+    const asNew = { ...car, year: now.getFullYear(), regMonth: now.getMonth() + 1 }
+    const tax = norwayRegistrationTax(asNew, now)!
+    // 12.71 a kilo above 500, 260 a kilo above 1200, then the marginal CO₂ bands.
+    expect(tax.asNew).toBeCloseTo(12.71 * 1100 + 260 * 400 + (100 * 800 + 50 * 1600 + 18 * 3200), 6)
+    // An electric car pays the first weight part only: section 3 reaches piston engines.
+    expect(norwayRegistrationTax({ ...asNew, fuel: 'electric' }, now)!.asNew).toBeCloseTo(12.71 * 1100, 6)
+    // Twenty years old is a full deduction, so nothing is due.
+    expect(norwayRegistrationTax({ ...car, year: now.getFullYear() - 25 }, now)!.nok).toBe(0)
+    // No certified CO₂: the law derives one from the kerb weight rather than the displacement.
+    expect(norwayRegistrationTax({ ...asNew, co2Wltp: undefined }, now)!.co2).toBeCloseTo(160, 6)
+    // Price moves the VAT and nothing else.
+    const at = (price: number) => lineOf(estimateNorway(car, { ...trip, origin: 'EU', destination: 'NO', currency: 'EUR', price }, fx, now), 'regTax').amount.likely
+    expect(at(20000)).toBeCloseTo(at(40000), 6)
+  })
+
+  it('spares a used British import the first-year licence, and catches a nearly new one', () => {
+    // s.62(1C): over six months abroad AND over 6 000 km — both, or the CO₂ table applies.
+    expect(ukFirstYearVed(car, now)!.gbp).toBe(0)
+    expect(ukFirstYearVed({ ...car, year: now.getFullYear(), mileageKm: 2000 }, now)!.gbp).toBe(1410)
+    expect(ukFirstYearVed({ ...car, year: now.getFullYear(), mileageKm: 2000, fuel: 'diesel' }, now)!.gbp).toBe(2270)
+    // Four months old with 20 000 km is still not "used": one limb is not both.
+    expect(ukFirstYearVed({ ...car, year: now.getFullYear(), mileageKm: 20000 }, now)!.used).toBe(false)
+
+    const gb = (hasOriginProof: boolean) =>
+      estimateUnitedKingdom(car, { ...trip, origin: 'EU', destination: 'GB', currency: 'EUR', price: 20000, hasOriginProof }, fx, now)
+    expect(lineOf(gb(true), 'duty').amount.likely).toBe(0)
+    expect(lineOf(gb(false), 'duty').amount.likely).toBeCloseTo(2000, 6)
   })
 })

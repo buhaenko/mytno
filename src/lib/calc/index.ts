@@ -3,6 +3,7 @@ import type { EstonianFee } from '../estonia'
 import { estimateEu } from './eu'
 import { estimateSpain } from './spain'
 import { estimateNorway } from './norway'
+import { estimateUnitedKingdom } from './uk'
 import { estimateSwitzerland } from './switzerland'
 import { estimateUkraine } from './ukraine'
 
@@ -12,5 +13,6 @@ export function estimate(vehicle: Vehicle, trip: Trip, fx: FxRates, estonia?: Es
   if (trip.destination === 'ES') return estimateSpain(vehicle, trip, fx)
   if (trip.destination === 'CH') return estimateSwitzerland(vehicle, trip, fx)
   if (trip.destination === 'NO') return estimateNorway(vehicle, trip, fx)
+  if (trip.destination === 'GB') return estimateUnitedKingdom(vehicle, trip, fx)
   return estimateEu(vehicle, trip, fx, undefined, estonia)
 }

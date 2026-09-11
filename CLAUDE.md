@@ -502,6 +502,22 @@ DGT fee, plates, mandatory lighting conversion.
 - **The wheel mark** spins on hover, adds momentum on a second hover instead of restarting, and
   wobbles because it turns a few units off centre. Its SVG has `overflow: visible` so the wobble is
   not clipped — do not “fix” that by re-centring it.
+- **Britain has no registration tax, and a used import does not pay the “showroom tax”.**
+  What everyone calls that is the rate of the *first* annual licence, and VERA 1994 s.62(1C)
+  says there is no first vehicle licence at all where the car was registered abroad more
+  than six months ago **and** has covered more than 6 000 km. Both limbs — which is the
+  trap: four months old with 20 000 km still pays the CO₂ table, and so does two years old
+  with 3 000 km, and that table reaches £5 690. Gov.uk's own summary sentence is written for
+  new cars and does not carry the carve-out; the only authority is the Act. Duty is 10%,
+  zero for EU origin but **only on a proof of origin** a private seller usually cannot issue
+  — treating “bought in the EU” as duty-free understates the bill by a tenth of the price.
+  The £200 annual licence and the £440 expensive-car supplement are real, reach imports, and
+  are annual, so they are named and never counted.
+- **Take a research agent's arithmetic as data, not as an answer.** The Swiss research reported
+  the compounded federal rate as 12.4224%; 1.04 × 1.081 is 1.12424, so it is **12.424%**. It
+  went into the config, the code comment, six languages of notes, the article and a commit
+  message before a test caught it. Every figure an agent returns with its own multiplication
+  attached is worth redoing.
 - **Norway is the biggest number in the app and the most certain one.** The engangsavgift
   is charged on kerb weight and CO₂ and never on what the car cost, so it computes exactly —
   no valuation, no red caution. **2026 rewrote it and every older table is wrong**: the NOx
@@ -521,7 +537,7 @@ DGT fee, plates, mandatory lighting conversion.
   and the Generaltarif reads 0.00 on every car line. The CHF 12–15 per 100 kg of gross
   weight that forums and brokers still quote has been dead law since then. What is left is
   the 4% automobile tax (AStG art. 13) and 8.1% VAT charged on the price plus that tax,
-  which compounds to **12.4224%** of the price and nothing else federal. Both run off the
+  which compounds to **12.424%** of the price and nothing else federal. Both run off the
   invoice — a Swiss market value applies only where there is no sale, a gift or an
   inheritance — so Switzerland is `computed`, with no red caution. The CO₂ sanction is real
   but does not reach an ordinary import: art. 17d Abs. 3 CO2-V lets a car go once it has

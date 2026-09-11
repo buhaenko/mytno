@@ -163,11 +163,14 @@ function noteTable() {
 }
 
 function renderNote() {
+  // The article quotes the coverage too, and must not be the one place left saying 28.
+  const t2 = (text) => text.replaceAll('{destinations}', COUNTS.destinations)
+
   const body = [
     '<article class="note">',
     `<p class="note-eyebrow">${escape(BRAND)}</p>`,
-    `<h1>${escape(note.title)}</h1>`,
-    `<div class="note-lead">${note.lead.map((p) => `<p>${p}</p>`).join('')}</div>`,
+    `<h1>${escape(t2(note.title))}</h1>`,
+    `<div class="note-lead">${note.lead.map((p) => `<p>${t2(p)}</p>`).join('')}</div>`,
     '<hr class="note-rule" />',
     '<h2>Where the twenty-eight stand</h2>',
     noteTable(),
@@ -178,7 +181,7 @@ function renderNote() {
     '</article>',
   ].join('')
 
-  return render({ locale: 'en', path: note.slug, title: note.title, description: note.description, head: [], body: '' })
+  return render({ locale: 'en', path: note.slug, title: t2(note.title), description: t2(note.description), head: [], body: '' })
     // The app would only replace it, and there is nothing here for the app to do.
     .replace(/<script type="module"[^>]*><\/script>/, '')
     .replace('<div id="app" class="pending"></div>', body)

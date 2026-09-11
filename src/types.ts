@@ -8,7 +8,7 @@ export type Origin = 'US' | 'EU' | 'UA' | 'JP' | 'KR' | 'OTHER'
 export type Destination =
   | 'UA' | 'ES' | 'PL' | 'DE' | 'AT' | 'BE' | 'BG' | 'HR' | 'CY' | 'CZ' | 'DK' | 'EE' | 'FI' | 'FR'
   | 'GR' | 'HU' | 'IE' | 'IT' | 'LV' | 'LT' | 'LU' | 'MT' | 'NL' | 'PT' | 'RO' | 'SK' | 'SI' | 'SE'
-  | 'CH' | 'NO'
+  | 'CH' | 'NO' | 'GB'
 export type Currency =
   | 'EUR'
   | 'USD'

@@ -18,12 +18,12 @@ export type Section = { heading: string; body: string[] }
 
 export const note = {
   slug: NOTE_PATH,
-  title: 'What 28 countries actually charge to register an imported car',
+  title: 'What {destinations} countries actually charge to register an imported car',
   description:
-    'Registration tax in Ukraine and the 27 EU states, traced to the law in each one — including the countries where the tables everybody quotes stopped being law years ago.',
+    'Registration tax in Ukraine, the 27 EU states and the three countries outside it, traced to the law in each one — including the countries where the tables everybody quotes stopped being law years ago.',
   lead: [
     'A friend in Ukraine had an Audi A4 and nobody could say what bringing it to Spain would cost. Every guide on the internet gives a number. Almost none of them gives the law it came from, and a surprising share of them are quoting text that was repealed years ago.',
-    'So we read the laws — twenty-eight of them, one country at a time, an official source or nothing. This is what is actually charged, and the six places where the answer everyone repeats is wrong.',
+    'So we read the laws — {destinations} of them, one country at a time, an official source or nothing. This is what is actually charged, and the six places where the answer everyone repeats is wrong.',
   ],
   sections: [
     {
@@ -93,6 +93,29 @@ export const note = {
         'Luxembourg, Sweden and Latvia were inherited as “no registration tax” from an early draft and nobody had checked them. All three hold up, for three different reasons.',
         'Luxembourg charges a €50 chancellery fee and an annual road tax, and nothing at registration. Sweden’s malus is an <em>elevated annual</em> vehicle tax for the first three years, never a lump sum. Latvia’s CO₂ levy is the annual operating tax, merely pro-rated for the remaining months when the car is registered.',
         'Czechia is the counter-example worth knowing: it looks like a zero and is not. It charges an emission fee once, on the first registration of an import — 3 000 CZK for EURO 2, 5 000 for EURO 1, 10 000 for no standard, nothing from EURO 3 up. Most cars pay nothing, which is exactly how a country ends up wrongly filed as free.',
+      ],
+    },
+    {
+      heading: 'Switzerland charges no customs duty, and almost every source says otherwise',
+      body: [
+        'Switzerland abolished its industrial tariffs — chapters 25 to 97 of the tariff, which is where cars live — on 1 January 2024. The Generaltarif now reads 0.00 on every line of heading 8703. The CHF 12–15 per 100 kg of gross weight that forums, brokers and half the import guides still quote has been dead law for two years.',
+        'What is left is the 4% automobile tax and 8.1% VAT charged on the price plus that tax, which compounds to exactly 12.424% of what you paid and nothing else at federal level. Both run off the invoice — a Swiss market value is used only where there is no sale at all, a gift or an inheritance — so Switzerland is one of the countries we can compute to the franc.',
+      ],
+    },
+    {
+      heading: 'Norway’s tax is the largest in Europe and the most certain',
+      body: [
+        'The engangsavgift is charged on kerb weight and CO₂, and never on what the car cost. A 1 600 kg petrol car at 168 g/km owes 335 581 kroner as new. Nothing a seller writes on an invoice changes it.',
+        '2026 rewrote the whole thing, so every table published before that January is wrong: the NOx component is abolished, engine power and displacement no longer appear for cars, and the tax-free CO₂ allowance is gone — the first gram now costs money. Where no CO₂ is certified, the law derives one as the kerb weight divided by ten rather than falling back to displacement.',
+        'The age deduction is what makes Norway survivable: it reaches 100% at twenty years, so an old car pays nothing at all. And customs duty is zero from everywhere — the tariff reads 0.00 on every car line.',
+      ],
+    },
+    {
+      heading: 'A used import into Britain does not pay the “showroom tax”',
+      body: [
+        'The United Kingdom has no registration tax. What everyone calls the showroom tax is the rate of the *first* annual licence, and section 62(1C) of the Vehicle Excise and Registration Act says there is no first vehicle licence at all where the car was registered abroad more than six months ago **and** has covered more than 6 000 kilometres.',
+        'Both limbs, which is the trap. A four-month-old car with 20 000 km still pays the CO₂ table, and so does a two-year-old car with 3 000 km — and that table reaches £5 690. Get it right and an ordinary used import goes straight onto the £200 annual licence; get it wrong and you have understated the bill by thousands.',
+        'Gov.uk’s own summary sentence — “you’ll pay a rate based on a vehicle’s CO2 emissions the first time it’s registered” — is written for new cars and does not carry the carve-out. The only authority is the Act itself.',
       ],
     },
     {
