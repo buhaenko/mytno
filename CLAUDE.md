@@ -8,7 +8,7 @@ every session and do not create notes, docs folders or summaries anywhere else.
 **mytno.app** — a free calculator for what it costs to clear customs and register a car:
 duty, excise, VAT, registration taxes and the mandatory registration costs, at official rates.
 Route: any of 43 purchase countries → Ukraine, the 27 EU countries, Switzerland, Norway or the
-United Kingdom — 31 destinations in all. 6 languages, 19 currencies, 1 513 prerendered pages.
+United Kingdom — 31 destinations in all. 6 languages, 19 currencies, 1 615 prerendered pages.
 **Live at https://mytno.app.**
 
 It grew out of a real question: Serhii lives in Spain, a friend in Ukraine has an Audi A4 (US
@@ -45,7 +45,7 @@ import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over wou
 npm install
 npm run dev          # the site on :5173, nothing else to start
 npm test             # 15 calculation tests
-npm run build        # vite build + 1 513 prerendered pages, sitemap, robots
+npm run build        # vite build + 1 615 prerendered pages, sitemap, robots
 npm run catalog      # rebuild public/catalog from the EPA dataset
 ```
 
@@ -66,7 +66,7 @@ src/
   components/              controls · vehicle · result · icons
   styles/                  tokens · base · layout · controls · result · footer · motion
   i18n/                    locales.ts + one message file per language (239 keys each)
-scripts/                   prerender (1 513 pages, sitemap, robots) · build-catalog
+scripts/                   prerender (1 615 pages, sitemap, robots) · build-catalog
 ```
 
 ## What is calculated
@@ -369,6 +369,18 @@ DGT fee, plates, mandatory lighting conversion.
   cheapest first, with this route's own place marked. A country whose registration tax cannot be
   reduced to a number is left out rather than shown cheap — otherwise the table would recommend
   exactly the countries we know least about.
+- **Three destinations had no door, and it took counting to see it.** Britain, Norway and
+  Switzerland were added as destinations and not one of the thirty route pages pointed at any of
+  them; France, Belgium, Austria, Sweden, Denmark and Ireland had never had one either. Seventeen
+  routes were added — twenty of the thirty-one destinations are now reachable by the query people
+  actually type. They cost no research: a route page is computed from config that already exists.
+  `npm run og` must be re-run when routes change, or the new pages point at share cards that are
+  not there. **Page count is no longer the lever.** 1 615 pages with zero thin ones on a domain
+  days old will not be indexed in full for weeks; what is missing is coverage and links, not URLs.
+  The measured gap in coverage is `config/models.json`: fourteen makes, all German premium,
+  Japanese, Korean and Tesla — no Renault, Peugeot, Citroën, Seat, Dacia, Fiat, Opel or Volvo,
+  on a site that speaks Spanish, French and Polish. That is the next thing worth adding, and each
+  model needs a certified WLTP CO₂ and a real list price before it earns a page.
 - **A page per car model, and a page per year that model was built — 188 in each language.**
   Somebody searching for their own car searches for “Audi A4 2016”, not for a country, and the
   year is not decoration: the Dutch write-down, the French barème and the Hungarian threshold all

@@ -1,5 +1,5 @@
 {
-  "_note": "The routes people actually search for, one page each in every language. A route page is the query typed into a search box — “bringing a car from Germany to Poland” — where a country page is only half of it. Thirty is deliberate: the grid allows 1204, and most of them nobody looks for. The example car is the one this project started with, priced round so the arithmetic can be followed by eye; it carries every field any destination needs — power, mass, length — so that no route falls back to “not in total”.",
+  "_note": "The routes people actually search for, one page each in every language. A route page is the query typed into a search box — “bringing a car from Germany to Poland” — where a country page is only half of it. Forty-seven is deliberate: the grid allows 1364, and most of them nobody looks for. The second batch closed a hole rather than chasing volume — Britain, Norway and Switzerland had been added as destinations and no route page pointed at any of them, and France, Belgium, Austria, Sweden, Denmark and Ireland had never had one either. The example car is the one this project started with, priced round so the arithmetic can be followed by eye; it carries every field any destination needs — power, mass, length — so that no route falls back to “not in total”.",
   "example": {
     "make": "Audi", "model": "A4", "year": 2017, "fuel": "petrol",
     "engineCc": 1984, "powerHp": 252, "co2Wltp": 168, "grossMassKg": 2000, "lengthMm": 4726,
@@ -18,6 +18,16 @@
     { "from": "DE", "to": "LT" }, { "from": "US", "to": "LT" },
     { "from": "DE", "to": "NL" }, { "from": "US", "to": "NL" },
     { "from": "DE", "to": "PT" }, { "from": "FR", "to": "PT" },
-    { "from": "DE", "to": "IT" }, { "from": "US", "to": "IT" }
+    { "from": "DE", "to": "IT" }, { "from": "US", "to": "IT" },
+
+    { "from": "DE", "to": "GB" }, { "from": "JP", "to": "GB" }, { "from": "US", "to": "GB" },
+    { "from": "DE", "to": "CH" }, { "from": "FR", "to": "CH" }, { "from": "IT", "to": "CH" },
+    { "from": "DE", "to": "NO" }, { "from": "SE", "to": "NO" }, { "from": "US", "to": "NO" },
+    { "from": "DE", "to": "FR" }, { "from": "BE", "to": "FR" },
+    { "from": "DE", "to": "BE" }, { "from": "NL", "to": "BE" },
+    { "from": "DE", "to": "AT" },
+    { "from": "DE", "to": "SE" },
+    { "from": "DE", "to": "DK" },
+    { "from": "GB", "to": "IE" }
   ]
 }
