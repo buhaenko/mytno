@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import models from '@config/models.json'
 import countries from '@config/countries.json'
 import type { Currency, Destination, FxRates, Vehicle } from '../../types'
@@ -14,9 +14,10 @@ import { useI18n } from '../../i18n'
  * The first screen: one car priced in every country that can answer, cheapest first.
  *
  * On the bare home page it does not stand still. A dozen ordinary cars take turns — a Golf,
- * a Model 3, an X5 — and for each one the bars grow and shrink and the figures count from the
- * old number to the new. That movement is the argument: a static table says the tax differs
- * by country; a table that redraws itself when the car changes says it differs by *car*.
+ * a Model 3, an X5 — and the ladder is redrawn for each. It is redrawn **at once**: the bars
+ * do not slide to their new lengths and the figures do not count up to their new values. A
+ * second of easing between two states turns a comparison into a wait, and the chart is only
+ * interesting once it has arrived. The cut is the argument, not the travel.
  *
  * The order of the countries does **not** change with the car, and that is deliberate. Sorting
  * each car afresh moved twenty-five rows of twenty-eight, several of them four hundred pixels,
@@ -77,30 +78,6 @@ const rows = computed<SpreadRow[]>(() => {
 })
 
 /**
- * The figures count rather than jump. Text cannot be transitioned in CSS, so each amount is
- * walked from where it was to where it is going over the same time the bars take to move.
- */
-const shown = ref(new Map<string, number>())
-let frame = 0
-watch(rows, (next, previous) => {
-  if (reduced || !previous) {
-    shown.value = new Map(next.map((r) => [r.code, r.total]))
-    return
-  }
-  const from = new Map(shown.value)
-  const started = performance.now()
-  const step = (now: number) => {
-    const t = Math.min(1, (now - started) / 1000)
-    // The same ease-in-out the rows move on, so nothing arrives ahead of anything else.
-    const eased = t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2
-    shown.value = new Map(next.map((r) => [r.code, (from.get(r.code) ?? r.total) + (r.total - (from.get(r.code) ?? r.total)) * eased]))
-    if (t < 1) frame = requestAnimationFrame(step)
-  }
-  cancelAnimationFrame(frame)
-  frame = requestAnimationFrame(step)
-}, { immediate: true })
-
-/**
  * The two ends of the bar scale belong to the palette, so they are read off the stylesheet.
  * Read in `onMounted` and held in a ref: as a computed this ran during the first render,
  * before the stylesheet had applied, got nothing, fell back and cached the fallback for the
@@ -119,7 +96,7 @@ onMounted(() => {
   if (still.value || reduced || cars.length < 2) return
   timer = window.setInterval(() => (index.value += 1), 4800)
 })
-onBeforeUnmount(() => { clearInterval(timer); cancelAnimationFrame(frame) })
+onBeforeUnmount(() => clearInterval(timer))
 
 /** What the site covers, counted from the config: never the number of rows that happen to fit. */
 const DESTINATION_COUNT = Object.keys(countries.destinations).length
@@ -137,10 +114,7 @@ const barColour = (share: number) => {
 }
 
 const money = (value: number) => formatMoney(Math.round(value), props.currency, props.fx, locale.value)
-const amount = (row: SpreadRow) => {
-  const value = shown.value.get(row.code) ?? row.total
-  return value < 1 ? t('home.spread.nothing') : money(value)
-}
+const amount = (row: SpreadRow) => (row.total < 1 ? t('home.spread.nothing') : money(row.total))
 /** The extremes are this car's own across every country, not only the dozen on screen. */
 const sorted = computed(() => [...(props.car ? rows.value : all.value)].sort((a, b) => b.total - a.total))
 const dearest = computed(() => sorted.value[0])
@@ -174,7 +148,7 @@ const note = computed(() => t('home.spread.note', {
       </p>
     </header>
 
-    <TransitionGroup tag="ol" name="ladder" class="spread-list" :style="{ minHeight: `${tallest * ROW_HEIGHT}px` }">
+    <ol class="spread-list" :style="{ minHeight: `${tallest * ROW_HEIGHT}px` }">
       <li
         v-for="row in rows" :key="row.code"
         :class="{ low: row.code === cheapest?.code, high: row.code === dearest?.code }"
@@ -184,7 +158,7 @@ const note = computed(() => t('home.spread.note', {
         <span class="spread-bar"><i :style="{ width: `${Math.round(row.share * 1000) / 10}%`, background: barColour(row.share) }"></i></span>
         <span class="spread-total">{{ amount(row) }}</span>
       </li>
-    </TransitionGroup>
+    </ol>
 
     <p class="spread-note" v-html="note"></p>
   </section>

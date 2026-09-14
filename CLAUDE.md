@@ -514,10 +514,11 @@ DGT fee, plates, mandatory lighting conversion.
   count from the old number to the new. `src/lib/spread.ts` computes it and is handed
   `estimate` rather than importing it, so the prerender and the app run the same function —
   and `averageOrder` picks the fixed dozen so a crawler and a reader see the same table.
-- **Three things were tried on that ladder and two were wrong.** Sorting all twenty-eight rows
+- **Four things were tried on that ladder and three were wrong.** Sorting all twenty-eight rows
   per car moved twenty-five of them, several four hundred pixels, every few seconds: measured,
   not guessed, and no easing rescues it — a bar-chart race works because one year differs from
-  the last by a place or two. Cutting the field to twelve fixed the motion. Then a cool-to-hot
+  the last by a place or two. Cutting the field to twelve made the motion legible, and then the
+  motion was cut too: it was a wait dressed as a feature. Then a cool-to-hot
   colour scale was tried and rejected because blue and orange interpolate through neutral and
   the middle of the ladder went muddy. And the bars were six pixels tall: the scale was applied
   and measured correct and still looked like the grey it replaced, because colour needs area

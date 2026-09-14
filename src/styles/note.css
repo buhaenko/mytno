@@ -91,8 +91,9 @@
    it to be seen in. Colour needs room before it needs choosing. */
 .spread-bar { height: 12px; border-radius: 3px; background: var(--surface-sunken); }
 .spread-bar i {
+  /* No transition. The ladder is redrawn when the car changes, not animated into place: a
+     second of easing between two states is a second of neither. */
   display: block; height: 100%; width: 0; border-radius: 3px; background: var(--line-strong);
-  transition: width .9s cubic-bezier(.65, 0, .35, 1), background-color .9s ease;
 }
 .spread-total {
   font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums;
@@ -103,12 +104,7 @@
 /* Colour marks the two ends, never weight: a bolder name is a wider name, and a wider name
    is a reflow in the middle of a transition. */
 .spread-list li.low .spread-name, .spread-list li.high .spread-name { color: var(--ink); }
-.spread-name, .spread-total { transition: color .5s ease; }
 
-/* Twelve rows re-sorting among themselves, one curve, one duration, no stagger. The field is
-   what was cut, not the movement: at twenty-eight rows a re-sort threw three quarters of them
-   across four hundred pixels at once, which no easing can make graceful. */
-.ladder-move { transition: transform .9s cubic-bezier(.65, 0, .35, 1); }
 .spread-note { margin: 16px 0 0; font-size: 12.5px; line-height: 1.5; color: var(--ink-faint); }
 .spread-note b { color: var(--ink); font-weight: 500; }
 
@@ -118,7 +114,7 @@
   .spread-bar { height: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spread-bar i, .swap-enter-active, .swap-leave-active, .ladder-move { transition: none; }
+  .swap-enter-active, .swap-leave-active { transition: none; }
 }
 
 /* ── Where every rate comes from ────────────────────────────────────────────────────────
