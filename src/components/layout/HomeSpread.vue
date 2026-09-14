@@ -142,9 +142,10 @@ const note = computed(() => t('home.spread.note', {
       <h2>{{ carLabel
         ? t('page.car.h1', { car: carLabel, destinations: DESTINATION_COUNT })
         : t('home.spread.title', { destinations: DESTINATION_COUNT }) }}</h2>
+      <!-- One line: Vue drops whitespace between elements that sits across a line break,
+           and the car name would run straight into the sentence after it. -->
       <p class="spread-terms">
-        <Transition name="swap" mode="out-in"><b :key="current.label" class="spread-car">{{ current.label }}</b></Transition>
-        <span>{{ t('home.spread.car', { price: money(current.price) }) }}</span>
+        <Transition name="swap" mode="out-in"><b :key="current.label" class="spread-car">{{ current.label }}</b></Transition> <span>{{ t('home.spread.car', { price: money(current.price) }) }}</span>
       </p>
     </header>
 

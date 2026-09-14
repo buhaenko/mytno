@@ -14,7 +14,7 @@ import { LOCALES } from '../src/i18n/locales.ts'
 import { countryBrief, countryPath, routeBrief, routePath, sourcesFor } from '../src/lib/pages.ts'
 import { note } from './note.ts'
 import { averageOrder, spread } from '../src/lib/spread.ts'
-import { carName, carPath, carSlug, carVehicle, rotation } from '../src/lib/cars.ts'
+import { carName, carNewest, carPath, carSlug, carVehicle, carYears, rotation } from '../src/lib/cars.ts'
 import { LEGAL_PATH, SOURCES_PATH } from '../src/lib/pages.ts'
 
 // The worked examples are computed by the calculator itself, bundled for Node by the build,
@@ -23,11 +23,15 @@ const { estimate, fallbackRates, format, ORIGIN_GROUP } = await import('../.cach
 
 const SITE = (process.env.SITE_URL ?? 'https://mytno.app').replace(/\/$/, '')
 const DIST = 'dist'
-const BRAND = 'mytno.app'
 const shell = readFileSync(join(DIST, 'index.html'), 'utf8')
 
 const config = (name) => JSON.parse(readFileSync(join('config', name), 'utf8'))
 const countries = config('countries.json')
+const SITE_CONFIG = config('site.json')
+/** What the page prints — the domain, because that is what people type. */
+const BRAND = SITE_CONFIG.brand
+/** What the site is called, as opposed to what it is typed as: Google reads this for the site name. */
+const SITE_NAME = SITE_CONFIG.name
 const ukraine = config('rules.ukraine.json')
 const spain = config('rules.spain.json')
 const DESTINATIONS = Object.keys(countries.destinations)
@@ -115,7 +119,7 @@ function render({ locale, path, title, description, head, body, image }) {
       `<link rel="canonical" href="${abs(path)}" />`,
       `<meta property="og:url" content="${abs(path)}" />`,
       `<meta property="og:locale" content="${locale}" />`,
-      `<meta property="og:site_name" content="${BRAND}" />`,
+      `<meta property="og:site_name" content="${SITE_NAME}" />`,
       `<meta property="og:image" content="${abs(image ?? `/og/${locale}.png`)}" />`,
       '<meta property="og:image:width" content="1200" />',
       '<meta property="og:image:height" content="630" />',
@@ -264,14 +268,35 @@ function spreadTable(locale, t) {
  * its own list price, its own last year of production — so nothing is assumed for them.
  */
 const CARS = config('models.json')
-const CAR_LADDERS = new Map(CARS.map((car) => {
+const carTrip = (engine) => ({
+  origin: 'EU', price: engine.listEur, currency: 'EUR',
+  hasOriginProof: true, residenceTransfer: false, region: 'FL',
+})
+const ladderFor = (car, year) => {
   const engine = car.engines[0]
-  const vehicle = carVehicle(car, engine)
-  const trip = {
-    origin: 'EU', price: engine.listEur, currency: 'EUR',
-    hasOriginProof: true, residenceTransfer: false, region: 'FL',
-  }
-  return [carSlug(car), { car, engine, vehicle, rows: spread(estimate, vehicle, trip, DESTINATIONS, fx) }]
+  const vehicle = carVehicle(car, engine, year)
+  return { car, engine, vehicle, rows: spread(estimate, vehicle, carTrip(engine), DESTINATIONS, fx) }
+}
+const CAR_LADDERS = new Map(CARS.map((car) => [carSlug(car), ladderFor(car)]))
+
+/**
+ * And a page per year the model was built. Not the same page with another number on it: the
+ * Dutch write-down, the French barème and the Hungarian threshold all read the year off the
+ * registration certificate, so each page also says which countries answer differently for
+ * that year and by how much — worked out by comparing the two ladders, not asserted beside
+ * them, so it cannot drift from what the calculator does.
+ */
+const CAR_YEAR_LADDERS = new Map(CARS.flatMap((car) => {
+  const newest = CAR_LADDERS.get(carSlug(car)).rows
+  const at = new Map(newest.map((row) => [row.code, row.total]))
+  return carYears(car).map((year) => {
+    const ladder = ladderFor(car, year)
+    const here = new Map(ladder.rows.map((row) => [row.code, row.total]))
+    const changed = [...at.keys()]
+      .filter((code) => !here.has(code) || Math.round(here.get(code)) !== Math.round(at.get(code)))
+      .map((code) => ({ code, here: here.get(code), there: at.get(code) }))
+    return [`${carSlug(car)}/${year}`, { ...ladder, year, changed }]
+  })
 }))
 
 /**
@@ -313,6 +338,22 @@ function sourcesFor_(locale, t) {
   return { blocks: blocks.join(''), count: seen.size }
 }
 
+/**
+ * The years of one model, as plain links, on the model page and on every year page — so a
+ * reader who lands on the 2019 car can reach the 2017 one, and so can a crawler.
+ */
+function yearLinks(locale, t, car, slug, current) {
+  const links = [carNewest(car), ...carYears(car)]
+    .sort((a, b) => b - a)
+    .filter((year) => year !== current)
+    .map((year) => {
+      const newest = year === carNewest(car)
+      return `<a href="${carPath('/', locale, slug, newest ? undefined : year)}">${year}</a>`
+    })
+  const label = current ? t('page.car.year.all', { car: carName(car) }) : t('page.car.years')
+  return `<nav>${escape(label)} ${links.join(' ')}</nav>`
+}
+
 /** The model index: how a crawler walks from any page to every car page. */
 function carLinks(locale, t) {
   const links = CARS
@@ -337,10 +378,15 @@ for (const locale of LOCALES) {
   urls.push({ loc: home, alt: homePath })
   write(home, render({
     locale, path: home,
-    title: t('seo.title', COUNTS), description: t('seo.description', COUNTS),
+    // The home page is the one whose title Google reads for the site name, and the name it
+    // was reading was “mytno.app” or nothing at all. It leads here, in front of the subject.
+    title: `${SITE_NAME}: ${t('seo.title', COUNTS)}`, description: t('seo.description', COUNTS),
     head: [alternates(homePath), `<script type="application/ld+json">${JSON.stringify({
-      '@context': 'https://schema.org', '@type': 'WebApplication', name: BRAND,
-      alternateName: t('seo.title', COUNTS), description: t('seo.description', COUNTS), url: abs(home), inLanguage: locale,
+      '@context': 'https://schema.org', '@type': 'WebSite',
+      name: SITE_NAME, alternateName: BRAND, url: abs(homePath(locale)), inLanguage: locale,
+    })}</script>`, `<script type="application/ld+json">${JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'WebApplication', name: SITE_NAME,
+      alternateName: BRAND, description: t('seo.description', COUNTS), url: abs(home), inLanguage: locale,
       applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
       offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
     })}</script>`],
@@ -392,6 +438,58 @@ for (const locale of LOCALES) {
         `<ul>${car.engines.map((e) =>
           `<li>${escape(e.label)}${e.co2 ? ` — CO₂ ${e.co2} g/km` : ''}${e.listEur ? `, ${escape(money(e.listEur))}` : ''}</li>`).join('')}</ul>`,
         `<h2>${escape(t('page.car.faq.q', vars))}</h2><p>${escape(t('page.car.faq.a', vars))}</p>`,
+        yearLinks(locale, t, car, slug),
+        carLinks(locale, t),
+        countryLinks(locale, t),
+      ].join(''),
+    }))
+  }
+
+  // One page per year that model was built, the last one excepted: that is the page above.
+  for (const [key, { car, engine, year, rows, changed }] of CAR_YEAR_LADDERS) {
+    const slug = key.slice(0, key.lastIndexOf('/'))
+    const path = (l) => carPath('/', l, slug, year)
+    const here = path(locale)
+    const name = carName(car)
+    const money = (n) => format(n, 'EUR', fx, locale)
+    const amount = (n) => (n < 1 ? t('home.spread.nothing') : money(n))
+    const dearest = rows[0]
+    const cheapest = rows[rows.length - 1]
+    const newest = carNewest(car)
+    const vars = {
+      car: name, engine: engine.label, year, newest, countries: rows.length,
+      destinations: COUNTS.destinations, price: money(engine.listEur),
+      low: `${countryName(cheapest.code, locale)} — ${amount(cheapest.total)}`,
+      high: `${countryName(dearest.code, locale)} — ${money(dearest.total)}`,
+    }
+    const title = t('page.car.year.h1', vars)
+    const changes = changed.map(({ code, here: mine, there }) => {
+      const line = { country: countryName(code, locale), year, newest, there: amount(there) }
+      return mine === undefined
+        ? t('page.car.year.gone', line)
+        : t('page.car.year.diff', { ...line, here: amount(mine) })
+    })
+    urls.push({ loc: here, alt: path })
+    write(here, render({
+      locale, path: here, title: `${title} — ${BRAND}`, description: t('page.car.year.lead', vars),
+      head: [alternates(path), `<script type="application/ld+json">${JSON.stringify({
+        '@context': 'https://schema.org', '@type': 'FAQPage',
+        mainEntity: [{ '@type': 'Question', name: t('page.car.year.faq.q', vars),
+          acceptedAnswer: { '@type': 'Answer', text: t('page.car.year.faq.a', vars) } }],
+      })}</script>`],
+      body: [
+        `<h1>${escape(title)}</h1>`,
+        `<p>${escape(t('page.car.year.lead', vars))}</p>`,
+        `<table><tbody>${rows.map(({ code, total }) =>
+          `<tr><td><a href="${countryPath('/', locale, code)}">${escape(countryName(code, locale))}</a></td>` +
+          `<td>${escape(amount(total))}</td></tr>`).join('')}</tbody></table>`,
+        `<h2>${escape(t('page.car.year.changes'))}</h2>`,
+        changes.length
+          ? `<ul>${changes.map((line) => `<li>${escape(line)}</li>`).join('')}</ul>`
+          : `<p>${escape(t('page.car.year.flat'))}</p>`,
+        `<p>${escape(t('page.car.priceNote'))}</p>`,
+        `<h2>${escape(t('page.car.year.faq.q', vars))}</h2><p>${escape(t('page.car.year.faq.a', vars))}</p>`,
+        yearLinks(locale, t, car, slug, year),
         carLinks(locale, t),
         countryLinks(locale, t),
       ].join(''),
@@ -547,4 +645,5 @@ writeFileSync(join(DIST, 'sitemap.xml'), [
 writeFileSync(join(DIST, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`)
 writeFileSync(join(DIST, '404.html'), shell.replace('<!--seo-->', '<meta name="robots" content="noindex" />'))
 
-console.log(`prerendered ${urls.length} pages (${LOCALES.length} languages × ${DESTINATIONS.length + 1} countries + ${priced.length} routes) → ${SITE}`)
+console.log(`prerendered ${urls.length} pages in ${LOCALES.length} languages: ${DESTINATIONS.length} countries, `
+  + `${priced.length} routes, ${CAR_LADDERS.size} models, ${CAR_YEAR_LADDERS.size} model years → ${SITE}`)

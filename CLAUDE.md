@@ -7,8 +7,9 @@ every session and do not create notes, docs folders or summaries anywhere else.
 
 **mytno.app** — a free calculator for what it costs to clear customs and register a car:
 duty, excise, VAT, registration taxes and the mandatory registration costs, at official rates.
-Route: any of 43 purchase countries → Ukraine or any of the 27 EU countries. 6 languages,
-19 currencies, 354 prerendered pages. **Live at https://mytno.app.**
+Route: any of 43 purchase countries → Ukraine, the 27 EU countries, Switzerland, Norway or the
+United Kingdom — 31 destinations in all. 6 languages, 19 currencies, 1 513 prerendered pages.
+**Live at https://mytno.app.**
 
 It grew out of a real question: Serhii lives in Spain, a friend in Ukraine has an Audi A4 (US
 import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over would actually cost.
@@ -44,7 +45,7 @@ import, VIN `WAUANAF42HN008179`), and nobody could say what bringing it over wou
 npm install
 npm run dev          # the site on :5173, nothing else to start
 npm test             # 15 calculation tests
-npm run build        # vite build + 667 prerendered pages, sitemap, robots
+npm run build        # vite build + 1 513 prerendered pages, sitemap, robots
 npm run catalog      # rebuild public/catalog from the EPA dataset
 ```
 
@@ -65,7 +66,7 @@ src/
   components/              controls · vehicle · result · icons
   styles/                  tokens · base · layout · controls · result · footer · motion
   i18n/                    locales.ts + one message file per language (239 keys each)
-scripts/                   prerender (667 pages, sitemap, robots) · build-catalog
+scripts/                   prerender (1 513 pages, sitemap, robots) · build-catalog
 ```
 
 ## What is calculated
@@ -368,6 +369,24 @@ DGT fee, plates, mandatory lighting conversion.
   cheapest first, with this route's own place marked. A country whose registration tax cannot be
   reduced to a number is left out rather than shown cheap — otherwise the table would recommend
   exactly the countries we know least about.
+- **A page per car model, and a page per year that model was built — 188 in each language.**
+  Somebody searching for their own car searches for “Audi A4 2016”, not for a country, and the
+  year is not decoration: the Dutch write-down, the French barème and the Hungarian threshold all
+  read it off the registration certificate, so the same A4 is €2 178 in the Netherlands for 2016
+  and €5 607 for 2023, and Hungary answers for one and not the other. Each year page therefore
+  also carries **what the year changes** — the countries whose figure differs from the model's
+  newest year, with both amounts — worked out by comparing the two ladders in
+  `scripts/prerender.mjs`, never asserted beside them, so it cannot drift from the calculator.
+  The newest year has no page of its own: that is the model page, and `carYears()` leaves it out.
+- **Google was reading the site name off a string nobody had set.** Every signal emitted
+  “mytno.app” or nothing — there was no `WebSite` schema at all, which is the first thing Google
+  looks at, and `og:site_name` was written twice, once by the shell and once by the prerender. A
+  search for the bare word “mytno” found nothing as a result. `config/site.json` now carries
+  `name` (“mytno”) beside `brand` (“mytno.app”); the home page emits `WebSite` and `WebApplication`
+  with `name: mytno, alternateName: mytno.app`, and its `<title>` leads with the name —
+  `mytno: Car import tax calculator — 31 countries in one place` — because the homepage title is
+  the other source Google reads it from. Google re-reads this on its own schedule; it is days,
+  not minutes.
 - **The catalogue is the first question now, the VIN the second.** A stranger from a search result
   will not go and find a VIN to learn a rough number; a make and a model they can answer from memory.
 - **The address bar is the share link.** State lives in the URL and nowhere else — no localStorage,

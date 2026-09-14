@@ -1,6 +1,7 @@
 {
-  "_note": "Site-wide settings: brand, legal contact and analytics. Analytics stays off until an id is set.",
+  "_note": "Site-wide settings: brand, legal contact and analytics. Analytics stays off until an id is set. `brand` is what the page prints — the domain, because that is what people type. `name` is what the site is called, and it is the one Google reads for the site name in search results: the domain was the only form we ever emitted, so a search for the bare word found nothing.",
   "brand": "mytno.app",
+  "name": "mytno",
   "host": "mytno.app",
   "legal": {
     "owner": "mytno.app",

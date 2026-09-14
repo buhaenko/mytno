@@ -23,27 +23,45 @@ export const carSlug = (car: CarModel) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 
-export const carPath = (base: string, locale: string, slug: string) =>
-  `${base}${locale === 'en' ? '' : `${locale}/`}car/${slug}/`
+export const carPath = (base: string, locale: string, slug: string, year?: number) =>
+  `${base}${locale === 'en' ? '' : `${locale}/`}car/${slug}/${year ? `${year}/` : ''}`
 
-/** `/uk/car/audi-a4/` names a model; anything else does not. */
-export function carFromPath(pathname: string, base: string, cars: CarModel[]): string | null {
+/** `/uk/car/audi-a4/` names a model and `/uk/car/audi-a4/2019/` one year of it. */
+export function carFromPath(pathname: string, base: string, cars: CarModel[]): { slug: string; year?: number } | null {
   const rest = pathname.slice(base.length).replace(/^\/+/, '')
   const parts = rest.split('/').filter(Boolean)
   const at = parts[0]?.length === 2 ? 1 : 0
   if (parts[at] !== 'car' || !parts[at + 1]) return null
   const slug = parts[at + 1]!
-  return cars.some((car) => carSlug(car) === slug) ? slug : null
+  const car = cars.find((c) => carSlug(c) === slug)
+  if (!car) return null
+  const year = Number(parts[at + 2])
+  const [from, to] = [car.years[0]!, car.years[1] ?? car.years[0]!]
+  return { slug, year: year >= from && year <= to ? year : undefined }
+}
+
+/** The year the model page itself prices: the last one it was built. */
+export const carNewest = (car: CarModel) => car.years[1] ?? car.years[0]!
+
+/**
+ * Every year the model was built *except* its last, which the model page already is. A page
+ * per year because the year is not decoration: the Dutch write-down, the French barème and
+ * the Hungarian threshold all read it off the registration certificate, so the same car of
+ * 2016 and of 2023 are different amounts in half of Europe.
+ */
+export const carYears = (car: CarModel) => {
+  const [from, to] = [car.years[0]!, carNewest(car)]
+  return Array.from({ length: to - from }, (_, i) => from + i)
 }
 
 export const carBySlug = (slug: string, cars: CarModel[]) => cars.find((car) => carSlug(car) === slug)
 
 /** The model as it left the showroom: its own engine, its own list price, its own last year. */
-export function carVehicle(car: CarModel, engine: CarEngine): Vehicle {
+export function carVehicle(car: CarModel, engine: CarEngine, year?: number): Vehicle {
   return {
     make: car.make,
     model: car.model,
-    year: car.years[1] ?? car.years[0]!,
+    year: year ?? carNewest(car),
     fuel: engine.fuel as Fuel,
     market: 'EU',
     brandTier: car.tier as BrandTier,

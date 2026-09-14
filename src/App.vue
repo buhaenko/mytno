@@ -46,14 +46,15 @@ const arrivedOnRoutePage = routeFromPath(location.pathname, import.meta.env.BASE
 /** Somebody who searched for their own model rather than for a country lands here. */
 const CAR_MODELS = modelList as CarModel[]
 const arrivedOnCarPage = carFromPath(location.pathname, import.meta.env.BASE_URL, CAR_MODELS)
-const pageCar = arrivedOnCarPage ? carBySlug(arrivedOnCarPage, CAR_MODELS) : undefined
+const pageCar = arrivedOnCarPage ? carBySlug(arrivedOnCarPage.slug, CAR_MODELS) : undefined
+const pageCarYear = arrivedOnCarPage?.year
 const pageCarEngine = pageCar?.engines[0]
 const pageCountry = computed(() =>
   arrivedOnCountryPage && destination.value && destination.value in DESTINATION_INFO ? destination.value : null)
 
 const page = computed(() => {
   // A model page says what it is about before the ladder does.
-  if (pageCar) return { h1: carName(pageCar), lead: t('app.tagline'), faq: [] }
+  if (pageCar) return { h1: `${carName(pageCar)}${pageCarYear ? ` ${pageCarYear}` : ''}`, lead: t('app.tagline'), faq: [] }
   const code = pageCountry.value
   if (!code) return null
   const info = DESTINATION_INFO[code]!
@@ -168,9 +169,9 @@ onMounted(async () => {
       <HomeSpread
         v-if="showSpread"
         :fx="fx" :currency="calc.display.value"
-        :car="pageCar && pageCarEngine ? carVehicle(pageCar, pageCarEngine) : undefined"
+        :car="pageCar && pageCarEngine ? carVehicle(pageCar, pageCarEngine, pageCarYear) : undefined"
         :price="pageCarEngine?.listEur"
-        :car-label="pageCar ? carName(pageCar) : undefined"
+        :car-label="pageCar ? `${carName(pageCar)}${pageCarYear ? ` ${pageCarYear}` : ''}` : undefined"
       />
     </div>
 
