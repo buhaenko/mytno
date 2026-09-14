@@ -52,6 +52,7 @@ export function toQuery(s: Snapshot): string {
   put('hp', v.powerHp); put('plant', v.plantCountry)
   put('price', s.trip.price); put('cur', s.trip.currency); put('show', s.display); put('reg', s.trip.region)
   if (!s.trip.hasOriginProof) q.set('proof', '0')
+  if (s.vehicle.euBuilt !== undefined) q.set('built', s.vehicle.euBuilt ? 'eu' : 'x')
   if (s.trip.residenceTransfer) q.set('reloc', '1')
 
   const query = q.toString()
@@ -88,6 +89,7 @@ export function fromQuery(q: URLSearchParams, destinations: readonly string[]): 
     listPriceEur: num('lp'),
     powerHp: num('hp'),
     plantCountry: q.get('plant') ?? undefined,
+    euBuilt: q.has('built') ? q.get('built') === 'eu' : undefined,
     notes: [],
   }
   if (vehicle.make) vehicle.brandTier = tierForMake(vehicle.make)

@@ -85,6 +85,32 @@ describe('Ukraine', () => {
     const builtElsewhere = estimateUkraine({ ...audi, plantCountry: 'UNITED STATES (USA)' }, { ...trip, origin: 'EU' }, fx, now)
     expect(lineOf(builtElsewhere, 'duty').amount.likely).toBeGreaterThan(0)
   })
+
+  it('leaves the duty a range when nothing says where the car was built', () => {
+    // No plant and nobody asked: 0% and 10% are both live, so neither may be quoted alone.
+    const { plantCountry, ...unknownPlant } = audi
+    const duty = lineOf(estimateUkraine(unknownPlant, { ...trip, origin: 'EU', currency: 'EUR' }, fx, now), 'duty')
+    expect(duty.amount.min).toBe(0)
+    expect(duty.amount.likely).toBeGreaterThan(0)
+    expect(duty.caution?.key).toBe('caution.uaPlantUnknown')
+
+    // The reader answers, and the range collapses to the rate their answer earns.
+    const saidEu = lineOf(estimateUkraine({ ...unknownPlant, euBuilt: true }, { ...trip, origin: 'EU', currency: 'EUR' }, fx, now), 'duty')
+    expect(saidEu.amount.max).toBe(0)
+    expect(saidEu.caution).toBeUndefined()
+
+    const saidElsewhere = lineOf(estimateUkraine({ ...unknownPlant, euBuilt: false }, { ...trip, origin: 'EU', currency: 'EUR' }, fx, now), 'duty')
+    expect(saidElsewhere.amount.min).toBeGreaterThan(0)
+    expect(saidElsewhere.caution).toBeUndefined()
+  })
+
+  it('charges an electric car no duty whatever its plant, so nothing is left open', () => {
+    const { plantCountry, ...unknownPlant } = audi
+    const ev = { ...unknownPlant, fuel: 'electric' as const, batteryKwh: 75 }
+    const duty = lineOf(estimateUkraine(ev, { ...trip, origin: 'EU', currency: 'EUR' }, fx, now), 'duty')
+    expect(duty.amount.max).toBe(0)
+    expect(duty.caution).toBeUndefined()
+  })
 })
 
 describe('Spain', () => {

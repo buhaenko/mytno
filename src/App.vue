@@ -110,6 +110,22 @@ const showResidenceRelief = computed(() => destination.value !== 'UA' && calc.or
 const belgianRegions = computed(() => (['FL', 'WA', 'BR'] as const).map((value) => ({ value, label: t(`price.region.${value}`) })))
 
 /**
+ * Ukraine's duty relief turns on where the car was **built**, which a decoded VIN answers and
+ * nothing else in our data does. So where nothing has answered it, ask — the same move Belgium
+ * made for its regions. Unasked stays unasked: the duty is then a range, not a guess.
+ */
+const showEuBuilt = computed(() =>
+  destination.value === 'UA' && calc.origin.value === 'EU' && !vehicle.value.plantCountry)
+const euBuiltOptions = computed(() => ([
+  { value: 'eu' as const, label: t('car.euBuilt.yes') },
+  { value: 'x' as const, label: t('car.euBuilt.no') },
+]))
+const euBuilt = computed({
+  get: () => (vehicle.value.euBuilt === undefined ? null : vehicle.value.euBuilt ? 'eu' : 'x'),
+  set: (value: 'eu' | 'x' | null) => { vehicle.value = { ...vehicle.value, euBuilt: value === null ? undefined : value === 'eu' } },
+})
+
+/**
  * The address bar is the state. It is written out once the first screen is restored and
  * again whenever anything changes, so every value on screen is in the URL and copying it
  * is all sharing takes — no code to mint, nothing kept on a server.
@@ -192,6 +208,11 @@ onMounted(async () => {
           <div v-if="destination === 'BE'" class="field">
             <span class="field-label">{{ t('price.region') }} <HelpTip :text="t('price.help.region')" /></span>
             <ChoiceChips v-model="belgianRegion" :options="belgianRegions" />
+          </div>
+
+          <div v-if="showEuBuilt" class="field">
+            <span class="field-label">{{ t('car.euBuilt') }} <HelpTip :text="t('car.euBuilt.help')" /></span>
+            <ChoiceChips v-model="euBuilt" :options="euBuiltOptions" />
           </div>
 
           <label v-if="showOriginProof" class="checkbox">

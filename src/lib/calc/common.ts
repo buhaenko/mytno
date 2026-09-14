@@ -8,8 +8,16 @@ const EU_PLANTS = new Set([
   'POLAND', 'PORTUGAL', 'ROMANIA', 'SLOVAKIA', 'SLOVENIA', 'SPAIN', 'SWEDEN',
 ])
 
+/**
+ * Where the car was built — the thing Ukraine's duty relief turns on, and it has three
+ * answers, not two. A decoded VIN settles it; failing that the reader may have said; and
+ * `undefined` means genuinely nobody knows, which must not be read as “no”.
+ */
+export const euBuild = (v: Vehicle): boolean | undefined =>
+  v.plantCountry ? EU_PLANTS.has(v.plantCountry.toUpperCase()) : v.euBuilt
+
 /** Duty relief depends on where the car was built, not where it was bought. */
-export const builtInEu = (v: Vehicle) => !!v.plantCountry && EU_PLANTS.has(v.plantCountry.toUpperCase())
+export const builtInEu = (v: Vehicle) => euBuild(v) === true
 
 /** Age in years, counted from the middle of the model year. */
 export function age(v: Vehicle, now = new Date()): number {

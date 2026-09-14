@@ -2,7 +2,7 @@ import type { Estimate, FxRates, Line, Trip, Vehicle } from '../../types'
 import rules from '@config/rules.ukraine.json'
 import { toEur } from '../fx'
 import { between, exact, money, plus, times } from '../money'
-import { builtInEu, conversion, line, msg, totalOf } from './common'
+import { conversion, euBuild, line, msg, totalOf } from './common'
 
 /** Full years since the year after production, as the excise law counts them. */
 export function ageFactor(year: number, now = new Date()): number {
@@ -38,15 +38,35 @@ export function pensionRate(valueUah: number): number {
   return 0.05
 }
 
-/** Duty is 10%, unless the car is electric or was built in the EU and has proof of origin. */
+/**
+ * Duty is 10%, unless the car is electric or was **built** in the EU and has proof of origin.
+ *
+ * Built, not bought: a Japanese-made Toyota sold in Germany gets no relief, and that is the
+ * one thing readers get wrong. So where nobody has said where the car was built, the rate is
+ * not decided — it is a range from 0 to 10%, carried as such all the way into the total,
+ * whose `likely` stays at the full rate so the bill is never understated. Pretending to know
+ * would be worse in either direction: 0% understates by a tenth of the price, and a flat 10%
+ * overstated a German-built car by €5 040 on a €42 000 one for as long as this said `false`.
+ */
 function duty(v: Vehicle, trip: Trip) {
-  if (v.fuel === 'electric') return { rate: rules.duty.electric, note: msg('note.dutyEv'), warning: undefined }
-  if (trip.origin !== 'EU') return { rate: rules.duty.default, note: msg('note.dutyNonEu'), warning: undefined }
-  if (!builtInEu(v)) {
-    return { rate: rules.duty.default, note: msg('note.dutyNotEuMade', { plant: v.plantCountry ?? '—' }), warning: msg('warn.dutyNotEuMade') }
+  const flat = (rate: number, note: string, params?: Record<string, string>, warning?: string) => ({
+    rate: { min: rate, likely: rate, max: rate },
+    note: msg(note, params), warning: warning ? msg(warning) : undefined, caution: undefined,
+  })
+  if (v.fuel === 'electric') return flat(rules.duty.electric, 'note.dutyEv')
+  if (trip.origin !== 'EU') return flat(rules.duty.default, 'note.dutyNonEu')
+  const built = euBuild(v)
+  if (built === false) {
+    return flat(rules.duty.default, 'note.dutyNotEuMade', { plant: v.plantCountry ?? '—' }, 'warn.dutyNotEuMade')
   }
-  if (!trip.hasOriginProof) return { rate: rules.duty.default, note: msg('note.dutyNonEu'), warning: msg('warn.noOriginProof') }
-  return { rate: rules.duty.euOriginWithProof, note: msg('note.dutyEuOrigin'), warning: undefined }
+  if (!trip.hasOriginProof) return flat(rules.duty.default, 'note.dutyNonEu', undefined, 'warn.noOriginProof')
+  if (built === true) return flat(rules.duty.euOriginWithProof, 'note.dutyEuOrigin')
+  return {
+    rate: { min: rules.duty.euOriginWithProof, likely: rules.duty.default, max: rules.duty.default },
+    note: msg('note.dutyPlantUnknown'),
+    warning: undefined,
+    caution: msg('caution.uaPlantUnknown'),
+  }
 }
 
 export function estimateUkraine(v: Vehicle, trip: Trip, fx: FxRates, now = new Date()): Estimate {
@@ -60,11 +80,24 @@ export function estimateUkraine(v: Vehicle, trip: Trip, fx: FxRates, now = new D
   const warnings = []
   if (trip.origin === 'US') warnings.push(msg('warn.uaFreight'))
 
-  const { rate: dutyRate, note: dutyNote, warning: dutyWarning } = duty(v, trip)
+  const { rate: dutyRate, note: dutyNote, warning: dutyWarning, caution: dutyCaution } = duty(v, trip)
   if (dutyWarning) warnings.push(dutyWarning)
-  const dutyDue = times(customsValue, dutyRate)
-  lines.push(line('duty', msg('line.duty', { rate: dutyRate * 100 }), 'tax', dutyDue, {
-    notes: [dutyNote], formula: `${dutyRate * 100}% × CV`, source: rules.refs.duty,
+  // The rate and the valuation are each a range; the low end of one belongs with the low end
+  // of the other, so the duty is never quoted narrower than both together allow.
+  const dutyDue = money(
+    customsValue.min * dutyRate.min,
+    customsValue.likely * dutyRate.likely,
+    customsValue.max * dutyRate.max,
+  )
+  const spread = dutyRate.min !== dutyRate.max
+  const pc = (r: number) => r * 100
+  lines.push(line('duty', spread
+    ? msg('line.dutyRange', { min: pc(dutyRate.min), max: pc(dutyRate.max) })
+    : msg('line.duty', { rate: pc(dutyRate.likely) }), 'tax', dutyDue, {
+    notes: [dutyNote],
+    formula: spread ? `${pc(dutyRate.min)}–${pc(dutyRate.max)}% × CV` : `${pc(dutyRate.likely)}% × CV`,
+    caution: dutyCaution,
+    source: rules.refs.duty,
   }))
 
   const { eur: exciseDue, formula } = excise(v, now)
@@ -115,6 +148,6 @@ export function estimateUkraine(v: Vehicle, trip: Trip, fx: FxRates, now = new D
     total: totalOf(lines),
     taxes: totalOf(lines.filter((l) => l.kind === 'tax')),
     customsValue: customsValue.likely,
-    meta: { ageFactor: ageFactor(v.year, now), dutyRate, pensionRate: rateAt(customsValue.likely) },
+    meta: { ageFactor: ageFactor(v.year, now), dutyRate: dutyRate.likely, pensionRate: rateAt(customsValue.likely) },
   }
 }

@@ -134,6 +134,20 @@ const note = computed(() => t('home.spread.note', {
   computed: all.value.length,
   destinations: DESTINATION_COUNT,
 }))
+
+/**
+ * Ukraine is the one country here whose duty turns on where the car was *built*, and a ladder
+ * car carries no plant — so its figure is the full-rate one, and saying so is the difference
+ * between a conservative number and one that quietly misleads. Asked of the calculation rather
+ * than worked out beside it: an electric car pays no duty whatever its plant, and a note that
+ * repeated the rule instead of reading it said the wrong thing on every Tesla.
+ */
+const plantNote = computed(() => {
+  if (!rows.value.some((row) => row.code === 'UA')) return ''
+  const ua = estimate(current.value.vehicle, { ...tripFor(current.value.price), destination: 'UA' }, props.fx)
+  const duty = ua.lines.find((l) => l.id === 'duty')
+  return duty?.caution?.key === 'caution.uaPlantUnknown' ? t('page.spread.plantNote') : ''
+})
 </script>
 
 <template>
@@ -162,5 +176,6 @@ const note = computed(() => t('home.spread.note', {
     </ol>
 
     <p class="spread-note" v-html="note"></p>
+    <p v-if="plantNote" class="spread-note">{{ plantNote }}</p>
   </section>
 </template>

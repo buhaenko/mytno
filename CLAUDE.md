@@ -617,6 +617,34 @@ DGT fee, plates, mandatory lighting conversion.
   — treating “bought in the EU” as duty-free understates the bill by a tenth of the price.
   The £200 annual licence and the £440 expensive-car supplement are real, reach imports, and
   are annual, so they are named and never counted.
+- **Ukraine's duty had been overstating a European car by €5 040, and `plant` is not the fix.**
+  The relief turns on where the car was **built**, not bought, and `builtInEu()` reads
+  `plantCountry`, which only a decoded VIN carries. `config/models.json` has none and
+  `carVehicle()` sets none, so every car page, every year page, the home ladder and every
+  route into Ukraine charged the full 10%: €16 550 against €11 510 for a German-built A4 at
+  €42 000, 44% high, and it moved Ukraine several places up the ladder. Filling in a `plant`
+  field would not have fixed it and would have been wrong: `models.json` holds one row per
+  model across a span of years, while Model 3 was built in Fremont, Shanghai **and** Berlin,
+  Tucson in Ulsan and Nošovice, Sportage in Gwangju and Žilina, CR-V in four countries. Days
+  of research for a field that lies. So `euBuild()` returns **three** states —
+  `true | false | undefined` — and where it is `undefined` the duty is not decided: the rate
+  is a range from 0 to 10%, and because `times`/`plus` already compose `Money`, it flows into
+  the VAT base and the total by itself (€11 448 … €16 550 … €18 943). `likely` stays at the
+  full rate, so nothing is ever understated. The reader is then asked, exactly as Belgium asks
+  for its region: a chip beside the price, shown only for Ukraine and only when no VIN has
+  already answered, carried in the URL as `built=eu|x`. Answering collapses the range.
+- **A note that repeats a rule says the wrong thing somewhere.** The ladders carry a sentence
+  saying Ukraine is shown at the full rate — and the first version printed it on every page
+  with Ukraine in it, Teslas included, where an electric car pays no duty at all whatever its
+  plant. It now asks the calculation instead: it looks for `caution.uaPlantUnknown` on the
+  duty line, so it appears on 176 English pages and not on the 14 that would have been wrong.
+- **The mobile audit lied, and it lied about production too.** It reported the help mark's hit
+  area as 0 of 5 points on every device — a number CLAUDE.md records as 5 of 5 — and the same
+  0/5 came back from the live site, which is what proved it was the instrument. Cause:
+  `elementFromPoint` works in **viewport** coordinates, and the first `.tip-toggle` on a
+  restored result page sits at `top: -583`, above the fold. The probe now calls
+  `scrollIntoView({ block: 'center' })` first; all seventeen marks then answer 5/5. When an
+  audit reports a regression, run it against production before believing it.
 - **Take a research agent's arithmetic as data, not as an answer.** The Swiss research reported
   the compounded federal rate as 12.4224%; 1.04 × 1.081 is 1.12424, so it is **12.424%**. It
   went into the config, the code comment, six languages of notes, the article and a commit

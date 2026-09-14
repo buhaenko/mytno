@@ -259,7 +259,7 @@ function spreadTable(locale, t) {
   return `<h2>${escape(t('home.spread.title', COUNTS))}</h2>` +
     `<p><strong>${escape(car)}</strong> ${escape(t('home.spread.car', { price: money(FIRST_ENGINE.listEur) }))}</p>` +
     `<table><tbody>${rows.join('')}</tbody></table>` +
-    `<p>${escape(note)}</p>`
+    `<p>${escape(note)}</p>` + plantNote(LADDER, t, REFERENCE, FIRST_ENGINE.listEur)
 }
 
 /**
@@ -354,6 +354,17 @@ function yearLinks(locale, t, car, slug, current) {
   return `<nav>${escape(label)} ${links.join(' ')}</nav>`
 }
 
+/**
+ * Ukraine's duty turns on where the car was built and a ladder car carries no plant, so its
+ * figure is the full-rate one. Every ladder that shows Ukraine says so underneath.
+ */
+const plantNote = (rows, t, vehicle, price) => {
+  if (!rows.some(({ code }) => code === 'UA')) return ''
+  const ua = estimate(vehicle, { ...carTrip({ listEur: price }), destination: 'UA' }, fx)
+  const duty = ua.lines.find((l) => l.id === 'duty')
+  return duty?.caution?.key === 'caution.uaPlantUnknown' ? `<p>${escape(t('page.spread.plantNote'))}</p>` : ''
+}
+
 /** The model index: how a crawler walks from any page to every car page. */
 function carLinks(locale, t) {
   const links = CARS
@@ -433,6 +444,7 @@ for (const locale of LOCALES) {
         `<table><tbody>${rows.map(({ code, total }) =>
           `<tr><td><a href="${countryPath('/', locale, code)}">${escape(countryName(code, locale))}</a></td>` +
           `<td>${escape(total < 1 ? t('home.spread.nothing') : money(total))}</td></tr>`).join('')}</tbody></table>`,
+        plantNote(rows, t, carVehicle(car, engine), engine.listEur),
         `<p>${escape(t('page.car.priceNote'))}</p>`,
         `<h2>${escape(t('page.car.engines'))}</h2>`,
         `<ul>${car.engines.map((e) =>
@@ -487,6 +499,7 @@ for (const locale of LOCALES) {
         changes.length
           ? `<ul>${changes.map((line) => `<li>${escape(line)}</li>`).join('')}</ul>`
           : `<p>${escape(t('page.car.year.flat'))}</p>`,
+        plantNote(rows, t, carVehicle(car, engine, year), engine.listEur),
         `<p>${escape(t('page.car.priceNote'))}</p>`,
         `<h2>${escape(t('page.car.year.faq.q', vars))}</h2><p>${escape(t('page.car.year.faq.a', vars))}</p>`,
         yearLinks(locale, t, car, slug, year),

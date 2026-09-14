@@ -79,6 +79,12 @@ export interface Vehicle {
   listPriceEur?: number
   mileageKm?: number
   plantCountry?: string
+  /**
+   * Where the car was built, when nothing decoded it: Ukraine's duty relief turns on the
+   * country of manufacture, not of purchase, and the reader knows their own car. `undefined`
+   * means nobody has said — which is a third state, not a “no”.
+   */
+  euBuilt?: boolean
   drive?: string
   /** What the VIN decode and the catalogue had to say, shown behind the “?” next to the car. */
   notes: Msg[]
